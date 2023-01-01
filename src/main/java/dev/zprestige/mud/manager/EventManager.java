@@ -6,10 +6,7 @@ import dev.zprestige.mud.events.impl.render.*;
 import dev.zprestige.mud.events.impl.system.ConnectEvent;
 import dev.zprestige.mud.events.impl.system.DisconnectEvent;
 import dev.zprestige.mud.util.MC;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.RenderBlockOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
@@ -91,6 +88,11 @@ public class EventManager implements MC {
         event.setPitch(cameraSetupEvent.getPitch());
     }
 
+    @SubscribeEvent
+    public void onInputUpdate(InputUpdateEvent event) {
+        dev.zprestige.mud.events.impl.player.InputUpdateEvent itemInputUpdateEvent = new dev.zprestige.mud.events.impl.player.InputUpdateEvent(event.getMovementInput());
+        Mud.eventBus.invoke(itemInputUpdateEvent);
+    }
     public static boolean nullCheck() {
         return mc.player == null || mc.world == null;
     }
