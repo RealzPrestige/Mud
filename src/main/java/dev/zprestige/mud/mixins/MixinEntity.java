@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinEntity {
 
     @Inject(method = "turn", at = @At("HEAD"), cancellable = true)
-    public void onTurn(float yaw, float pitch, CallbackInfo ci) {
+    private void onTurn(float yaw, float pitch, CallbackInfo ci) {
         TurnEvent event = new TurnEvent(yaw, pitch);
         Mud.eventBus.invoke(event);
         if (event.isCancelled()) {
