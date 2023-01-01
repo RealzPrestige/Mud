@@ -1,6 +1,8 @@
 package dev.zprestige.mud.ui;
 
 import dev.zprestige.mud.Mud;
+import dev.zprestige.mud.events.impl.render.GuiPrimaryEvent;
+import dev.zprestige.mud.events.impl.system.GuiClosedEvent;
 import dev.zprestige.mud.module.Category;
 import dev.zprestige.mud.module.client.ClickGui;
 import dev.zprestige.mud.shader.impl.ShadowShader;
@@ -168,6 +170,12 @@ public class Interface extends GuiScreen {
         return false;
     }
 
+    @Override
+    public void onGuiClosed() {
+        GuiClosedEvent event = new GuiClosedEvent();
+        Mud.eventBus.invoke(event);
+    }
+
     public String type(String string, char typedChar, int keyCode) {
         String newString = string;
         switch (keyCode) {
@@ -209,7 +217,9 @@ public class Interface extends GuiScreen {
     }
 
     public static Color primary() {
-        return ClickGui.Instance.color.getValue();
+        GuiPrimaryEvent event = new GuiPrimaryEvent(Color.WHITE);
+        Mud.eventBus.invoke(event);
+        return event.getColor();
     }
 
     public static Color shade(int i) {
