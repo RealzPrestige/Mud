@@ -1,6 +1,5 @@
 package dev.zprestige.mud.module.misc;
 
-import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.world.TickEvent;
 import dev.zprestige.mud.module.Module;
@@ -8,7 +7,6 @@ import dev.zprestige.mud.setting.impl.BindSetting;
 import dev.zprestige.mud.setting.impl.IntSetting;
 import dev.zprestige.mud.util.impl.InventoryUtil;
 import dev.zprestige.mud.util.impl.PacketUtil;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
 import net.minecraft.util.EnumHand;
@@ -22,7 +20,7 @@ public class KeyAction extends Module {
 
     @EventListener
     public void onTick(TickEvent event) {
-        if (key.getValue().equals(Keyboard.KEY_NONE) || !Keyboard.isKeyDown(key.getValue())) {
+        if (key.getValue().equals(Keyboard.KEY_NONE) || !Keyboard.isKeyDown(key.getValue()) || mc.currentScreen != null) {
             return;
         }
 
@@ -33,16 +31,6 @@ public class KeyAction extends Module {
         RayTraceResult result = mc.objectMouseOver;
 
         switch (result.typeOfHit) {
-            case ENTITY:
-                if (result.entityHit instanceof EntityPlayer) {
-                    EntityPlayer entityPlayer = (EntityPlayer) result.entityHit;
-                    if (Mud.friendManager.contains(entityPlayer)) {
-                        Mud.friendManager.remove(entityPlayer.getName());
-                    } else {
-                        Mud.friendManager.add(entityPlayer.getName());
-                    }
-                }
-                break;
             case BLOCK:
             case MISS:
                 boolean block = result.typeOfHit.equals(RayTraceResult.Type.BLOCK);
