@@ -320,7 +320,7 @@ public class ConfigScreen extends DrawableScreen {
         return new Color(48, 51, 71);
     }
 
-    public Color shade(int i) {
+    public static Color shade(int i) {
         return new Color(48 + i, 51 + i, 71 + i);
     }
 

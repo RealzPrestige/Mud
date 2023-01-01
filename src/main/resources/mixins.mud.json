@@ -11,6 +11,7 @@
     "interfaces.IPlayerControllerMP",
     "interfaces.ISPacketPlayerPosLook",
     "interfaces.ITimer",
+
     "MixinEntity",
     "MixinEntityPlayer",
     "MixinEntityPlayerSP",
@@ -18,6 +19,7 @@
     "MixinGuiChat",
     "MixinGuiIngame",
     "MixinGuiNewChat",
+    "MixinGuiScreen",
     "MixinItemRenderer",
     "MixinLayerHeldItem",
     "MixinMinecraft",
