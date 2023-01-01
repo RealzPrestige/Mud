@@ -1,0 +1,35 @@
+package dev.zprestige.mud.module.client;
+
+import dev.zprestige.mud.Mud;
+import dev.zprestige.mud.events.bus.EventListener;
+import dev.zprestige.mud.events.impl.world.TickEvent;
+import dev.zprestige.mud.module.Module;
+import dev.zprestige.mud.setting.impl.ColorSetting;
+import dev.zprestige.mud.ui.Interface;
+import org.lwjgl.input.Keyboard;
+
+import java.awt.*;
+
+public class ClickGui extends Module {
+    public static ClickGui Instance;
+    public final ColorSetting color = setting("Color", new Color(113, 93, 214)).invokeTab("Coloring");
+
+    public ClickGui() {
+        getKeybind().invokeValue(Keyboard.KEY_RSHIFT);
+        Instance = this;
+    }
+
+    @Override
+    public void onEnable() {
+        if (mc.world != null && mc.player != null) {
+            mc.displayGuiScreen(Mud.clickGui);
+        }
+    }
+
+    @EventListener
+    public void onTick(TickEvent event){
+        if (!(mc.currentScreen instanceof Interface)){
+            toggle();
+        }
+    }
+}
