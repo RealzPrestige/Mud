@@ -40,7 +40,7 @@ public class MineCrystal extends Module {
 
     @EventListener
     public void onMotionUpdate(MotionUpdateEvent event) {
-        if (key.getValue() == Keyboard.KEY_NONE || Keyboard.isKeyDown(key.getValue())) {
+        if (key.getValue() == Keyboard.KEY_NONE || !Keyboard.isKeyDown(key.getValue()) || !mc.player.getHeldItemMainhand().getItem().equals(Items.END_CRYSTAL)) {
             return;
         }
         if (pos == null || face == null) {
