@@ -2,6 +2,7 @@ package dev.zprestige.mud.manager;
 
 import dev.zprestige.mud.mixins.interfaces.IMinecraft;
 import dev.zprestige.mud.util.MC;
+import dev.zprestige.mud.util.impl.InventoryUtil;
 import dev.zprestige.mud.util.impl.PacketUtil;
 import dev.zprestige.mud.util.impl.RotationUtil;
 import net.minecraft.block.Block;
@@ -113,6 +114,16 @@ public class InteractionManager implements MC {
         }
     }
 
+    public void placeBlock(BlockPos pos, boolean rotate, boolean packet, boolean strict, boolean ignoreEntities, int slot) {
+        if (slot == -1) {
+            return;
+        }
+        int currentItem = mc.player.inventory.currentItem;
+        InventoryUtil.switchToSlot(slot);
+        placeBlock(pos, rotate, packet, strict, ignoreEntities);
+        InventoryUtil.switchBack(currentItem);
+    }
+
     public EnumFacing getFirstEnumFacing(BlockPos pos) {
         return getEnumFacingSides(pos).stream().findFirst().orElse(null);
     }
@@ -177,7 +188,7 @@ public class InteractionManager implements MC {
     }
 
 
-    private Vec3i getDistanceToFace( EnumFacing enumFacing) {
+    private Vec3i getDistanceToFace(EnumFacing enumFacing) {
         Vec3i vec3i = new Vec3i(0.5, 0.5, 0.5);
         switch (enumFacing) {
             case NORTH:

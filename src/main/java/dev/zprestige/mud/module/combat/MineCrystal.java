@@ -40,7 +40,7 @@ public class MineCrystal extends Module {
 
     @EventListener
     public void onMotionUpdate(MotionUpdateEvent event) {
-        if (key.getValue() == Keyboard.KEY_NONE || Keyboard.isKeyDown(key.getValue())){
+        if (key.getValue() == Keyboard.KEY_NONE || Keyboard.isKeyDown(key.getValue())) {
             return;
         }
         if (pos == null || face == null) {
@@ -56,18 +56,14 @@ public class MineCrystal extends Module {
         }
         if (BlockUtil.is(pos, Blocks.OBSIDIAN)) {
             if (BlockUtil.hasCrystal(pos)) {
-                int currentItem = mc.player.inventory.currentItem;
                 int slot = InventoryUtil.getItemFromHotbar(Items.DIAMOND_PICKAXE);
-                if (slot != -1) {
-                    InventoryUtil.switchToSlot(slot);
+                if (slot == -1) {
+                    return;
                 }
                 if (rotate.getValue()) {
                     RotationUtil.facePos(pos, event);
                 }
-                PacketUtil.invoke(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, pos, face));
-                if (slot != -1) {
-                    InventoryUtil.switchBack(currentItem);
-                }
+                PacketUtil.invoke(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, pos, face), slot);
             } else {
                 EnumHand enumHand =
                         mc.player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(Items.END_CRYSTAL) ? EnumHand.MAIN_HAND
@@ -97,18 +93,18 @@ public class MineCrystal extends Module {
                 }
 
                 EntityEnderCrystal entity = null;
-                for (Entity e : new ArrayList<>(mc.world.loadedEntityList)){
-                   if (e instanceof EntityEnderCrystal && Math.sqrt(e.getDistanceSq(pos)) < 1.5f){
-                       entity = (EntityEnderCrystal) e;
-                   }
+                for (Entity e : new ArrayList<>(mc.world.loadedEntityList)) {
+                    if (e instanceof EntityEnderCrystal && Math.sqrt(e.getDistanceSq(pos)) < 1.5f) {
+                        entity = (EntityEnderCrystal) e;
+                    }
                 }
-                if (entity == null){
+                if (entity == null) {
                     return;
                 }
                 if (rotate.getValue()) {
                     RotationUtil.faceEntity(entity, event);
                 }
-                    PacketUtil.invoke(new CPacketUseEntity(entity));
+                PacketUtil.invoke(new CPacketUseEntity(entity));
 
                 mc.player.swingArm(enumHand);
             } else {

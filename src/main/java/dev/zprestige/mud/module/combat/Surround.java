@@ -114,12 +114,7 @@ public class Surround extends Module {
     }
 
     private void place(BlockPos pos, int block) {
-        int currentItem = mc.player.inventory.currentItem;
-        InventoryUtil.switchToSlot(block);
-
-        Mud.interactionManager.placeBlock(pos, rotate.getValue(), packet.getValue(), strict.getValue(), false);
-
-        InventoryUtil.switchBack(currentItem);
+        Mud.interactionManager.placeBlock(pos, rotate.getValue(), packet.getValue(), strict.getValue(), false, block);
     }
 
     private int block() {
