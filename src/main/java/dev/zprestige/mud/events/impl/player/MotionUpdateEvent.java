@@ -3,17 +3,15 @@ package dev.zprestige.mud.events.impl.player;
 import dev.zprestige.mud.events.bus.Event;
 
 public class MotionUpdateEvent extends Event {
-    protected double x, y, z, prevX, prevY, prevZ;
-    protected float rotationYaw, rotationPitch, prevYaw, prevPitch;
-    protected boolean onGround, prevOnGround;
-    protected String stage;
+    private double x, y,  z;
+    private final double prevX, prevY, prevZ;
+    private float rotationYaw;
+    private float rotationPitch;
+    private final float prevYaw, prevPitch;
+    private boolean onGround;
+    private final boolean prevOnGround;
 
-    public MotionUpdateEvent(final String stage, final MotionUpdateEvent event) {
-        this(stage, event.x, event.y, event.z, event.rotationYaw, event.rotationPitch, event.onGround);
-    }
-
-    public MotionUpdateEvent(final String stage, final double x, final double y, final double z, final float rotationYaw, final float rotationPitch, final boolean onGround) {
-        this.stage = stage;
+    public MotionUpdateEvent(double x, double y, double z, float rotationYaw, float rotationPitch, boolean onGround) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -28,9 +26,6 @@ public class MotionUpdateEvent extends Event {
         this.prevOnGround = onGround;
     }
 
-    public String getStage() {
-        return stage;
-    }
 
     public double getPrevX() {
         return prevX;

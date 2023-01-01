@@ -7,7 +7,7 @@ public class Render2DPostEvent extends Event {
     private final ScaledResolution scaledResolution;
     private final float partialTicks;
 
-    public Render2DPostEvent(final float partialTicks, final ScaledResolution scaledResolution) {
+    public Render2DPostEvent(float partialTicks, ScaledResolution scaledResolution) {
         this.partialTicks = partialTicks;
         this.scaledResolution = scaledResolution;
     }

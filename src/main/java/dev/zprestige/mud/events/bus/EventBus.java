@@ -15,7 +15,7 @@ public final class EventBus {
     }
 
     public void unregisterListener(final Object object) {
-        listeners.removeIf(listener -> listener.object == object);
+        listeners.removeIf(listener -> listener.getObject().equals(object));
     }
 
     private void listeners(final Object object) {
@@ -29,9 +29,9 @@ public final class EventBus {
     }
 
     public void invoke(final Event event) {
-        new ArrayList<>(listeners).stream().filter(listener -> listener.event.equals(event.getClass())).forEach(listener -> {
+        new ArrayList<>(listeners).stream().filter(listener -> listener.getEvent().equals(event.getClass())).forEach(listener -> {
             try {
-                listener.method.invoke(listener.object, event);
+                listener.getMethod().invoke(listener.getObject(), event);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }

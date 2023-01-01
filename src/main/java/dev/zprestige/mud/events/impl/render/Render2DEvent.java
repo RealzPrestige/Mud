@@ -7,7 +7,7 @@ public class Render2DEvent extends Event {
     private final ScaledResolution scaledResolution;
     private final float partialTicks;
 
-    public Render2DEvent(final float partialTicks, final ScaledResolution scaledResolution) {
+    public Render2DEvent(float partialTicks, ScaledResolution scaledResolution) {
         this.partialTicks = partialTicks;
         this.scaledResolution = scaledResolution;
     }

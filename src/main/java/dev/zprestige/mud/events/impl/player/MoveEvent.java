@@ -4,12 +4,10 @@ import dev.zprestige.mud.events.bus.Event;
 import net.minecraft.entity.MoverType;
 
 public class MoveEvent extends Event {
-    public double motionX;
-    public double motionY;
-    public double motionZ;
-    public MoverType type;
+    private double motionX, motionY, motionZ;
+    private final MoverType type;
 
-    public MoveEvent(final MoverType type, final double x, final double y, final double z) {
+    public MoveEvent(MoverType type, double x, double y, double z) {
         this.type = type;
         this.motionX = x;
         this.motionY = y;
@@ -20,6 +18,22 @@ public class MoveEvent extends Event {
         motionX = x;
         motionY = y;
         motionZ = z;
+    }
+
+    public double getMotionX() {
+        return motionX;
+    }
+
+    public double getMotionY() {
+        return motionY;
+    }
+
+    public double getMotionZ() {
+        return motionZ;
+    }
+
+    public MoverType getType() {
+        return type;
     }
 
     public void setMotionX(double motionX) {
