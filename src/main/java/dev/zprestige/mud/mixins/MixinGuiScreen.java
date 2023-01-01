@@ -1,6 +1,7 @@
 package dev.zprestige.mud.mixins;
 
 import dev.zprestige.mud.Mud;
+import dev.zprestige.mud.events.impl.render.GuiBackgroundEvent;
 import dev.zprestige.mud.events.impl.render.RenderToolTipEvent;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
@@ -16,9 +17,17 @@ public class MixinGuiScreen {
     private void renderToolTip(ItemStack stack, int x, int y, CallbackInfo ci) {
         RenderToolTipEvent event = new RenderToolTipEvent(stack, x, y);
         Mud.eventBus.invoke(event);
-        if (event.isCancelled()){
+        if (event.isCancelled()) {
             ci.cancel();
         }
     }
 
+    @Inject(method = "drawBackground", at = @At("HEAD"), cancellable = true)
+    private void drawBackground(int tint, CallbackInfo ci) {
+        GuiBackgroundEvent event = new GuiBackgroundEvent();
+        Mud.eventBus.invoke(event);
+        if (event.isCancelled()) {
+            ci.cancel();
+        }
+    }
 }

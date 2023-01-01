@@ -20,6 +20,7 @@ public class NoRender extends Module {
     private final BooleanSetting newAnimations = setting("New Animations", false).invokeTab("Remove");
     private final BooleanSetting boss = setting("Boss", false).invokeTab("Remove");
     private final BooleanSetting vignette = setting("Vignette", false).invokeTab("Remove");
+    private final BooleanSetting guiBackground = setting("Gui Background", false).invokeTab("Remove");
 
     private final BooleanSetting animations = setting("Animations", false).invokeTab("World Remove");
     private final BooleanSetting sPacketEffects = setting("SPacketEffects", false).invokeTab("World Remove");
@@ -32,6 +33,13 @@ public class NoRender extends Module {
     private final BooleanSetting sky = setting("Sky", false).invokeTab("World Remove");
 
     private long sys;
+
+    @EventListener
+    public void onGuiBackground(GuiBackgroundEvent event){
+        if (guiBackground.getValue()){
+            event.setCancelled(true);
+        }
+    }
 
     @EventListener
     public void onConnect(ConnectEvent event){
