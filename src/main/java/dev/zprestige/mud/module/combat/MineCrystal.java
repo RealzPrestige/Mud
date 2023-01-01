@@ -26,7 +26,7 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 
-public class HeadCrystal extends Module {
+public class MineCrystal extends Module {
     private final BindSetting key = setting("Key", Keyboard.KEY_NONE);
     private final FloatSetting timing = setting("Timing", 100.0f, 0.1f, 500.0f);
     private final FloatSetting range = setting("Range", 5.0f, 0.1f, 6.0f);
