@@ -6,7 +6,7 @@ import dev.zprestige.mud.module.Module;
 public class ToggleEvent extends Event {
     private final Module module;
 
-    public ToggleEvent(Module module){
+    public ToggleEvent(Module module) {
         this.module = module;
     }
 

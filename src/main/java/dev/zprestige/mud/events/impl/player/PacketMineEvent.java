@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 public class PacketMineEvent extends Event {
     private final BlockPos pos;
 
-    public PacketMineEvent(BlockPos pos){
+    public PacketMineEvent(BlockPos pos) {
         this.pos = pos;
     }
 

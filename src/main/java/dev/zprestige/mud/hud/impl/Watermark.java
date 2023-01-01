@@ -5,13 +5,12 @@ import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.render.Render2DPostEvent;
 import dev.zprestige.mud.hud.HudModule;
 
-
 import java.awt.*;
 
 public class Watermark extends HudModule {
 
     public Watermark() {
-        super("Watermark",true);
+        super("Watermark", true);
         x = 1.0f;
         y = 1.0f;
     }

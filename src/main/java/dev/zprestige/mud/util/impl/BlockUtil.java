@@ -15,7 +15,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.*;
 import net.minecraft.world.Explosion;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class BlockUtil implements MC {
     private static final Vec3i[] hole = new Vec3i[]{

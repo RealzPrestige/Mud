@@ -2,7 +2,10 @@ package dev.zprestige.mud.hud;
 
 import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.setting.Setting;
-import dev.zprestige.mud.setting.impl.*;
+import dev.zprestige.mud.setting.impl.BooleanSetting;
+import dev.zprestige.mud.setting.impl.ColorSetting;
+import dev.zprestige.mud.setting.impl.FloatSetting;
+import dev.zprestige.mud.setting.impl.ModeSetting;
 import dev.zprestige.mud.shader.impl.GradientShader;
 import dev.zprestige.mud.util.MC;
 import org.lwjgl.opengl.GL11;
@@ -35,13 +38,13 @@ public class HudModule implements MC {
     }
 
 
-    public void enableShader(){
+    public void enableShader() {
         if (isGradient()) {
             GradientShader.setup(getStep(), getSpeed(), getGradient()[0], getGradient()[1]);
         }
     }
 
-    public void disableShader(){
+    public void disableShader() {
         if (isGradient()) {
             GradientShader.finish();
             GL11.glLineWidth(1.0f);
@@ -83,10 +86,11 @@ public class HudModule implements MC {
         return enabled.getValue();
     }
 
-    public boolean isGradient(){
+    public boolean isGradient() {
         return mode.getValue().equals("Gradient");
     }
-    public Color getRenderColor(){
+
+    public Color getRenderColor() {
         return mode.getValue().equals("Static") ? getStatic() : Color.WHITE;
     }
 

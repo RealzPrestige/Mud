@@ -6,6 +6,7 @@ public class Drawable implements MC {
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
     }
+
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
     }
 

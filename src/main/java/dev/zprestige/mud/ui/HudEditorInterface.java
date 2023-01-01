@@ -29,7 +29,7 @@ public class HudEditorInterface extends GuiScreen {
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        if (mouseButton == 0){
+        if (mouseButton == 0) {
             Mud.hudModuleManager.getHudModules().stream().filter(HudModule::getEnabled).filter(hudModule -> mouseX > hudModule.x && mouseX < hudModule.x + hudModule.width && mouseY > hudModule.y && mouseY < hudModule.y + hudModule.height).forEach(hudModule -> {
                 hudModule.dragX = hudModule.x - mouseX;
                 hudModule.dragY = hudModule.y - mouseY;
@@ -46,7 +46,7 @@ public class HudEditorInterface extends GuiScreen {
         Mud.hudModuleManager.getHudModules().stream().filter(HudModule::getEnabled).forEach(hudModule -> hudModule.dragging = false);
     }
 
-    private boolean insideReturn(int mouseX, int mouseY){
+    private boolean insideReturn(int mouseX, int mouseY) {
         return mouseX > width / 2.0f - 50.0f && mouseX < width / 2.0f + 50.0f && mouseY > height / 2.0f - 10.0f && mouseY < height / 2.0f + 10.0f;
     }
 

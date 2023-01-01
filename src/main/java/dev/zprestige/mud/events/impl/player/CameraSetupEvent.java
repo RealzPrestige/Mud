@@ -5,7 +5,7 @@ import dev.zprestige.mud.events.bus.Event;
 public class CameraSetupEvent extends Event {
     private float yaw, pitch;
 
-    public CameraSetupEvent(float yaw, float pitch){
+    public CameraSetupEvent(float yaw, float pitch) {
         this.yaw = yaw;
         this.pitch = pitch;
     }

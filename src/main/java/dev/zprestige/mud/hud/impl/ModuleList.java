@@ -32,7 +32,7 @@ public class ModuleList extends HudModule {
         float deltaY = y;
         for (Module module : new ArrayList<>(modules)) {
             module.anim = MathUtil.lerp(module.anim, module.getEnabled().getValue() ? 1.0f : 0.0f, 0.005f * EventManager.deltaTime);
-            if (!module.getEnabled().getValue() && module.anim < 0.05f){
+            if (!module.getEnabled().getValue() && module.anim < 0.05f) {
                 modules.remove(module);
                 continue;
             }

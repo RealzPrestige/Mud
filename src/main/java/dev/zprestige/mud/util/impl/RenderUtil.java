@@ -8,12 +8,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
 
 public class RenderUtil implements MC {
     private static final ResourceLocation blank = new ResourceLocation("textures/blank.png");
@@ -446,7 +444,7 @@ public class RenderUtil implements MC {
         bind(blank);
     }
 
-    public static ResourceLocation blank(){
+    public static ResourceLocation blank() {
         return blank;
     }
 

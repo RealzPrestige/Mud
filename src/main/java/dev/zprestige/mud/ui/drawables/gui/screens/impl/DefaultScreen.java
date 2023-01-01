@@ -7,9 +7,7 @@ import dev.zprestige.mud.ui.Interface;
 import dev.zprestige.mud.ui.drawables.gui.category.CategoryBar;
 import dev.zprestige.mud.ui.drawables.gui.module.ActiveModule;
 import dev.zprestige.mud.ui.drawables.gui.screens.DrawableScreen;
-import dev.zprestige.mud.util.impl.MathUtil;
 import dev.zprestige.mud.util.impl.RenderUtil;
-import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 
@@ -23,17 +21,17 @@ public class DefaultScreen extends DrawableScreen {
         for (Category category : Category.values()) {
             categoryBars.add(new CategoryBar(category));
         }
-        for (Module module : Mud.moduleManager.getModules()){
+        for (Module module : Mud.moduleManager.getModules()) {
             activeModules.add(new ActiveModule(module));
         }
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        if (Interface.selectedScreen.equals("Default")){
+        if (Interface.selectedScreen.equals("Default")) {
             sys = System.currentTimeMillis();
         }
-        if (System.currentTimeMillis() - sys > 500){
+        if (System.currentTimeMillis() - sys > 500) {
             return;
         }
 
@@ -52,7 +50,7 @@ public class DefaultScreen extends DrawableScreen {
             /* Release scissor */
             RenderUtil.releaseScissor();
         }
-        for (ActiveModule activeModule : activeModules){
+        for (ActiveModule activeModule : activeModules) {
             activeModule.x = x + sidebarWidth + 15.0f;
             activeModule.y = y + 105.0f;
             activeModule.width = guiWidth - sidebarWidth - 25.0f;
@@ -63,13 +61,13 @@ public class DefaultScreen extends DrawableScreen {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (System.currentTimeMillis() - sys > 500){
+        if (System.currentTimeMillis() - sys > 500) {
             return;
         }
         for (CategoryBar categoryBar : categoryBars) {
             categoryBar.mouseClicked(mouseX, mouseY, mouseButton);
         }
-        for (ActiveModule activeModule : activeModules){
+        for (ActiveModule activeModule : activeModules) {
             activeModule.mouseClicked(mouseX, mouseY, mouseButton);
         }
     }
@@ -79,7 +77,7 @@ public class DefaultScreen extends DrawableScreen {
         for (CategoryBar categoryBar : categoryBars) {
             categoryBar.keyTyped(typedChar, keyCode);
         }
-        for (ActiveModule activeModule : activeModules){
+        for (ActiveModule activeModule : activeModules) {
             activeModule.keyTyped(typedChar, keyCode);
         }
     }

@@ -4,7 +4,6 @@ import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.impl.render.GuiPrimaryEvent;
 import dev.zprestige.mud.events.impl.system.GuiClosedEvent;
 import dev.zprestige.mud.module.Category;
-import dev.zprestige.mud.module.client.ClickGui;
 import dev.zprestige.mud.shader.impl.ShadowShader;
 import dev.zprestige.mud.ui.drawables.gui.screens.DrawableScreen;
 import dev.zprestige.mud.ui.drawables.gui.screens.impl.ConfigScreen;

@@ -51,7 +51,7 @@ public class ActiveModule extends Drawable {
             scrollTarget = 0.0f;
         }
 
-        float leftY = y + 10.0f , rightY = y + 10.0f;
+        float leftY = y + 10.0f, rightY = y + 10.0f;
         for (ModuleTab moduleTab : moduleTabs) {
             float x = this.x;
             boolean right = rightY < leftY;

@@ -7,7 +7,6 @@ import dev.zprestige.mud.ui.drawables.gui.module.tab.ModuleTab;
 import dev.zprestige.mud.ui.drawables.gui.settings.SettingDrawable;
 import dev.zprestige.mud.util.impl.MathUtil;
 import dev.zprestige.mud.util.impl.RenderUtil;
-import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
 
@@ -16,7 +15,7 @@ public class ModeButton extends SettingDrawable {
     private float anim, boxWidth;
     public boolean open;
 
-    public ModeButton(ModeSetting setting){
+    public ModeButton(ModeSetting setting) {
         super(setting);
         this.setting = setting;
     }
@@ -25,9 +24,9 @@ public class ModeButton extends SettingDrawable {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         Mud.fontManager.guiString(setting.getName(), x, y + 7.5f - Mud.fontManager.stringHeight() / 2.0f, new Color(1.0f, 1.0f, 1.0f, 0.4f));
         float longest = 0.0f;
-        for (String string : setting.values){
+        for (String string : setting.values) {
             float stringWidth = Mud.fontManager.stringWidth(string);
-            if (stringWidth > longest){
+            if (stringWidth > longest) {
                 longest = stringWidth;
             }
         }
@@ -50,12 +49,12 @@ public class ModeButton extends SettingDrawable {
 
         RenderUtil.invokeScale(scale);
         float deltaY = y + 12.5f;
-        for (String value : setting.values){
-            if (setting.getValue().equals(value)){
+        for (String value : setting.values) {
+            if (setting.getValue().equals(value)) {
                 continue;
             }
             Color color = new Color(1.0f, 1.0f, 1.0f, 0.4f);
-            if (mouseY > deltaY && mouseY < deltaY + 11.0f){
+            if (mouseY > deltaY && mouseY < deltaY + 11.0f) {
                 color = Interface.primary();
             }
             Mud.fontManager.guiString(value, (x + width - boxWidth / 2.0f - Mud.fontManager.stringWidth(value) * scale / 2.0f) / scale, (deltaY + 5.0f - Mud.fontManager.stringHeight() * scale / 2.0f) / scale, color);
@@ -70,13 +69,13 @@ public class ModeButton extends SettingDrawable {
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (mouseButton == 0) {
             if (insideBox(mouseX, mouseY)) {
-                if (open){
+                if (open) {
                     float deltaY = y + 12.5f;
-                    for (String value : setting.values){
-                        if (setting.getValue().equals(value)){
+                    for (String value : setting.values) {
+                        if (setting.getValue().equals(value)) {
                             continue;
                         }
-                        if (mouseY > deltaY && mouseY < deltaY + 11.0f){
+                        if (mouseY > deltaY && mouseY < deltaY + 11.0f) {
                             setting.invokeValue(value);
                             break;
                         }
@@ -88,7 +87,7 @@ public class ModeButton extends SettingDrawable {
         }
     }
 
-    private boolean insideBox(int mouseX, int mouseY){
+    private boolean insideBox(int mouseX, int mouseY) {
         return mouseX > x + width - boxWidth && mouseX < x + width && mouseY > y + 2.5f && mouseY < y + height - 2.5f;
     }
 }

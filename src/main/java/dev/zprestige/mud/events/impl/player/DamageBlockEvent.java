@@ -8,7 +8,7 @@ public class DamageBlockEvent extends Event {
     private final BlockPos pos;
     private final EnumFacing face;
 
-    public DamageBlockEvent(BlockPos pos, EnumFacing face){
+    public DamageBlockEvent(BlockPos pos, EnumFacing face) {
         this.pos = pos;
         this.face = face;
     }

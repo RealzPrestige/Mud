@@ -36,7 +36,7 @@ public class BooleanButton extends SettingDrawable {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (mouseButton == 0 && insideEnabled(mouseX, mouseY)){
+        if (mouseButton == 0 && insideEnabled(mouseX, mouseY)) {
             setting.invokeValue(!setting.getValue());
         }
     }

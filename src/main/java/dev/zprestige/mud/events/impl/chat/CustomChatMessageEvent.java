@@ -5,7 +5,7 @@ import dev.zprestige.mud.events.bus.Event;
 public class CustomChatMessageEvent extends Event {
     private final String text;
 
-    public CustomChatMessageEvent(String text){
+    public CustomChatMessageEvent(String text) {
         this.text = text;
     }
 

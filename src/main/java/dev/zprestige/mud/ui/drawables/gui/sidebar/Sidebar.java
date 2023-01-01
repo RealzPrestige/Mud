@@ -97,7 +97,7 @@ public class Sidebar extends Drawable {
         for (SidebarCategory sidebarCategory : sidebarCategories) {
             sidebarCategory.mouseClicked(mouseX, mouseY, mouseButton);
         }
-        for (SidebarItem sidebarItem : sidebarItems){
+        for (SidebarItem sidebarItem : sidebarItems) {
             sidebarItem.mouseClicked(mouseX, mouseY, mouseButton);
         }
     }

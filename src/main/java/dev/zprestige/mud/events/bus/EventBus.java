@@ -2,7 +2,6 @@ package dev.zprestige.mud.events.bus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class EventBus {
     private final ArrayList<Listener> listeners;

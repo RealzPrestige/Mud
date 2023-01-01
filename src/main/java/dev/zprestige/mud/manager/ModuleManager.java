@@ -5,23 +5,11 @@ import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.system.KeyEvent;
 import dev.zprestige.mud.module.Category;
 import dev.zprestige.mud.module.Module;
-import dev.zprestige.mud.module.client.ClickGui;
-import dev.zprestige.mud.module.client.Notifications;
-import dev.zprestige.mud.module.combat.AutoCrystal;
-import dev.zprestige.mud.module.combat.Offhand;
-import dev.zprestige.mud.module.combat.Surround;
-import dev.zprestige.mud.module.misc.EChestPlacer;
-import dev.zprestige.mud.module.misc.KeyAction;
-import dev.zprestige.mud.module.misc.PacketMine;
-import dev.zprestige.mud.module.misc.Quiver;
-import dev.zprestige.mud.module.movement.*;
-import dev.zprestige.mud.module.visual.*;
 import dev.zprestige.mud.util.MC;
 import dev.zprestige.mud.util.impl.ClassFinder;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ModuleManager implements MC {
     private final ArrayList<Module> modules;
@@ -76,5 +64,9 @@ public class ModuleManager implements MC {
 
     public ArrayList<Module> getModules() {
         return modules;
+    }
+
+    public Module getModuleByClass(Class<?> c) {
+        return modules.stream().filter(module -> module.getClass().equals(c)).findFirst().orElse(null);
     }
 }

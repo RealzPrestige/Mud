@@ -44,7 +44,7 @@ public class SidebarCategory extends Drawable {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (mouseButton == 0 && inside(mouseX, mouseY) && (Interface.getActiveCategory() == null || Interface.getActiveCategory() != category)){
+        if (mouseButton == 0 && inside(mouseX, mouseY) && (Interface.getActiveCategory() == null || Interface.getActiveCategory() != category)) {
             Interface.setActiveCategory(category);
             DefaultScreen.setActiveModule(null);
             Interface.selectedScreen = "Default";

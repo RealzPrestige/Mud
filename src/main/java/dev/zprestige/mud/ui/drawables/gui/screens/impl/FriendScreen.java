@@ -78,11 +78,11 @@ public class FriendScreen extends DrawableScreen {
 
         float leftY = boxY + 10.0f + scroll, rightY = boxY + 10.0f + scroll;
         for (NetworkPlayerInfo networkPlayerInfo : mc.player.connection.getPlayerInfoMap()) {
-            if (networkPlayerInfo.getGameProfile().getName().equals(mc.player.getName())){
+            if (networkPlayerInfo.getGameProfile().getName().equals(mc.player.getName())) {
                 continue;
             }
             Person person = new Person(networkPlayerInfo);
-            if (!networkPlayerInfo.getGameProfile().getName().toLowerCase().contains(search.toLowerCase())){
+            if (!networkPlayerInfo.getGameProfile().getName().toLowerCase().contains(search.toLowerCase())) {
                 continue;
             }
             person.x = (person.friend ? rightX : leftX) + 5.0f;
@@ -115,17 +115,17 @@ public class FriendScreen extends DrawableScreen {
                 boxY = y + categoryBarY + 30.0f,
                 boxHeight = y + 30.0f + guiHeight - 100.0f;
         if (mouseButton == 0) {
-            if (mouseX > rightX - 105.0f && mouseX < rightX + 95.0f  && mouseY > boxY - 30.0f && mouseY < boxY - 10.0f) {
+            if (mouseX > rightX - 105.0f && mouseX < rightX + 95.0f && mouseY > boxY - 30.0f && mouseY < boxY - 10.0f) {
                 searching = !searching;
             }
         }
         float leftY = boxY + 10.0f + scroll, rightY = boxY + 10.0f + scroll;
         for (NetworkPlayerInfo networkPlayerInfo : mc.player.connection.getPlayerInfoMap()) {
-            if (networkPlayerInfo.getGameProfile().getName().equals(mc.player.getName())){
+            if (networkPlayerInfo.getGameProfile().getName().equals(mc.player.getName())) {
                 continue;
             }
             Person person = new Person(networkPlayerInfo);
-            if (!networkPlayerInfo.getGameProfile().getName().toLowerCase().contains(search.toLowerCase())){
+            if (!networkPlayerInfo.getGameProfile().getName().toLowerCase().contains(search.toLowerCase())) {
                 continue;
             }
             person.x = (person.friend ? rightX : leftX) + 5.0f;

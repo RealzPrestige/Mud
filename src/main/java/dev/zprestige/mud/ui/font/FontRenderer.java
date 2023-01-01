@@ -27,7 +27,7 @@ public class FontRenderer {
     public void drawString(String text, float x, float y, int color, boolean dropShadow) {
         y -= 3.0f;
         final String symbol = String.valueOf(ChatFormatting.PREFIX_CODE);
-        if (text.contains(symbol)){
+        if (text.contains(symbol)) {
             final String[] split = text.split(symbol);
             float deltaX = x;
             for (int i = 0; i < split.length; i++) {
@@ -116,7 +116,7 @@ public class FontRenderer {
                 return new Color(0xAAAAAA).getRGB();
             case "8":
                 return new Color(0x555555).getRGB();
-            case"9":
+            case "9":
                 return new Color(0x5555FF).getRGB();
             case "a":
                 return new Color(0x55FF55).getRGB();

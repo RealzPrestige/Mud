@@ -4,7 +4,6 @@ import dev.zprestige.mud.setting.Setting;
 import dev.zprestige.mud.ui.Interface;
 import dev.zprestige.mud.ui.drawables.Drawable;
 import dev.zprestige.mud.util.impl.MathUtil;
-import org.lwjgl.Sys;
 
 public class SettingDrawable extends Drawable {
     public float guiX, guiY, guiWidth, guiHeight;
@@ -17,7 +16,7 @@ public class SettingDrawable extends Drawable {
         this.visibleAnim = isVisible() ? 1.0f : 0.0f;
     }
 
-    public float updateVisible(){
+    public float updateVisible() {
         return visibleAnim = MathUtil.lerp(visibleAnim, isVisible() ? 1.0f : 0.0f, Interface.getDelta());
     }
 

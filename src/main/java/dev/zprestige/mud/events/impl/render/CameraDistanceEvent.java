@@ -5,7 +5,7 @@ import dev.zprestige.mud.events.bus.Event;
 public class CameraDistanceEvent extends Event {
     private float distance;
 
-    public CameraDistanceEvent(float distance){
+    public CameraDistanceEvent(float distance) {
         this.distance = distance;
     }
 

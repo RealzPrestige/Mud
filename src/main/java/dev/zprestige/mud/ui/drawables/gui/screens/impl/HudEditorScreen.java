@@ -103,10 +103,10 @@ public class HudEditorScreen extends DrawableScreen {
         for (HudModuleButton hudModuleButton : hudModuleButtons) {
             hudModuleButton.mouseClicked(mouseX, mouseY, mouseButton);
         }
-        if (mouseButton == 0){
+        if (mouseButton == 0) {
             float width = guiWidth - sidebarWidth - 25.0f;
             float x = this.x + sidebarWidth + 15.0f;
-            if (mouseX > x + width / 2.0f - 75.0f && mouseX < x + width / 2.0f + 75.0f && mouseY > y + guiHeight - 50.0f + 60.0f * anim && mouseY <y + guiHeight - 30.0f + 60.0f * anim){
+            if (mouseX > x + width / 2.0f - 75.0f && mouseX < x + width / 2.0f + 75.0f && mouseY > y + guiHeight - 50.0f + 60.0f * anim && mouseY < y + guiHeight - 30.0f + 60.0f * anim) {
                 mc.displayGuiScreen(new HudEditorInterface());
             }
         }

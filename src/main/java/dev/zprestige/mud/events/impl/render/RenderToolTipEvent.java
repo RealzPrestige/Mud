@@ -7,7 +7,7 @@ public class RenderToolTipEvent extends Event {
     private final ItemStack itemStack;
     private int x, y;
 
-    public RenderToolTipEvent(ItemStack itemStack, int x, int y){
+    public RenderToolTipEvent(ItemStack itemStack, int x, int y) {
         this.itemStack = itemStack;
         this.x = x;
         this.y = y;

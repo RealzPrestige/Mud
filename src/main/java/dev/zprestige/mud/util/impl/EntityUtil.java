@@ -13,7 +13,7 @@ public class EntityUtil implements MC {
         return mc.player.movementInput.moveForward != 0.0f && mc.player.movementInput.moveStrafe != 0.0f;
     }
 
-    public static void setSpeed( double speed) {
+    public static void setSpeed(double speed) {
         float[] dir = forward(speed);
         mc.player.motionX = dir[0];
         mc.player.motionZ = dir[1];
@@ -31,6 +31,31 @@ public class EntityUtil implements MC {
     public static float[] forward(double speed) {
         float forward = mc.player.movementInput.moveForward,
                 strafe = mc.player.movementInput.moveStrafe,
+                yaw = mc.player.prevRotationYaw + (mc.player.rotationYaw - mc.player.prevRotationYaw) * mc.getRenderPartialTicks();
+        if (forward != 0.0f) {
+            if (strafe > 0.0f) {
+                yaw += ((forward > 0.0f) ? -45 : 45);
+            } else if (strafe < 0.0f) {
+                yaw += ((forward > 0.0f) ? 45 : -45);
+            }
+            strafe = 0.0f;
+            if (forward > 0.0f) {
+                forward = 1.0f;
+            } else if (forward < 0.0f) {
+                forward = -1.0f;
+            }
+        }
+        double sin = Math.sin(Math.toRadians(yaw + 90.0f)),
+                cos = Math.cos(Math.toRadians(yaw + 90.0f)),
+                posX = forward * speed * cos + strafe * speed * sin,
+                posZ = forward * speed * sin - strafe * speed * cos;
+        return new float[]{(float) posX, (float) posZ};
+    }
+
+
+    public static float[] forward(double speed, float slow) {
+        float forward = mc.player.movementInput.moveForward / slow,
+                strafe = mc.player.movementInput.moveStrafe / slow,
                 yaw = mc.player.prevRotationYaw + (mc.player.rotationYaw - mc.player.prevRotationYaw) * mc.getRenderPartialTicks();
         if (forward != 0.0f) {
             if (strafe > 0.0f) {

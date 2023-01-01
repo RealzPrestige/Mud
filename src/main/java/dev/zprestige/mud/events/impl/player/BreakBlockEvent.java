@@ -8,7 +8,7 @@ public class BreakBlockEvent extends Event {
     private final BlockPos pos;
     private final EnumFacing enumFacing;
 
-    public BreakBlockEvent(BlockPos pos, EnumFacing enumFacing){
+    public BreakBlockEvent(BlockPos pos, EnumFacing enumFacing) {
         this.pos = pos;
         this.enumFacing = enumFacing;
     }

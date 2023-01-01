@@ -8,13 +8,13 @@ public class NoSlow extends Module {
 
     @EventListener
     public void onInputUpdate(InputUpdateEvent event){
-        if (slowed()) {
+        if (isSlowed()) {
             event.getMovementInput().moveForward /= 0.2f;
             event.getMovementInput().moveStrafe /= 0.2f;
         }
     }
 
-    private boolean slowed() {
+    public boolean isSlowed() {
         return mc.player.isHandActive() && !mc.player.isRiding() && !mc.player.isElytraFlying();
     }
 

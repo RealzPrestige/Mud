@@ -1,7 +1,6 @@
 package dev.zprestige.mud.ui.drawables.gui.sidebar;
 
 import dev.zprestige.mud.Mud;
-import dev.zprestige.mud.module.Category;
 import dev.zprestige.mud.shader.impl.ShadowShader;
 import dev.zprestige.mud.ui.Interface;
 import dev.zprestige.mud.ui.drawables.Drawable;
@@ -19,8 +18,8 @@ public class SidebarItem extends Drawable {
     private final String alias;
     private float hoverAnim;
 
-    public SidebarItem(String alias){
-        resourceLocation = new ResourceLocation("textures/icons/other/" + alias.toLowerCase() +  ".png");
+    public SidebarItem(String alias) {
+        resourceLocation = new ResourceLocation("textures/icons/other/" + alias.toLowerCase() + ".png");
         this.alias = alias;
     }
 
@@ -44,7 +43,7 @@ public class SidebarItem extends Drawable {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (mouseButton == 0 && inside(mouseX, mouseY) && !Interface.selectedScreen.equals(alias)){
+        if (mouseButton == 0 && inside(mouseX, mouseY) && !Interface.selectedScreen.equals(alias)) {
             Interface.setActiveCategory(null);
             DefaultScreen.setActiveModule(null);
             Interface.selectedScreen = alias;

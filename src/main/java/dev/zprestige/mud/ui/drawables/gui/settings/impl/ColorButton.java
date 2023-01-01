@@ -381,7 +381,7 @@ public class ColorButton extends SettingDrawable {
             if (mouseButton == 0) {
                 if (insideBox(mouseX, mouseY)) {
                     typing = !typing;
-                } else if (typing){
+                } else if (typing) {
                     finish();
                     typing = false;
                 }
