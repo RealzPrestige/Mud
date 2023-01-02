@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class CustomChat extends Module {
+public class  CustomChat extends Module {
     private final FloatSetting y = setting("Y", 0.0f, 0.0f, 500.0f);
     private final BooleanSetting clear = setting("Clear", true);
     private final FloatSetting speed = setting("Speed", 1.0f, 0.1f, 5.0f).invokeTab("Render");

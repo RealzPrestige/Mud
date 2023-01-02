@@ -113,10 +113,6 @@ public class BlockUtil implements MC {
                 || mc.world.getBlockState(pos).getBlock().equals(Blocks.BEDROCK));
     }
 
-    public static BlockPos center() {
-        return new BlockPos(Math.floor(mc.player.posX), Math.floor(mc.player.posY), Math.floor(mc.player.posZ));
-    }
-
     public static float calculateEntityDamage(final EntityEnderCrystal crystal, final EntityPlayer entityPlayer) {
         return calculatePosDamage(crystal.posX, crystal.posY, crystal.posZ, entityPlayer);
     }
