@@ -23,30 +23,30 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class MixinEntityPlayerSP extends AbstractClientPlayer {
     protected MotionUpdateEvent motionUpdateEvent;
 
-    public MixinEntityPlayerSP(final World worldIn, final GameProfile playerProfile) {
+    public MixinEntityPlayerSP(World worldIn, GameProfile playerProfile) {
         super(worldIn, playerProfile);
     }
 
     @ParametersAreNonnullByDefault
-    public void move(final MoverType type, final double x, final double y, final double z) {
-        final MoveEvent event = new MoveEvent(type, x, y, z);
+    public void move(MoverType type, double x, double y, double z) {
+        MoveEvent event = new MoveEvent(type, x, y, z);
         Mud.eventBus.invoke(event);
-        super.move(type, event.motionX, event.motionY, event.motionZ);
+        super.move(type, event.getMotionX(), event.getMotionY(), event.getMotionZ());
     }
 
     @Inject(method = "move", at = @At("HEAD"), cancellable = true)
-    private void move(final MoverType type, final double x, final double y, final double z, final CallbackInfo ci) {
-        final MoveEvent event = new MoveEvent(type, x, y, z);
+    private void move(MoverType type, double x, double y, double z, CallbackInfo ci) {
+        MoveEvent event = new MoveEvent(type, x, y, z);
         Mud.eventBus.invoke(event);
-        if (event.motionX != x || event.motionY != y || event.motionZ != z) {
-            super.move(type, event.motionX, event.motionY, event.motionZ);
+        if (event.getMotionX() != x || event.getMotionY() != y || event.getMotionZ() != z) {
+            super.move(type, event.getMotionX(), event.getMotionY(), event.getMotionZ());
             ci.cancel();
         }
     }
 
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;onUpdateWalkingPlayer()V", shift = At.Shift.BEFORE))
-    private void onUpdate(final CallbackInfo callbackInfo) {
-        motionUpdateEvent = new MotionUpdateEvent("Pre", this.posX, this.getEntityBoundingBox().minY, this.posZ, this.rotationYaw, this.rotationPitch, this.onGround);
+    private void onUpdate(CallbackInfo callbackInfo) {
+        motionUpdateEvent = new MotionUpdateEvent(posX, getEntityBoundingBox().minY, posZ, rotationYaw, rotationPitch, onGround);
         Mud.eventBus.invoke(motionUpdateEvent);
         posX = motionUpdateEvent.getX();
         posY = motionUpdateEvent.getY();
@@ -110,8 +110,8 @@ public class MixinEntityPlayerSP extends AbstractClientPlayer {
     }
 
     @Inject(method = "onUpdateWalkingPlayer", at = @At(value = "RETURN"))
-    private void onUpdateWalkingPlayerReturn(final CallbackInfo callbackInfo) {
-        final MotionUpdateEvent event = new MotionUpdateEvent("Post", motionUpdateEvent);
+    private void onUpdateWalkingPlayerReturn(CallbackInfo callbackInfo) {
+        MotionUpdateEvent event = new MotionUpdateEvent(motionUpdateEvent);
         event.setCancelled(true);
         Mud.eventBus.invoke(event);
     }

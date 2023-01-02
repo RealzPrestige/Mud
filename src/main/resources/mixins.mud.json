@@ -17,6 +17,7 @@
     "MixinEntityPlayerSP",
     "MixinEntityRenderer",
     "MixinGuiChat",
+    "MixinGuiContainer",
     "MixinGuiIngame",
     "MixinGuiNewChat",
     "MixinGuiScreen",

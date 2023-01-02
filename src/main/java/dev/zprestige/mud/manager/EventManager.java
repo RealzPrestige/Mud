@@ -93,6 +93,7 @@ public class EventManager implements MC {
         dev.zprestige.mud.events.impl.player.InputUpdateEvent itemInputUpdateEvent = new dev.zprestige.mud.events.impl.player.InputUpdateEvent(event.getMovementInput());
         Mud.eventBus.invoke(itemInputUpdateEvent);
     }
+
     public static boolean nullCheck() {
         return mc.player == null || mc.world == null;
     }

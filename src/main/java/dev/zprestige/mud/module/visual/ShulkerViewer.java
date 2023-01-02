@@ -1,6 +1,5 @@
 package dev.zprestige.mud.module.visual;
 
-import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.render.RenderToolTipEvent;
 import dev.zprestige.mud.module.Module;

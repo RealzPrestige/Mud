@@ -11,6 +11,10 @@ public class MotionUpdateEvent extends Event {
     private boolean onGround;
     private final boolean prevOnGround;
 
+    public MotionUpdateEvent(MotionUpdateEvent event){
+        this(event.getX(), event.getY(), event.getZ(), event.getRotationYaw(), event.getRotationPitch(), event.isOnGround());
+    }
+
     public MotionUpdateEvent(double x, double y, double z, float rotationYaw, float rotationPitch, boolean onGround) {
         this.x = x;
         this.y = y;

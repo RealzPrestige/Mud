@@ -2,9 +2,8 @@ package dev.zprestige.mud.module.client;
 
 import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
-import dev.zprestige.mud.events.impl.render.GuiPrimaryEvent;
+import dev.zprestige.mud.events.impl.gui.GuiPrimaryEvent;
 import dev.zprestige.mud.events.impl.system.GuiClosedEvent;
-import dev.zprestige.mud.events.impl.world.TickEvent;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.ColorSetting;
 import org.lwjgl.input.Keyboard;

@@ -1,6 +1,7 @@
 package dev.zprestige.mud.module.visual;
 
 import dev.zprestige.mud.events.bus.EventListener;
+import dev.zprestige.mud.events.impl.gui.GuiBackgroundEvent;
 import dev.zprestige.mud.events.impl.render.*;
 import dev.zprestige.mud.events.impl.system.ConnectEvent;
 import dev.zprestige.mud.events.impl.system.PacketReceiveEvent;

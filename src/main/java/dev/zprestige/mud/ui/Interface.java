@@ -1,7 +1,7 @@
 package dev.zprestige.mud.ui;
 
 import dev.zprestige.mud.Mud;
-import dev.zprestige.mud.events.impl.render.GuiPrimaryEvent;
+import dev.zprestige.mud.events.impl.gui.GuiPrimaryEvent;
 import dev.zprestige.mud.events.impl.system.GuiClosedEvent;
 import dev.zprestige.mud.module.Category;
 import dev.zprestige.mud.shader.impl.ShadowShader;

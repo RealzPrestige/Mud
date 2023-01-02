@@ -24,7 +24,7 @@ public class ModuleList extends HudModule {
     @EventListener
     public void onRender2DPost(Render2DPostEvent event) {
         Mud.moduleManager.getModules().stream().filter(module -> module.getEnabled().getValue() && !modules.contains(module)).forEach(modules::add);
-        Mud.threadManager.invokeThread(() -> modules.sort(Comparator.comparing(Module::getStringWidthFull)));
+       modules.sort(Comparator.comparing(Module::getStringWidthFull));
 
         ArrayList<Runnable> names = new ArrayList<>(), appends = new ArrayList<>(), shadows = new ArrayList<>();
 

@@ -1,4 +1,4 @@
-package dev.zprestige.mud.events.impl.render;
+package dev.zprestige.mud.events.impl.gui;
 
 import dev.zprestige.mud.events.bus.Event;
 
