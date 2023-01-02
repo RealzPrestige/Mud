@@ -32,6 +32,11 @@ public class BlockUtil implements MC {
         return new BlockPos(Math.floor(mc.player.posX), Math.floor(mc.player.posY), Math.floor(mc.player.posZ));
     }
 
+    public static BlockPos getPosition(EntityPlayer entityPlayer) {
+        return new BlockPos(Math.floor(entityPlayer.posX), Math.floor(entityPlayer.posY), Math.floor(entityPlayer.posZ));
+    }
+
+
     public static boolean isSelfSafe() {
         BlockPos pos = getPosition();
         return mc.player.onGround && Arrays.stream(hole).allMatch(vec3i -> isBedrockOrObsidianOrEchest(pos.add(vec3i)));

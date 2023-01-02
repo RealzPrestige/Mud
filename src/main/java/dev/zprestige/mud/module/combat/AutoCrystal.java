@@ -6,6 +6,7 @@ import dev.zprestige.mud.events.impl.player.MotionUpdateEvent;
 import dev.zprestige.mud.events.impl.player.PacketMineEvent;
 import dev.zprestige.mud.events.impl.render.Render2DEvent;
 import dev.zprestige.mud.events.impl.render.Render3DEvent;
+import dev.zprestige.mud.events.impl.world.WebExplosionEvent;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.*;
 import dev.zprestige.mud.shader.impl.BufferGroup;
@@ -69,6 +70,7 @@ public class AutoCrystal extends Module {
     private final ColorSetting color = setting("Color", new Color(113, 93, 214)).invokeVisibility(z -> renderMode.getValue().equals("Static")).invokeTab("Render");
     private final FloatSetting outlineWidth = setting("Outline Width", 1.0f, 0.1f, 5.0f).invokeVisibility(z -> renderMode.getValue().equals("Static")).invokeTab("Render");
 
+    private boolean calculating;
     private long placeTime, breakTime;
     private BlockPos pos;
 
@@ -92,7 +94,9 @@ public class AutoCrystal extends Module {
             long sys = System.currentTimeMillis();
             if (sys - placeTime > placeInterval.getValue()) {
 
+                calculating = true;
                 BlockPos pos = findPos(entityPlayer);
+                calculating = false;
 
                 if (pos != null) {
 
@@ -106,7 +110,9 @@ public class AutoCrystal extends Module {
                 this.pos = pos;
             }
             if (sys - breakTime > breakInterval.getValue()) {
+                calculating = true;
                 EntityEnderCrystal crystal = crystal(entityPlayer);
+                calculating = false;
 
                 if (crystal != null) {
                     breakCrystal(crystal, event);
@@ -149,6 +155,14 @@ public class AutoCrystal extends Module {
                 placeCrystal(event.getPos(), null);
                 placeTime = sys;
             }
+        }
+    }
+
+
+    @EventListener
+    public void onWebExplosion(WebExplosionEvent event){
+        if (calculating){
+            event.setCancelled(true);
         }
     }
 

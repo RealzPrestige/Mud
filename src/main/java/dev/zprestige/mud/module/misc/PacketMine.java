@@ -91,7 +91,10 @@ public class PacketMine extends Module {
         invokeAppend(String.valueOf(Math.ceil(scale)).replace(".0", ""));
         if (mc.player != null && mc.world != null && pos != null) {
             PacketMineEvent packetMineEvent = new PacketMineEvent(pos);
-            Mud.eventBus.invoke(packetMineEvent);
+            try {
+                Mud.eventBus.invoke(packetMineEvent);
+            } catch (Exception ignored){
+            }
         }
         if (rotate.getValue()) {
             RotationUtil.facePos(pos, event);

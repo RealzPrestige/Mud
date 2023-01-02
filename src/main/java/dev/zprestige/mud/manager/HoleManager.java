@@ -62,9 +62,13 @@ public class HoleManager implements MC {
             return holes;
         }
         for (final BlockPos pos : BlockUtil.getBlocksInRadius(range)) {
-            final HolePos holePos = getHolePos(pos);
-            if (holePos != null) {
-                holes.add(holePos);
+            try {
+                final HolePos holePos = getHolePos(pos);
+                if (holePos != null) {
+                    holes.add(holePos);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
             }
         }
         return holes;
