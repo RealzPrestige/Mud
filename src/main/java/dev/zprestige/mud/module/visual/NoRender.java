@@ -44,8 +44,10 @@ public class NoRender extends Module {
 
     @EventListener
     public void onGuiBackground(GuiBackgroundEvent event) {
-        if (guiBackground.getValue()) {
-            event.setCancelled(true);
+        if (mc.player != null && mc.world != null) {
+            if (guiBackground.getValue()) {
+                event.setCancelled(true);
+            }
         }
     }
 
