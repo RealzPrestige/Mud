@@ -105,7 +105,7 @@ public class Aura extends Module {
     private void render(EntityPlayer entityPlayer) {
         Vec3d vec = RenderUtil.interpolateEntity(entityPlayer);
         final float sin = ((float) Math.sin(i / 25.0f) / 2.0f);
-        final float sin2 = ((float) Math.sin(i / 25.0f + 0.5) / 2.0f);
+        final float sin2 = ((float) Math.sin(i / 25.0f + 0.5f) / 2.0f);
         i = i + 10 * speed.getValue() * EventManager.getDeltaTime();
         glPushMatrix();
         glEnable(GL_BLEND);
