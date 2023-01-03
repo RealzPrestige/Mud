@@ -3,7 +3,6 @@ package dev.zprestige.mud.module.combat;
 import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.player.MotionUpdateEvent;
-import dev.zprestige.mud.events.impl.player.PacketMineEvent;
 import dev.zprestige.mud.events.impl.render.Render2DEvent;
 import dev.zprestige.mud.events.impl.render.Render3DEvent;
 import dev.zprestige.mud.events.impl.world.WebExplosionEvent;
@@ -46,7 +45,6 @@ public class AutoCrystal extends Module {
     private final BooleanSetting smartCalculations = setting("Smart Calculations", true).invokeTab("Calculations");
     private final FloatSetting minimumDamage = setting("Minimum Damage", 6.0f, 0.1f, 20.0f).invokeTab("Calculations");
     private final FloatSetting maximumSelfDamage = setting("Maximum Self Damage", 8.0f, 0.1f, 20.0f).invokeTab("Calculations");
-    private final BooleanSetting placeOnMine = setting("Place On Mine", true).invokeTab("Calculations");
     private final BooleanSetting antiSuicide = setting("Anti Suicide", true).invokeTab("Calculations");
     private final FloatSetting antiSuicideSafety = setting("Anti Suicide Safety", 2.0f, 0.0f, 15.0f).invokeTab("Calculations").invokeVisibility(z -> antiSuicide.getValue());
     private final IntSetting ticksExisted = setting("Ticks Existed", 0, 0, 20).invokeTab("Calculations");
@@ -122,6 +120,7 @@ public class AutoCrystal extends Module {
             }
         } else {
             pos = null;
+            invokeAppend("");
         }
     }
 
@@ -141,20 +140,6 @@ public class AutoCrystal extends Module {
     public void onRender2D(Render2DEvent event) {
         if (renderMode.getValue().equals("Gradient")) {
             GlowShader.render2D(bufferGroup);
-        }
-    }
-
-    @EventListener
-    public void onPacketMineEvent(PacketMineEvent event) {
-        if (!placeOnMine.getValue()) {
-            return;
-        }
-        long sys = System.currentTimeMillis();
-        if (sys - placeTime > placeInterval.getValue()) {
-            if (BlockUtil.distance(event.getPos()) < placeRange.getValue() && BlockUtil.valid(pos, placements.getValue().equals("1.13+"))) {
-                placeCrystal(event.getPos(), null);
-                placeTime = sys;
-            }
         }
     }
 

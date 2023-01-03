@@ -89,13 +89,6 @@ public class PacketMine extends Module {
         prevFace = face;
         float scale = ((System.currentTimeMillis() - time) * multiplier(pos));
         invokeAppend(String.valueOf(Math.ceil(scale)).replace(".0", ""));
-        if (mc.player != null && mc.world != null && pos != null) {
-            PacketMineEvent packetMineEvent = new PacketMineEvent(pos);
-            try {
-                Mud.eventBus.invoke(packetMineEvent);
-            } catch (Exception ignored){
-            }
-        }
         if (rotate.getValue()) {
             RotationUtil.facePos(pos, event);
         }
@@ -129,7 +122,9 @@ public class PacketMine extends Module {
 
     @EventListener
     public void onRender3D(Render3DEvent event) {
-        GlowShader.render3D(bufferGroup);
+        if (bufferGroup != null) {
+            GlowShader.render3D(bufferGroup);
+        }
     }
 
     @EventListener
