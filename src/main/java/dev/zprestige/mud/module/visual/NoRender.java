@@ -9,8 +9,13 @@ import dev.zprestige.mud.events.impl.world.*;
 import dev.zprestige.mud.mixins.interfaces.IItemRenderer;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.BooleanSetting;
+import dev.zprestige.mud.shader.impl.BlurShader;
+import dev.zprestige.mud.util.impl.RenderUtil;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.network.play.server.SPacketEffect;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+
+import java.awt.*;
 
 public class NoRender extends Module {
     private final BooleanSetting armor = setting("Armor", false).invokeTab("Remove");
@@ -22,6 +27,7 @@ public class NoRender extends Module {
     private final BooleanSetting boss = setting("Boss", false).invokeTab("Remove");
     private final BooleanSetting vignette = setting("Vignette", false).invokeTab("Remove");
     private final BooleanSetting guiBackground = setting("Gui Background", false).invokeTab("Remove");
+    private final BooleanSetting blur = setting("Blur", false).invokeVisibility(z -> guiBackground.getValue()).invokeTab("Remove");
 
     private final BooleanSetting animations = setting("Animations", false).invokeTab("World Remove");
     private final BooleanSetting sPacketEffects = setting("SPacketEffects", false).invokeTab("World Remove");
@@ -38,6 +44,13 @@ public class NoRender extends Module {
     @EventListener
     public void onGuiBackground(GuiBackgroundEvent event){
         if (guiBackground.getValue()){
+            if (blur.getValue()){
+                ScaledResolution scaledResolution = new ScaledResolution(mc);
+
+                BlurShader.invokeBlur();
+                RenderUtil.rounded(0.0f, 0.0f, scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight(), 0.0f, Color.WHITE);
+                BlurShader.releaseBlur(15.0f);
+            }
             event.setCancelled(true);
         }
     }
