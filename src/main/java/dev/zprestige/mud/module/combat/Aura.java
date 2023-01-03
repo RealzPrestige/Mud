@@ -104,7 +104,8 @@ public class Aura extends Module {
 
     private void render(EntityPlayer entityPlayer) {
         Vec3d vec = RenderUtil.interpolateEntity(entityPlayer);
-        float sin = ((float) Math.sin(i / 25.0f) / 2.0f);
+        final float sin = ((float) Math.sin(i / 25.0f) / 2.0f);
+        final float sin2 = ((float) Math.sin(i / 25.0f + 0.5) / 2.0f);
         i = i + 10 * speed.getValue() * EventManager.getDeltaTime();
         glPushMatrix();
         glEnable(GL_BLEND);
@@ -120,9 +121,9 @@ public class Aura extends Module {
             double y = (vec.y + (entityPlayer.height / 2.0f)) + 0.1f;
             double z = ((Math.sin(i * Math.PI / 180F) * entityPlayer.width) + vec.z);
             glColor(color.getValue());
-            glVertex3d(x, y + (sin * entityPlayer.height), z);
+            glVertex3d(x, y + (sin2 * entityPlayer.height), z);
             glColor(new Color(color2.getValue().getRed(), color2.getValue().getGreen(), color2.getValue().getBlue(), 0));
-            glVertex3d(x, y + (sin * entityPlayer.height / 2.0f), z);
+            glVertex3d(x, y + (sin * entityPlayer.height), z);
         }
 
         glEnd();
