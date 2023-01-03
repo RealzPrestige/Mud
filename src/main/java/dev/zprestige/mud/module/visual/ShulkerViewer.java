@@ -25,7 +25,7 @@ public class ShulkerViewer extends Module {
     private final FloatSetting intensity = setting("Intensity", 1.0f, 1.0f, 2.0f).invokeTab("Glow");
     private final FloatSetting speed = setting("Speed", 1.0f, 0.1f, 5.0f).invokeTab("Glow");
     private final FloatSetting step = setting("Step", 0.2f, 0.1f, 2.0f).invokeTab("Glow");
-    private final ColorSetting color = setting("Color", new Color(113, 93, 214)).invokeTab("Glow");
+    private final ColorSetting color1 = setting("Color 1", new Color(113, 93, 214)).invokeTab("Glow");
     private final ColorSetting color2 = setting("Color 2", new Color(113, 220, 214)).invokeTab("Glow");
 
     @EventListener
@@ -53,7 +53,7 @@ public class ShulkerViewer extends Module {
 
                 ShadowGradientShader.invokeShadow();
                 RenderUtil.rounded(event.getX(), event.getY(), event.getX() + width, event.getY() + height, 5.0f, Color.WHITE);
-                ShadowGradientShader.releaseShadow(radius.getValue(), 1, intensity.getValue(), step.getValue(), speed.getValue(), color.getValue(), color2.getValue());
+                ShadowGradientShader.releaseShadow(radius.getValue(), 1, intensity.getValue(), step.getValue(), speed.getValue(), color1.getValue(), color2.getValue());
 
                 int item = 0;
                 float deltaX = event.getX() + 2.5f, deltaY = event.getY() + 2.5f;

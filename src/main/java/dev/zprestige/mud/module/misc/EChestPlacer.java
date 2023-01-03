@@ -33,13 +33,13 @@ public class EChestPlacer extends Module {
     private final FloatSetting step = setting("Step", 0.2f, 0.1f, 2.0f).invokeTab("Render");
     private final FloatSetting opacity = setting("Opacity", 150.0f, 0.0f, 255.0f).invokeTab("Render");
     private final FloatSetting lineWidth = setting("Line Width", 1.0f, 0.1f, 5.0f).invokeTab("Render");
-    private final ColorSetting color = setting("Color", new Color(113, 93, 214)).invokeTab("Render");
+    private final ColorSetting color1 = setting("Color 1", new Color(113, 93, 214)).invokeTab("Render");
     private final ColorSetting color2 = setting("Color 2", new Color(113, 220, 214)).invokeTab("Render");
 
     private BlockPos pos;
     private EnumFacing face;
     private long time;
-    private final BufferGroup bufferGroup = new BufferGroup(this, z -> pos != null && face != null, lineWidth, color, color2, step, speed, opacity,
+    private final BufferGroup bufferGroup = new BufferGroup(this, z -> pos != null && face != null, lineWidth, color1, color2, step, speed, opacity,
             () -> {
                 float scale = (System.currentTimeMillis() - time) / 500.0f;
                 if (scale >= 1.0f) {

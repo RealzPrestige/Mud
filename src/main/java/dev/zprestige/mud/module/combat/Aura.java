@@ -37,7 +37,7 @@ public class Aura extends Module {
 
     private final BooleanSetting render = setting("Render", false).invokeTab("Render");
     private final FloatSetting speed = setting("Speed", 1.0f, 0.5f, 1.5f).invokeVisibility(z -> render.getValue()).invokeTab("Render");
-    private final ColorSetting color = setting("Color", new Color(113, 93, 214)).invokeVisibility(z -> render.getValue()).invokeTab("Render");
+    private final ColorSetting color1 = setting("Color 1", new Color(113, 93, 214)).invokeVisibility(z -> render.getValue()).invokeTab("Render");
     private final ColorSetting color2 = setting("Color 2", new Color(113, 220, 214)).invokeVisibility(z -> render.getValue()).invokeTab("Render");
 
     private EntityPlayer entityPlayer;
@@ -120,7 +120,7 @@ public class Aura extends Module {
             double x = ((Math.cos(i * Math.PI / 180F) * entityPlayer.width) + vec.x);
             double y = (vec.y + (entityPlayer.height / 2.0f)) + 0.1f;
             double z = ((Math.sin(i * Math.PI / 180F) * entityPlayer.width) + vec.z);
-            glColor(color.getValue());
+            glColor(color1.getValue());
             glVertex3d(x, y + (sin2 * entityPlayer.height), z);
             glColor(new Color(color2.getValue().getRed(), color2.getValue().getGreen(), color2.getValue().getBlue(), 0));
             glVertex3d(x, y + (sin * entityPlayer.height), z);

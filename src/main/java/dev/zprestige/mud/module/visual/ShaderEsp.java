@@ -22,14 +22,14 @@ public class ShaderEsp extends Module {
     private final FloatSetting opacity = setting("Opacity", 150.0f, 0.0f, 255.0f).invokeTab("Shader");
     private final FloatSetting lineWidth = setting("Line Width", 1.0f, 0.1f, 5.0f).invokeTab("Shader");
 
-    private final ColorSetting color = setting("Color", new Color(113, 93, 214)).invokeTab("Coloring");
+    private final ColorSetting color1 = setting("Color 1", new Color(113, 93, 214)).invokeTab("Coloring");
     private final ColorSetting color2 = setting("Color 2", new Color(113, 220, 214)).invokeTab("Coloring");
 
     private final BooleanSetting players = setting("Players", false).invokeTab("Targets");
     private final BooleanSetting crystals = setting("Crystals", false).invokeTab("Targets");
     private boolean active;
 
-    private final BufferGroup bufferGroup = new BufferGroup(this, z -> true, lineWidth, color, color2, step, speed, opacity,
+    private final BufferGroup bufferGroup = new BufferGroup(this, z -> true, lineWidth, color1, color2, step, speed, opacity,
             () -> mc.world.loadedEntityList.stream().filter(entity -> !entity.equals(mc.player)
                     && (entity instanceof EntityPlayer || entity instanceof EntityEnderCrystal)
                     && !(entity instanceof EntityPlayer && !players.getValue())

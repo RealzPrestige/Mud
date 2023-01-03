@@ -33,7 +33,7 @@ public class  CustomChat extends Module {
     private final BooleanSetting clear = setting("Clear", true);
     private final FloatSetting speed = setting("Speed", 1.0f, 0.1f, 5.0f).invokeTab("Render");
     private final FloatSetting step = setting("Step", 0.2f, 0.1f, 2.0f).invokeTab("Render");
-    private final ColorSetting color = setting("Color", new Color(113, 93, 214)).invokeTab("Render");
+    private final ColorSetting color1 = setting("Color 1", new Color(113, 93, 214)).invokeTab("Render");
     private final ColorSetting color2 = setting("Color 2", new Color(113, 220, 214)).invokeTab("Render");
     private ArrayList<Message> messages = new ArrayList<>();
     private ArrayList<String> strings = new ArrayList<>();
@@ -86,7 +86,7 @@ public class  CustomChat extends Module {
                 float y1 = deltaY + deltaS - 1.0f + 10.0f * (1.0f - time);
                 if (string.startsWith("[Mud]")) {
                     Mud.fontManager.stringNoShadow("[Mud]", x + 5.5f, y1 + 0.5f, new Color(0, 0, 0, 50));
-                    GradientShader.setup(step.getValue(), speed.getValue(), color.getValue(), color2.getValue());
+                    GradientShader.setup(step.getValue(), speed.getValue(), color1.getValue(), color2.getValue());
                     Mud.fontManager.stringNoShadow("[Mud]", x + 5.0f, y1, Color.WHITE);
                     GradientShader.finish();
                     diff += Mud.fontManager.stringWidth("[Mud] ");
@@ -97,7 +97,7 @@ public class  CustomChat extends Module {
             deltaY -= 20.0f * time;
         }
 
-        GradientShader.setup(step.getValue(), speed.getValue(), color.getValue(), color2.getValue());
+        GradientShader.setup(step.getValue(), speed.getValue(), color1.getValue(), color2.getValue());
 
         gradients.forEach(Runnable::run);
 

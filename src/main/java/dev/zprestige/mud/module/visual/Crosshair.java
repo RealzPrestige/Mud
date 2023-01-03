@@ -18,7 +18,7 @@ public class Crosshair extends Module {
 
     private final FloatSetting speed = setting("Speed", 1.0f, 0.1f, 5.0f).invokeTab("Shader");
     private final FloatSetting step = setting("Step", 0.2f, 0.1f, 2.0f).invokeTab("Shader");
-    private final ColorSetting color = setting("Color", new Color(113, 93, 214)).invokeTab("Shader");
+    private final ColorSetting color1 = setting("Color 1", new Color(113, 93, 214)).invokeTab("Shader");
     private final ColorSetting color2 = setting("Color 2", new Color(113, 220, 214)).invokeTab("Shader");
 
     @EventListener
@@ -32,7 +32,7 @@ public class Crosshair extends Module {
         float length = this.length.getValue();
         float thickness = this.thickness.getValue() / 2.0f;
 
-        GradientShader.setup(step.getValue(), speed.getValue(), color.getValue(), color2.getValue());
+        GradientShader.setup(step.getValue(), speed.getValue(), color1.getValue(), color2.getValue());
 
         RenderUtil.texture(x - gap - length, y - thickness, x - gap, y + thickness, Color.WHITE, RenderUtil.blank());
         RenderUtil.texture(x + gap, y - thickness, x + gap + length, y + thickness, Color.WHITE, RenderUtil.blank());
