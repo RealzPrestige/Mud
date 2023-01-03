@@ -6,12 +6,12 @@ import dev.zprestige.mud.events.impl.render.*;
 import dev.zprestige.mud.events.impl.system.ConnectEvent;
 import dev.zprestige.mud.events.impl.system.PacketReceiveEvent;
 import dev.zprestige.mud.events.impl.world.*;
+import dev.zprestige.mud.manager.EventManager;
 import dev.zprestige.mud.mixins.interfaces.IItemRenderer;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.BooleanSetting;
 import dev.zprestige.mud.shader.impl.BlurShader;
 import dev.zprestige.mud.util.impl.RenderUtil;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.network.play.server.SPacketEffect;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
@@ -39,24 +39,40 @@ public class NoRender extends Module {
     private final BooleanSetting blockOutlines = setting("Block Outlines", false).invokeTab("World Remove");
     private final BooleanSetting sky = setting("Sky", false).invokeTab("World Remove");
 
+    private float time;
     private long sys;
 
     @EventListener
-    public void onGuiBackground(GuiBackgroundEvent event){
-        if (guiBackground.getValue()){
-            if (blur.getValue()){
-                ScaledResolution scaledResolution = new ScaledResolution(mc);
-
-                BlurShader.invokeBlur();
-                RenderUtil.rounded(0.0f, 0.0f, scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight(), 0.0f, Color.WHITE);
-                BlurShader.releaseBlur(15.0f);
-            }
+    public void onGuiBackground(GuiBackgroundEvent event) {
+        if (guiBackground.getValue()) {
             event.setCancelled(true);
         }
     }
 
     @EventListener
-    public void onConnect(ConnectEvent event){
+    public void onRender2D(Render2DEvent event) {
+        if (mc.currentScreen == null) {
+            if (time > 0) {
+                time -= EventManager.getDeltaTime() * 10.0f;
+                time = Math.max(0.0f, time);
+            }
+        } else {
+            if (time < 15) {
+                time += EventManager.getDeltaTime() * 10.0f;
+                time = Math.min(15.0f, time);
+            }
+        }
+        if (guiBackground.getValue() && blur.getValue()) {
+            if (time > 1.0f) {
+                BlurShader.invokeBlur();
+                RenderUtil.rounded(0.0f, 0.0f, event.getScaledResolution().getScaledWidth(), event.getScaledResolution().getScaledHeight(), 0.0f, Color.WHITE);
+                BlurShader.releaseBlur(time);
+            }
+        }
+    }
+
+    @EventListener
+    public void onConnect(ConnectEvent event) {
         sys = System.currentTimeMillis();
     }
 
