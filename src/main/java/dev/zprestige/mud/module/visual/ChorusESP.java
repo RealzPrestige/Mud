@@ -6,11 +6,14 @@ import dev.zprestige.mud.events.impl.render.Render2DEvent;
 import dev.zprestige.mud.events.impl.render.Render3DEvent;
 import dev.zprestige.mud.events.impl.system.PacketReceiveEvent;
 import dev.zprestige.mud.module.Module;
+import dev.zprestige.mud.setting.impl.BooleanSetting;
 import dev.zprestige.mud.setting.impl.ColorSetting;
 import dev.zprestige.mud.setting.impl.FloatSetting;
 import dev.zprestige.mud.setting.impl.IntSetting;
 import dev.zprestige.mud.shader.impl.BufferGroup;
 import dev.zprestige.mud.shader.impl.GlowShader;
+import dev.zprestige.mud.util.impl.BlockUtil;
+import dev.zprestige.mud.util.impl.RotationUtil;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketSoundEffect;
@@ -23,6 +26,8 @@ import java.util.UUID;
 
 public class ChorusESP extends Module {
     private final IntSetting time = setting("Time", 5, 1, 10);
+    private final BooleanSetting rotate = setting("Rotate", false);
+
     private final FloatSetting speed = setting("Speed", 1.0f, 0.1f, 5.0f).invokeTab("Render");
     private final FloatSetting step = setting("Step", 0.2f, 0.1f, 2.0f).invokeTab("Render");
     private final FloatSetting opacity = setting("Opacity", 150.0f, 0.0f, 255.0f).invokeTab("Render");
@@ -64,6 +69,9 @@ public class ChorusESP extends Module {
                 double x = packet.getX(), y = packet.getY(), z = packet.getZ();
                 if (mc.player.getDistanceSq(new BlockPos(x, y, z)) > 1.0f) {
                     addChorusESP(x, y, z);
+                    if (rotate.getValue() && BlockUtil.isSelfSafe()){
+                        RotationUtil.facePos(new BlockPos(x, y + 1.0f, z));
+                    }
                 }
             }
         }
