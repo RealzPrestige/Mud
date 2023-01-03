@@ -12,6 +12,7 @@ import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.BooleanSetting;
 import dev.zprestige.mud.shader.impl.BlurShader;
 import dev.zprestige.mud.util.impl.RenderUtil;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.network.play.server.SPacketEffect;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
@@ -58,7 +59,7 @@ public class NoRender extends Module {
                 time -= EventManager.getDeltaTime() * 10.0f;
                 time = Math.max(0.0f, time);
             }
-        } else {
+        } else if (!(mc.currentScreen instanceof GuiChat)){
             if (time < 15) {
                 time += EventManager.getDeltaTime() * 10.0f;
                 time = Math.min(15.0f, time);
