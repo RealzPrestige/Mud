@@ -35,20 +35,20 @@ public abstract class MixinWorld {
 
     @Inject(method = "getBlockState", at = @At("HEAD"), cancellable = true)
     private void getBlockState(BlockPos pos, CallbackInfoReturnable<IBlockState> cir) {
-            if (isOutsideBuildHeight(pos)) {
-                cir.setReturnValue(Blocks.AIR.getDefaultState());
-            } else {
-                Chunk chunk = getChunk(pos);
-                IBlockState blockState = chunk.getBlockState(pos);
-                if (blockState.getBlock().equals(Blocks.WEB)) {
-                    WebExplosionEvent event = new WebExplosionEvent();
-                    Mud.eventBus.invoke(event);
-                    if (event.isCancelled()) {
-                        cir.setReturnValue(Blocks.AIR.getDefaultState());
-                    }
-                } else {
-                    cir.setReturnValue(blockState);
+        if (isOutsideBuildHeight(pos)) {
+            cir.setReturnValue(Blocks.AIR.getDefaultState());
+        } else {
+            Chunk chunk = getChunk(pos);
+            IBlockState blockState = chunk.getBlockState(pos);
+            if (blockState.getBlock().equals(Blocks.WEB)) {
+                WebExplosionEvent event = new WebExplosionEvent();
+                Mud.eventBus.invoke(event);
+                if (event.isCancelled()) {
+                    cir.setReturnValue(Blocks.AIR.getDefaultState());
                 }
+            } else {
+                cir.setReturnValue(blockState);
             }
+        }
     }
 }
