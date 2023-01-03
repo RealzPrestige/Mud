@@ -46,8 +46,7 @@ public class Step extends Module {
 
     @EventListener
     public void onCollide(CollideEvent event) {
-        System.out.println("h");
-        if (!mode.getValue().equals("NCP")) {
+        if (!mode.getValue().equals("Constantiam")) {
             return;
         }
         float height = (float) (event.getBb().minY - mc.player.posY);
