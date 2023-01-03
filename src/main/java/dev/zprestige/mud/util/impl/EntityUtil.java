@@ -53,29 +53,7 @@ public class EntityUtil implements MC {
     }
 
 
-    public static float[] forward(double speed, float slow) {
-        float forward = mc.player.movementInput.moveForward / slow,
-                strafe = mc.player.movementInput.moveStrafe / slow,
-                yaw = mc.player.prevRotationYaw + (mc.player.rotationYaw - mc.player.prevRotationYaw) * mc.getRenderPartialTicks();
-        if (forward != 0.0f) {
-            if (strafe > 0.0f) {
-                yaw += ((forward > 0.0f) ? -45 : 45);
-            } else if (strafe < 0.0f) {
-                yaw += ((forward > 0.0f) ? 45 : -45);
-            }
-            strafe = 0.0f;
-            if (forward > 0.0f) {
-                forward = 1.0f;
-            } else if (forward < 0.0f) {
-                forward = -1.0f;
-            }
-        }
-        double sin = Math.sin(Math.toRadians(yaw + 90.0f)),
-                cos = Math.cos(Math.toRadians(yaw + 90.0f)),
-                posX = forward * speed * cos + strafe * speed * sin,
-                posZ = forward * speed * sin - strafe * speed * cos;
-        return new float[]{(float) posX, (float) posZ};
-    }
+
 
     public static EntityPlayer getEntityPlayer(float range) {
         EntityPlayer lowest = null;

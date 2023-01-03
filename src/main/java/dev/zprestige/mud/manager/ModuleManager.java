@@ -65,8 +65,4 @@ public class ModuleManager implements MC {
     public ArrayList<Module> getModules() {
         return modules;
     }
-
-    public Module getModuleByClass(Class<?> c) {
-        return modules.stream().filter(module -> module.getClass().equals(c)).findFirst().orElse(null);
-    }
 }

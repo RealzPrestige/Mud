@@ -1,7 +1,6 @@
 package dev.zprestige.mud.module.movement;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
-import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.player.MoveEvent;
 import dev.zprestige.mud.events.impl.system.KeyEvent;
@@ -53,8 +52,6 @@ public class Speed extends Module {
             activeMode = mode.getValue();
         }
         mc.player.setSprinting(true);
-        NoSlow noSlow = (NoSlow) Mud.moduleManager.getModuleByClass(NoSlow.class);
-        float f = noSlow.isEnabled() && noSlow.isSlowed() ? 5.0f : 1.0f;
         if (activeMode.equals("Control")) {
             if (mc.player.isSneaking()) {
                 return;
@@ -63,7 +60,7 @@ public class Speed extends Module {
                 event.setMotionX(0.0f);
                 event.setMotionZ(0.0f);
             }
-            float[] direction = EntityUtil.forward(EntityUtil.getBaseMoveSpeed(), f);
+            float[] direction = EntityUtil.forward(EntityUtil.getBaseMoveSpeed());
             event.setMotionX(direction[0]);
             event.setMotionZ(direction[1]);
         } else {
@@ -94,8 +91,8 @@ public class Speed extends Module {
                     motionSpeed = previousDistance - 0.76f * (previousDistance - EntityUtil.getBaseMoveSpeed() * strafeFactor);
             }
             motionSpeed = Math.max(motionSpeed, EntityUtil.getBaseMoveSpeed() * strafeFactor);
-            float forward = mc.player.movementInput.moveForward / f,
-                    strafe = mc.player.movementInput.moveStrafe / f,
+            float forward = mc.player.movementInput.moveForward,
+                    strafe = mc.player.movementInput.moveStrafe,
                     yaw = mc.player.rotationYaw;
             if (forward != 0.0 && strafe != 0.0) {
                 forward *= Math.sin(0.7853981633974483);
