@@ -41,7 +41,7 @@ public class Speed extends Module {
 
     @EventListener
     public void onMove(MoveEvent event) {
-        if ((!liquid.getValue() && (mc.player.isInWater() || mc.player.isInLava())) || mc.player.isCreative()) {
+        if ((!liquid.getValue() && (mc.player.isInWater() || mc.player.isInLava())) || mc.player.isCreative() || mc.currentScreen != null) {
             return;
         }
         invokeAppend(activeMode);
