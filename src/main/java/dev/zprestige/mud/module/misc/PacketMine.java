@@ -8,6 +8,7 @@ import dev.zprestige.mud.events.impl.render.Render3DEvent;
 import dev.zprestige.mud.events.impl.system.PacketSendEvent;
 import dev.zprestige.mud.mixins.interfaces.IPlayerControllerMP;
 import dev.zprestige.mud.module.Module;
+import dev.zprestige.mud.module.combat.MineCrystal;
 import dev.zprestige.mud.setting.impl.BindSetting;
 import dev.zprestige.mud.setting.impl.BooleanSetting;
 import dev.zprestige.mud.setting.impl.ColorSetting;
@@ -94,8 +95,7 @@ public class PacketMine extends Module {
         }
         if (BlockUtil.is(pos, Blocks.AIR) || BlockUtil.distance(pos) > range.getValue()) {
             if (BlockUtil.is(pos, Blocks.AIR)){
-                BreakBlockEvent breakBlockEvent = new BreakBlockEvent(pos, face);
-                Mud.eventBus.invoke(breakBlockEvent);
+                MineCrystal.onBreakBlock(new BreakBlockEvent(pos, face));
             }
             abortBlock();
         }

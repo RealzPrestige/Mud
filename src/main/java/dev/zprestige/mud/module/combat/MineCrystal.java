@@ -35,8 +35,8 @@ public class MineCrystal extends Module {
     private final BooleanSetting strict = setting("Strict", false);
 
     private long time;
-    private BlockPos pos;
-    private EnumFacing face;
+    private static BlockPos pos;
+    private static EnumFacing face;
 
     @EventListener
     public void onMotionUpdate(MotionUpdateEvent event) {
@@ -122,9 +122,8 @@ public class MineCrystal extends Module {
         time = System.currentTimeMillis();
     }
 
-    @EventListener
-    public void onBreakBlock(BreakBlockEvent event) {
-        this.pos = event.getPos();
-        this.face = event.getEnumFacing();
+    public static void onBreakBlock(BreakBlockEvent event) {
+        MineCrystal.pos = event.getPos();
+        MineCrystal.face = event.getEnumFacing();
     }
 }
