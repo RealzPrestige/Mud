@@ -89,15 +89,26 @@ public class ColorButton extends SettingDrawable {
                 if (insidePaste(mouseX, mouseY)) {
                     try {
                         String text = Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor).toString();
-                        String hex = text.split(":")[0];
-                        String alpha = text.split(":")[1];
-                        Color prev = setting.getValue();
-                        try {
-                            setting.invokeValue(Color.decode(hex));
-                            setting.invokeValue(new Color(setting.getValue().getRed(), setting.getValue().getGreen(), setting.getValue().getBlue(), Integer.parseInt(alpha)));
-                        } catch (Exception e) {
-                            setting.invokeValue(prev);
-                            e.printStackTrace();
+                        if (text.contains(":")) {
+                            String hex = text.split(":")[0];
+                            String alpha = text.split(":")[1];
+                            Color prev = setting.getValue();
+                            try {
+                                setting.invokeValue(Color.decode(hex));
+                                setting.invokeValue(new Color(setting.getValue().getRed(), setting.getValue().getGreen(), setting.getValue().getBlue(), Integer.parseInt(alpha)));
+                            } catch (Exception e) {
+                                setting.invokeValue(prev);
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Color prev = setting.getValue();
+                            try {
+                                setting.invokeValue(Color.decode(text));
+                                setting.invokeValue(new Color(setting.getValue().getRed(), setting.getValue().getGreen(), setting.getValue().getBlue(), 255));
+                            } catch (Exception e) {
+                                setting.invokeValue(prev);
+                                e.printStackTrace();
+                            }
                         }
                     } catch (Exception e) {
 
