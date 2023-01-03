@@ -39,8 +39,7 @@ public class ChorusESP extends Module {
                     if (System.currentTimeMillis() - entry.getValue() > time.getValue() * 1000.0f) {
                         continue;
                     }
-                    mc.getRenderManager().renderEntityStatic(entry.getKey(), mc.getRenderPartialTicks(), false);
-                    System.out.println("h");
+                    mc.getRenderManager().renderEntityStatic(entry.getKey(), mc.getRenderPartialTicks(), false);;
                 }
             }
 
