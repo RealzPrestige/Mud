@@ -1,8 +1,10 @@
 package dev.zprestige.mud.module.misc;
 
-import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
-import dev.zprestige.mud.events.impl.player.*;
+import dev.zprestige.mud.events.impl.player.BreakBlockEvent;
+import dev.zprestige.mud.events.impl.player.ClickBlockEvent;
+import dev.zprestige.mud.events.impl.player.DamageBlockEvent;
+import dev.zprestige.mud.events.impl.player.MotionUpdateEvent;
 import dev.zprestige.mud.events.impl.render.Render2DEvent;
 import dev.zprestige.mud.events.impl.render.Render3DEvent;
 import dev.zprestige.mud.events.impl.system.PacketSendEvent;
@@ -52,9 +54,11 @@ public class PacketMine extends Module {
     private long time, sys;
     private final BufferGroup bufferGroup = new BufferGroup(this, z -> pos != null, lineWidth, color1, color2, step, speed, opacity,
             () -> {
-                float scale = Math.min(1.0f, ((System.currentTimeMillis() - time) / 1000.0f) * multiplier(pos));
-                AxisAlignedBB bb = new AxisAlignedBB(pos);
-                RenderUtil.drawBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.minY + scale, bb.maxZ);
+                if (pos != null) {
+                    float scale = Math.min(1.0f, ((System.currentTimeMillis() - time) / 1000.0f) * multiplier(pos));
+                    AxisAlignedBB bb = new AxisAlignedBB(pos);
+                    RenderUtil.drawBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.minY + scale, bb.maxZ);
+                }
             }
     );
 
@@ -73,7 +77,7 @@ public class PacketMine extends Module {
                             RotationUtil.facePos(prevPos, event);
                         }
                         PacketUtil.invoke(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, prevPos, prevFace));
-                        if (swap.getValue() && slot != -1){
+                        if (swap.getValue() && slot != -1) {
                             InventoryUtil.switchBack(currentItem);
                         }
                         sys = System.currentTimeMillis();
@@ -94,7 +98,7 @@ public class PacketMine extends Module {
             RotationUtil.facePos(pos, event);
         }
         if (BlockUtil.is(pos, Blocks.AIR) || BlockUtil.distance(pos) > range.getValue()) {
-            if (BlockUtil.is(pos, Blocks.AIR)){
+            if (BlockUtil.is(pos, Blocks.AIR)) {
                 MineCrystal.onBreakBlock(new BreakBlockEvent(pos, face));
             }
             abortBlock();
@@ -122,9 +126,7 @@ public class PacketMine extends Module {
 
     @EventListener
     public void onRender3D(Render3DEvent event) {
-        if (bufferGroup != null) {
-            GlowShader.render3D(bufferGroup);
-        }
+        GlowShader.render3D(bufferGroup);
     }
 
     @EventListener

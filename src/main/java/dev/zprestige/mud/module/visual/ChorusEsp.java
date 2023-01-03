@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class ChorusESP extends Module {
+public class ChorusEsp extends Module {
     private final IntSetting time = setting("Time", 5, 1, 10);
     private final BooleanSetting rotate = setting("Rotate", false);
 

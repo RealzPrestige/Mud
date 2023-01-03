@@ -4,7 +4,6 @@ import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.util.MC;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
-import org.lwjgl.util.vector.Vector2f;
 
 import java.util.Objects;
 
