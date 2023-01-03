@@ -40,6 +40,10 @@ public class AutoCrystal extends Module {
     private final ModeSetting placements = setting("Placements", "1.12.2", Arrays.asList("1.12.2", "1.13+")).invokeTab("AntiCheat");
     private final BooleanSetting constBypass = setting("Const Bypass", false).invokeTab("AntiCheat");
     private final ModeSetting blockFace = setting("Block Face", "Closest", Arrays.asList("Closest", "Up")).invokeTab("AntiCheat");
+    private final BooleanSetting raytraceBypass = setting("Raytrace Bypass", false).invokeTab("AntiCheat");
+    private final IntSetting wait = setting("Wait", 1, 1, 20).invokeVisibility(z -> raytraceBypass.getValue()).invokeTab("AntiCheat");
+    private final IntSetting timeout = setting("Timeout", 1, 1, 20).invokeVisibility(z -> raytraceBypass.getValue()).invokeTab("AntiCheat");
+
 
     private final ModeSetting calculations = setting("Calculations", "Damage", Arrays.asList("Damage", "Net")).invokeTab("Calculations");
     private final BooleanSetting smartCalculations = setting("Smart Calculations", true).invokeTab("Calculations");
@@ -71,6 +75,7 @@ public class AutoCrystal extends Module {
     private boolean calculating;
     private long placeTime, breakTime;
     private BlockPos pos;
+    private int ticks, shiftTicks;
 
     private final BufferGroup bufferGroup = new BufferGroup(this, z -> this.pos != null, lineWidth, color1, color2, step, speed, opacity,
             () -> {
@@ -85,6 +90,20 @@ public class AutoCrystal extends Module {
     public void onMotion(MotionUpdateEvent event) {
         EntityPlayer entityPlayer = EntityUtil.getEntityPlayer(targetRange.getValue());
         if (entityPlayer != null) {
+            if (raytraceBypass.getValue()) {
+                if (ticks > 0) {
+                    shiftTicks = timeout.getValue();
+                    ticks--;
+                } else {
+                    if (shiftTicks > 0) {
+                        shiftTicks--;
+                        event.setPitch(-90);
+                        return;
+                    } else {
+                        ticks = wait.getValue();
+                    }
+                }
+            }
             invokeAppend(entityPlayer.getName());
             if (constBypass.getValue()) {
                 PacketUtil.invoke(new CPacketCloseWindow());
@@ -145,8 +164,8 @@ public class AutoCrystal extends Module {
 
 
     @EventListener
-    public void onWebExplosion(WebExplosionEvent event){
-        if (calculating){
+    public void onWebExplosion(WebExplosionEvent event) {
+        if (calculating) {
             event.setCancelled(true);
         }
     }
