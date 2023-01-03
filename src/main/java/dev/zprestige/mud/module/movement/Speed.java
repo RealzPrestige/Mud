@@ -56,14 +56,14 @@ public class Speed extends Module {
             if (mc.player.isSneaking()) {
                 return;
             }
-            if (!EntityUtil.isMoving()) {
+            if (!isMoving()) {
                 event.setMotionX(0.0f);
                 event.setMotionZ(0.0f);
             }
             float[] direction = EntityUtil.forward(EntityUtil.getBaseMoveSpeed());
             event.setMotionX(direction[0]);
             event.setMotionZ(direction[1]);
-        } else {
+        } else if (activeMode.equals("Strafe") || activeMode.equals("Strict Strafe")) {
             float strafeFactor = factor.getValue();
             switch (currentState) {
                 case 0:
@@ -102,5 +102,9 @@ public class Speed extends Module {
             event.setMotionZ((forward * motionSpeed * Math.cos(Math.toRadians(yaw)) - strafe * motionSpeed * -Math.sin(Math.toRadians(yaw))) * 0.99);
             ++currentState;
         }
+    }
+
+    private boolean isMoving(){
+        return mc.gameSettings.keyBindForward.isKeyDown() || mc.gameSettings.keyBindBack.isKeyDown() || mc.gameSettings.keyBindLeft.isKeyDown() || mc.gameSettings.keyBindRight.isKeyDown();
     }
 }

@@ -4,14 +4,11 @@ import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.util.MC;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.util.Objects;
 
 public class EntityUtil implements MC {
-
-    public static boolean isMoving() {
-        return mc.player.movementInput.moveForward != 0.0f && mc.player.movementInput.moveStrafe != 0.0f;
-    }
 
     public static void setSpeed(double speed) {
         float[] dir = forward(speed);

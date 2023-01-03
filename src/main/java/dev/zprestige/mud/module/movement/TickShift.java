@@ -12,7 +12,7 @@ import dev.zprestige.mud.setting.impl.IntSetting;
 public class TickShift extends Module {
     private final IntSetting activeTicks = setting("Active Ticks", 5, 1, 40);
     private final IntSetting thresholdTicks = setting("Threshold Ticks", 20, 1, 100);
-    private final FloatSetting timer = setting("Timer", 1.0f, 0.1f, 5.0f);
+    private final FloatSetting timer = setting("Timer", 1.0f, 0.1f, 10.0f);
     private final BooleanSetting whilePacketFly = setting("While Packet Fly", false);
     private int ticks, inactiveTicks;
     private boolean shift;
