@@ -144,14 +144,23 @@ public class HoleManager implements MC {
     }
 
     private boolean enter(BlockPos pos) {
+        if (pos == null){
+            return false;
+        }
         return mc.world != null && mc.world.getBlockState(pos.up()).getBlock().equals(Blocks.AIR) && mc.world.getBlockState(pos.up().up()).getBlock().equals(Blocks.AIR);
     }
 
     private boolean notUnsafe(BlockPos pos) {
+        if (pos == null){
+            return false;
+        }
         return mc.world != null && !mc.world.getBlockState(pos).getBlock().equals(Blocks.BEDROCK) && !mc.world.getBlockState(pos).getBlock().equals(Blocks.OBSIDIAN);
     }
 
     private boolean notSafe(BlockPos pos) {
+        if (pos == null){
+            return false;
+        }
         return mc.world != null && !mc.world.getBlockState(pos).getBlock().equals(Blocks.BEDROCK);
     }
 
