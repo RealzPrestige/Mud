@@ -123,11 +123,11 @@ public class Module implements MC {
     }
 
     public float getStringWidthFull() {
-        return -(Mud.fontManager.stringWidth(name) + Mud.fontManager.stringWidth(getAppend()));
+        return -(Mud.fontManager.stringWidthHud(name) + Mud.fontManager.stringWidthHud(getAppend()));
     }
 
     public float getStringWidth() {
-        return Mud.fontManager.stringWidth(name);
+        return Mud.fontManager.stringWidthHud(name);
     }
 
     public String getAppend() {

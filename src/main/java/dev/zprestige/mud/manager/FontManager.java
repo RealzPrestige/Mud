@@ -14,7 +14,7 @@ public class FontManager implements MC {
 
     public FontManager() {
         font = new FontRenderer(getFont(35));
-        hudFont = new FontRenderer(getFont(50));
+        hudFont = new FontRenderer(getFont(37.5f));
     }
 
 

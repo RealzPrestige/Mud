@@ -52,7 +52,7 @@ public class Armor extends HudModule {
                     int percentage = (int) Math.ceil(getPercentage(itemStack));
                     String text = percentage + "%";
                     float finalDeltaX = deltaX;
-                    post.add(() -> Mud.fontManager.string(text, (x + finalDeltaX + 10.0f - Mud.fontManager.stringWidth(text) * scale / 2.0f) / scale, (y - 5.0f) / scale, new Color(getRed(percentage), getGreen(percentage), 0.0f)));
+                    post.add(() -> Mud.fontManager.stringHud(text, (x + finalDeltaX + 10.0f - Mud.fontManager.stringWidthHud(text) * scale / 2.0f) / scale, (y - 5.0f) / scale, new Color(getRed(percentage), getGreen(percentage), 0.0f)));
                     RenderHelper.enableGUIStandardItemLighting();
                     mc.getRenderItem().renderItemAndEffectIntoGUI(itemStack, (int) (x + deltaX), (int) y);
                     RenderHelper.disableStandardItemLighting();

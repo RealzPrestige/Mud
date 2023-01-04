@@ -39,11 +39,11 @@ public class ModuleList extends HudModule {
             final float x = this.x + width + module.getStringWidthFull() * module.anim;
 
             final float finalDeltaY = deltaY;
-            shadows.add(() -> Mud.fontManager.stringNoShadow(module.getName(), x + 0.5f, finalDeltaY + 0.5f, new Color(0, 0, 0, 50)));
-            names.add(() -> Mud.fontManager.stringNoShadow(module.getName(), x, finalDeltaY, Color.WHITE));
-            appends.add(() -> Mud.fontManager.string(module.getAppend(), x + module.getStringWidth(), finalDeltaY, Color.GRAY));
+            shadows.add(() -> Mud.fontManager.stringNoShadowHud(module.getName(), x + 0.5f, finalDeltaY + 0.5f, new Color(0, 0, 0, 50)));
+            names.add(() -> Mud.fontManager.stringNoShadowHud(module.getName(), x, finalDeltaY, Color.WHITE));
+            appends.add(() -> Mud.fontManager.stringHud(module.getAppend(), x + module.getStringWidth(), finalDeltaY, Color.GRAY));
 
-            deltaY += (Mud.fontManager.stringHeight() + 3.0f) * module.anim;
+            deltaY += (Mud.fontManager.stringHeightHud() + 4.0f) * module.anim;
         }
 
         shadows.forEach(Runnable::run);
