@@ -10,30 +10,44 @@ import java.awt.*;
 import java.io.InputStream;
 
 public class FontManager implements MC {
-    protected FontRenderer font;
+    private final FontRenderer font, hudFont;
 
     public FontManager() {
-        loadFont(35);
+        font = new FontRenderer(getFont(35));
+        hudFont = new FontRenderer(getFont(50));
     }
 
-    public void loadFont(int size) {
-        font = new FontRenderer(getFont(size));
-    }
 
     public float stringHeight() {
         return font.getHeight() / 2.0f;
+    }
+
+    public float stringHeightHud() {
+        return hudFont.getHeight() / 2.0f;
     }
 
     public float stringWidth(String text) {
         return font.getStringWidth(text);
     }
 
+    public float stringWidthHud(String text) {
+        return hudFont.getStringWidth(text);
+    }
+
     public void string(String text, float x, float y, Color color) {
         font.drawStringWithShadow(text, x, y, color.getRGB());
     }
 
+    public void stringHud(String text, float x, float y, Color color) {
+        hudFont.drawStringWithShadow(text, x, y, color.getRGB());
+    }
+
     public void stringNoShadow(String text, float x, float y, Color color) {
         font.drawString(text, x, y, color.getRGB(), false);
+    }
+
+    public void stringNoShadowHud(String text, float x, float y, Color color) {
+        hudFont.drawString(text, x, y, color.getRGB(), false);
     }
 
     public void guiString(String text, float x, float y, Color color) {
