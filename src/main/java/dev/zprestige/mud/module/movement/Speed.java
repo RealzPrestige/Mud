@@ -56,7 +56,7 @@ public class Speed extends Module {
             if (mc.player.isSneaking()) {
                 return;
             }
-            if (!isMoving()) {
+            if (!EntityUtil.isMoving()) {
                 event.setMotionX(0.0f);
                 event.setMotionZ(0.0f);
             }
@@ -104,7 +104,4 @@ public class Speed extends Module {
         }
     }
 
-    private boolean isMoving(){
-        return mc.gameSettings.keyBindForward.isKeyDown() || mc.gameSettings.keyBindBack.isKeyDown() || mc.gameSettings.keyBindLeft.isKeyDown() || mc.gameSettings.keyBindRight.isKeyDown();
-    }
 }

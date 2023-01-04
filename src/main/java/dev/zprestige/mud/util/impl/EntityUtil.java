@@ -9,6 +9,10 @@ import java.util.Objects;
 
 public class EntityUtil implements MC {
 
+    public static boolean isMoving(){
+        return mc.gameSettings.keyBindForward.isKeyDown() || mc.gameSettings.keyBindBack.isKeyDown() || mc.gameSettings.keyBindLeft.isKeyDown() || mc.gameSettings.keyBindRight.isKeyDown();
+    }
+
     public static void setSpeed(double speed) {
         float[] dir = forward(speed);
         mc.player.motionX = dir[0];
