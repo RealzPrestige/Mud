@@ -2,10 +2,8 @@ package dev.zprestige.mud.module.combat;
 
 import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
-import dev.zprestige.mud.events.impl.system.PacketReceiveEvent;
 import dev.zprestige.mud.events.impl.system.PacketSendEvent;
 import dev.zprestige.mud.events.impl.world.TickEvent;
-import dev.zprestige.mud.mixins.interfaces.ISPacketPlayerPosLook;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.BooleanSetting;
 import dev.zprestige.mud.setting.impl.FloatSetting;
@@ -15,7 +13,6 @@ import dev.zprestige.mud.util.impl.InventoryUtil;
 import dev.zprestige.mud.util.impl.PacketUtil;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Arrays;
@@ -25,7 +22,6 @@ public class Burrow extends Module {
     private final FloatSetting force = setting("Force", 1.0f, -5.0f, 5.0f);
     private final ModeSetting prefer = setting("Prefer", "Obsidian", Arrays.asList("Obsidian", "Ender Chests"));
     private final BooleanSetting cancelRotations = setting("Cancel Rotations", false);
-    private final BooleanSetting removeForcedRotations = setting("Remove Forced Rotations", false);
     private final BooleanSetting rotate = setting("Rotate", false);
     private final BooleanSetting strict = setting("Strict", false);
 
@@ -82,17 +78,6 @@ public class Burrow extends Module {
             if (event.getPacket() instanceof CPacketPlayer.Rotation || event.getPacket() instanceof CPacketPlayer.Position || event.getPacket() instanceof CPacketPlayer.PositionRotation) {
                 event.setCancelled(true);
             }
-        }
-    }
-
-    @EventListener
-    public void onPacketReceive(PacketReceiveEvent event) {
-        if (removeForcedRotations.getValue() && event.getPacket() instanceof SPacketPlayerPosLook) {
-            SPacketPlayerPosLook packet = (SPacketPlayerPosLook) event.getPacket();
-            ((ISPacketPlayerPosLook) packet).setYaw(mc.player.rotationYaw);
-            ((ISPacketPlayerPosLook) packet).setPitch(mc.player.rotationPitch);
-            packet.getFlags().remove(SPacketPlayerPosLook.EnumFlags.X_ROT);
-            packet.getFlags().remove(SPacketPlayerPosLook.EnumFlags.Y_ROT);
         }
     }
 
