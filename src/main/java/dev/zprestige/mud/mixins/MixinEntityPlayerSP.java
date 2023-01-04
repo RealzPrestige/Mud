@@ -80,32 +80,32 @@ public class MixinEntityPlayerSP extends AbstractClientPlayer {
     }
 
     @Redirect(method = "onUpdateWalkingPlayer", at = @At(value = "FIELD", target = "net/minecraft/client/entity/EntityPlayerSP.posX:D"))
-    private double posXHook(EntityPlayerSP entityPlayerSP) {
+    private double posX(EntityPlayerSP entityPlayerSP) {
         return motionUpdateEvent.getX();
     }
 
     @Redirect(method = "onUpdateWalkingPlayer", at = @At(value = "FIELD", target = "net/minecraft/util/math/AxisAlignedBB.minY:D"))
-    private double minYHook(AxisAlignedBB axisAlignedBB) {
+    private double minY(AxisAlignedBB axisAlignedBB) {
         return motionUpdateEvent.getY();
     }
 
     @Redirect(method = "onUpdateWalkingPlayer", at = @At(value = "FIELD", target = "net/minecraft/client/entity/EntityPlayerSP.posZ:D"))
-    private double posZHook(EntityPlayerSP entityPlayerSP) {
+    private double posZ(EntityPlayerSP entityPlayerSP) {
         return motionUpdateEvent.getZ();
     }
 
     @Redirect(method = "onUpdateWalkingPlayer", at = @At(value = "FIELD", target = "net/minecraft/client/entity/EntityPlayerSP.rotationYaw:F"))
-    private float rotationYawHook(EntityPlayerSP entityPlayerSP) {
+    private float rotationYaw(EntityPlayerSP entityPlayerSP) {
         return motionUpdateEvent.getYaw();
     }
 
     @Redirect(method = "onUpdateWalkingPlayer", at = @At(value = "FIELD", target = "net/minecraft/client/entity/EntityPlayerSP.rotationPitch:F"))
-    private float rotationPitchHook(EntityPlayerSP entityPlayerSP) {
+    private float rotationPitch(EntityPlayerSP entityPlayerSP) {
         return motionUpdateEvent.getPitch();
     }
 
     @Redirect(method = "onUpdateWalkingPlayer", at = @At(value = "FIELD", target = "net/minecraft/client/entity/EntityPlayerSP.onGround:Z"))
-    private boolean onGroundHook(EntityPlayerSP entityPlayerSP) {
+    private boolean onGround(EntityPlayerSP entityPlayerSP) {
         return motionUpdateEvent.isOnGround();
     }
 
@@ -117,7 +117,7 @@ public class MixinEntityPlayerSP extends AbstractClientPlayer {
     }
 
     @Inject(method = "pushOutOfBlocks", at = @At("HEAD"), cancellable = true)
-    private void pushOutOfBlocksHook(double x, double y, double z, CallbackInfoReturnable<Boolean> cir) {
+    private void pushOutOfBlocks(double x, double y, double z, CallbackInfoReturnable<Boolean> cir) {
         BlockPushEvent event = new BlockPushEvent();
         Mud.eventBus.invoke(event);
         if (event.isCancelled()) {
