@@ -4,11 +4,12 @@ import club.minnced.discord.rpc.DiscordEventHandlers;
 import club.minnced.discord.rpc.DiscordRPC;
 import club.minnced.discord.rpc.DiscordRichPresence;
 import dev.zprestige.mud.Mud;
+import dev.zprestige.mud.util.MC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.multiplayer.ServerData;
 
-public class DiscordUtil {
+public class DiscordUtil implements MC {
 
     public static final String APP_ID = "1059823008270778369";
     public static final String STEAM_ID = "";
