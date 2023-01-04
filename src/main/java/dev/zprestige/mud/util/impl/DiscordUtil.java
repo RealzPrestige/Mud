@@ -45,16 +45,22 @@ public class DiscordUtil implements MC {
     @SuppressWarnings("BusyWait")
     public static void onPost() {
         thread = new Thread(() -> {
+            int mud = 0;
             while (!Thread.currentThread().isInterrupted()) {
                 discord.Discord_RunCallbacks();
 
                 presence.state = generateDetails(Minecraft.getMinecraft());
-                presence.details = Mud.MODNAME + " " + Mud.VERSION;
+                presence.details = MudUtil.getOffTheMudPt2()[mud];
 
                 discord.Discord_UpdatePresence(presence);
+                if (mud >= MudUtil.getOffTheMudPt2().length - 1) {
+                    mud = 0;
+                } else {
+                    mud++;
+                }
 
                 try {
-                    Thread.sleep(2000L);
+                    Thread.sleep(1000L);
                 } catch (InterruptedException ignored) {
                 }
             }
