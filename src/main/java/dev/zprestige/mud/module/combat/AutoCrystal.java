@@ -189,7 +189,7 @@ public class AutoCrystal extends Module {
         } else {
             mc.playerController.attackEntity(mc.player, entity);
         }
-        if (handleWeakness == -1) {
+        if (handleWeakness != -1) {
             InventoryUtil.switchBack(handleWeakness);
         }
 
