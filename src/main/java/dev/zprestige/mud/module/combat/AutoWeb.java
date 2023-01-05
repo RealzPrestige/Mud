@@ -24,7 +24,7 @@ public class AutoWeb extends Module {
     private final BooleanSetting raytrace = setting("Raytrace", false).invokeTab("Web");
 
     private final BooleanSetting predict = setting("Predict", false).invokeTab("Predict");
-    private final IntSetting ticks = setting("Ticks", 1,1, 5).invokeTab("Predict");
+    private final IntSetting ticks = setting("Ticks", 1,1, 10).invokeTab("Predict");
 
     private long time;
 
