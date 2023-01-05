@@ -19,7 +19,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class SourceESP extends Module {
+public class SourceEsp extends Module {
     private final FloatSetting range = setting("Range", 50.0f, 0.1f, 250.0f);
     private final FloatSetting speed = setting("Speed", 1.0f, 0.1f, 5.0f).invokeTab("Render");
     private final FloatSetting step = setting("Step", 0.2f, 0.1f, 2.0f).invokeTab("Render");
