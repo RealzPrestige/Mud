@@ -10,6 +10,7 @@ import dev.zprestige.mud.manager.EventManager;
 import dev.zprestige.mud.mixins.interfaces.IItemRenderer;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.BooleanSetting;
+import dev.zprestige.mud.setting.impl.ColorSetting;
 import dev.zprestige.mud.shader.impl.BlurShader;
 import dev.zprestige.mud.util.impl.RenderUtil;
 import net.minecraft.client.gui.GuiChat;
@@ -38,10 +39,20 @@ public class NoRender extends Module {
     private final BooleanSetting weather = setting("Weather", false).invokeTab("World Remove");
     private final BooleanSetting lightMapUpdates = setting("Light Map Updates", false).invokeTab("World Remove");
     private final BooleanSetting blockOutlines = setting("Block Outlines", false).invokeTab("World Remove");
+    private final ColorSetting skyColor = setting("Sky Color", Color.WHITE).invokeTab("World Remove");
     private final BooleanSetting sky = setting("Sky", false).invokeTab("World Remove");
 
     private float time;
     private long sys;
+
+    @EventListener
+    public void onFogColor(FogEvent event){
+        if (sky.getValue()){
+            return;
+        }
+        Color color = skyColor.getValue();
+        event.setColor(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f);
+    }
 
     @EventListener
     public void onGuiBackground(GuiBackgroundEvent event) {

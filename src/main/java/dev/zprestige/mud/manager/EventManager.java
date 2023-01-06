@@ -6,6 +6,7 @@ import dev.zprestige.mud.events.impl.player.ItemUsedEvent;
 import dev.zprestige.mud.events.impl.render.*;
 import dev.zprestige.mud.events.impl.system.ConnectEvent;
 import dev.zprestige.mud.events.impl.system.DisconnectEvent;
+import dev.zprestige.mud.events.impl.world.FogEvent;
 import dev.zprestige.mud.util.MC;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.MinecraftForge;
@@ -102,6 +103,15 @@ public class EventManager implements MC {
             ItemUsedEvent itemUsedEvent = new ItemUsedEvent();
             Mud.eventBus.invoke(itemUsedEvent);
         }
+    }
+
+    @SubscribeEvent
+    public void onFog(EntityViewRenderEvent.FogColors event){
+        FogEvent fogEvent = new FogEvent(event.getRed(), event.getGreen(), event.getBlue());
+        Mud.eventBus.invoke(fogEvent);
+        event.setRed(fogEvent.getRed());
+        event.setGreen(fogEvent.getGreen());
+        event.setBlue(fogEvent.getBlue());
     }
 
     public static boolean nullCheck() {
