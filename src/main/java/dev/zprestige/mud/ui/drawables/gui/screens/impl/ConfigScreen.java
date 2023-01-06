@@ -181,7 +181,7 @@ public class ConfigScreen extends DrawableScreen {
         if (mouseButton == 0) {
             float halfRightWidth = rightX + (rightWidth - rightX) / 2.0f;
             float expansion = (((Math.max(0, Math.min(7, loadableConfigs.size() - 1))) * 20.0f + 2.5f) * expandAnim);
-            if (insideLoadButton(mouseX, mouseY, halfRightWidth, boxHeight, expansion) && boxY + 25.0f < boxY + 25.0f + expansion) {
+            if (insideLoadButton(mouseX, mouseY, halfRightWidth, boxHeight, expansion)) {
                 if (selectedLoad != null && !selectedLoad.equals("")) {
                     ArrayList<Category> categories = right.stream().filter(CategoryBoolean::getValue).map(categoryBoolean -> categoryBoolean.category).collect(Collectors.toCollection(ArrayList::new));
                     Mud.configManager.load(selectedLoad, categories);
