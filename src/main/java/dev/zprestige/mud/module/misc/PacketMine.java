@@ -52,21 +52,22 @@ public class PacketMine extends Module {
     private EnumFacing face, prevFace;
     private BlockPos pos, prevPos;
     private long time, sys;
+    private static BlockPos activePos;
     private final BufferGroup bufferGroup = new BufferGroup(this, z -> true, lineWidth, color1, color2, step, speed, opacity,
             () -> {
                 if (pos != null) {
                     float scale = Math.min(1.0f, ((System.currentTimeMillis() - time) / 1000.0f) * multiplier(pos));
                     AxisAlignedBB bb = new AxisAlignedBB(pos);
-                    RenderUtil.drawBB(bb.minX, bb.minY, bb.minZ, bb.maxX                                                           , bb.minY + scale, bb.maxZ);
+                    RenderUtil.drawBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.minY + scale, bb.maxZ);
                 }
             }
     );
 
     @EventListener
     public void onMotionUpdate(MotionUpdateEvent event) {
+        activePos = pos;
         if (prevPos != null && prevFace != null) {
             if (instant.getValue()) {
-                System.out.println(key.getValue() != Keyboard.KEY_NONE && Keyboard.isKeyDown(key.getValue()) && System.currentTimeMillis() - sys > timing.getValue());
                 if (key.getValue() != Keyboard.KEY_NONE && Keyboard.isKeyDown(key.getValue())) {
                     if (System.currentTimeMillis() - sys > timing.getValue()) {
                         int currentItem = mc.player.inventory.currentItem;
@@ -78,6 +79,7 @@ public class PacketMine extends Module {
                             RotationUtil.facePos(prevPos, event);
                         }
                         PacketUtil.invoke(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, prevPos, prevFace));
+                        mc.player.swingArm(EnumHand.MAIN_HAND);
                         if (swap.getValue() && slot != -1) {
                             InventoryUtil.switchBack(currentItem);
                         }
@@ -171,6 +173,10 @@ public class PacketMine extends Module {
         this.pos = pos;
         this.face = face;
         this.time = System.currentTimeMillis();
+    }
+
+    public static BlockPos getActivePos() {
+        return activePos;
     }
 
     private boolean canBreak(BlockPos pos) {

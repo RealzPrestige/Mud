@@ -6,6 +6,7 @@ import dev.zprestige.mud.events.impl.player.ItemUsedEvent;
 import dev.zprestige.mud.events.impl.system.PacketSendEvent;
 import dev.zprestige.mud.events.impl.world.TickEvent;
 import dev.zprestige.mud.module.Module;
+import dev.zprestige.mud.module.misc.PacketMine;
 import dev.zprestige.mud.setting.impl.BooleanSetting;
 import dev.zprestige.mud.setting.impl.ModeSetting;
 import dev.zprestige.mud.util.impl.EntityUtil;
@@ -25,7 +26,6 @@ public class NoSlow extends Module {
     private final ModeSetting mode = setting("Mode", "NCP", Arrays.asList("None", "NCP", "Sneak", "Swap"));
 
     private boolean sneaking;
-
 
     @EventListener
     public void onInputUpdate(InputUpdateEvent event) {
@@ -78,7 +78,7 @@ public class NoSlow extends Module {
     @EventListener
     public void onPacketSend(PacketSendEvent event) {
         if (mode.getValue().equals("NCP")) {
-            if (event.getPacket() instanceof CPacketPlayer) {
+            if (event.getPacket() instanceof CPacketPlayer && PacketMine.getActivePos() != null) {
                 PacketUtil.invoke(new CPacketPlayerDigging(CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, mc.player.getPosition(), EnumFacing.DOWN));
             }
         }
