@@ -6,6 +6,7 @@ import dev.zprestige.mud.events.impl.render.*;
 import dev.zprestige.mud.events.impl.system.ConnectEvent;
 import dev.zprestige.mud.events.impl.system.DisconnectEvent;
 import dev.zprestige.mud.util.MC;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

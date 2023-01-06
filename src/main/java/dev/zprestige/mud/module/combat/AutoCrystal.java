@@ -77,7 +77,7 @@ public class AutoCrystal extends Module {
     private BlockPos pos;
     private int ticks, shiftTicks;
 
-    private final BufferGroup bufferGroup = new BufferGroup(this, z -> this.pos != null, lineWidth, color1, color2, step, speed, opacity,
+    private final BufferGroup bufferGroup = new BufferGroup(this, z -> true, lineWidth, color1, color2, step, speed, opacity,
             () -> {
                 if (pos != null) {
                     RenderUtil.drawBB(new AxisAlignedBB(pos));

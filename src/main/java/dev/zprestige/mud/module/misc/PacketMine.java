@@ -52,7 +52,7 @@ public class PacketMine extends Module {
     private EnumFacing face, prevFace;
     private BlockPos pos, prevPos;
     private long time, sys;
-    private final BufferGroup bufferGroup = new BufferGroup(this, z -> pos != null, lineWidth, color1, color2, step, speed, opacity,
+    private final BufferGroup bufferGroup = new BufferGroup(this, z -> true, lineWidth, color1, color2, step, speed, opacity,
             () -> {
                 if (pos != null) {
                     float scale = Math.min(1.0f, ((System.currentTimeMillis() - time) / 1000.0f) * multiplier(pos));
