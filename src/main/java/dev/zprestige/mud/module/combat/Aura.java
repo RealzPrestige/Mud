@@ -4,6 +4,7 @@ import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.player.MotionUpdateEvent;
 import dev.zprestige.mud.events.impl.render.Render3DPreEvent;
+import dev.zprestige.mud.events.impl.system.PacketSendEvent;
 import dev.zprestige.mud.manager.EventManager;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.BooleanSetting;
@@ -14,6 +15,7 @@ import dev.zprestige.mud.util.impl.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemSword;
+import net.minecraft.network.play.client.CPacketHeldItemChange;
 import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
@@ -32,6 +34,7 @@ public class Aura extends Module {
     private final BooleanSetting delay = setting("Delay", true);
     private final BooleanSetting disable = setting("Disable", false);
 
+    private final BooleanSetting packet = setting("Packet", true).invokeTab("Server");
     private final BooleanSetting strictTrace = setting("Strict Trace", false).invokeTab("Server");
     private final BooleanSetting tpsSync = setting("TPS Sync", false).invokeTab("Server");
 
@@ -83,12 +86,23 @@ public class Aura extends Module {
                 if (rotations.getValue().equals("Hit")) {
                     RotationUtil.faceEntity(entityPlayer, event);
                 }
-                PacketUtil.invoke(new CPacketUseEntity(entityPlayer));
+                if (packet.getValue()) {
+                    PacketUtil.invoke(new CPacketUseEntity(entityPlayer));
+                } else {
+                    mc.playerController.attackEntity(mc.player, entityPlayer);
+                }
                 mc.player.swingArm(EnumHand.MAIN_HAND);
                 sys = System.currentTimeMillis();
             }
         } else if (disable.getValue()) {
             toggle();
+        }
+    }
+
+    @EventListener
+    public void onPacketSend(PacketSendEvent event){
+        if (event.getPacket() instanceof CPacketHeldItemChange){
+            sys = System.currentTimeMillis();
         }
     }
 
