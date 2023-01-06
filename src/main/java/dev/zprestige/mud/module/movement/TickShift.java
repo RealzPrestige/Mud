@@ -19,7 +19,9 @@ public class TickShift extends Module {
 
     @Override
     public void onDisable() {
-        ((ITimer) ((IMinecraft) mc).getTimer()).setTickLength(50.0f);
+        if (!Step.isTimer()) {
+            ((ITimer) ((IMinecraft) mc).getTimer()).setTickLength(50.0f);
+        }
         ticks = 0;
         inactiveTicks = 0;
         shift = false;
@@ -44,13 +46,17 @@ public class TickShift extends Module {
             shift = false;
         }
         if (shift && ticks > activeTicks.getValue()) {
-            ((ITimer) ((IMinecraft) mc).getTimer()).setTickLength(50.0f);
+            if (!Step.isTimer()) {
+                ((ITimer) ((IMinecraft) mc).getTimer()).setTickLength(50.0f);
+            }
             shift = false;
             invokeAppend("");
             return;
         }
         if (shift) {
-            ((ITimer) ((IMinecraft) mc).getTimer()).setTickLength(50.0f / timer.getValue());
+            if (!Step.isTimer()) {
+                ((ITimer) ((IMinecraft) mc).getTimer()).setTickLength(50.0f / timer.getValue());
+            }
             ticks++;
             invokeAppend(String.valueOf(ticks));
         } else {

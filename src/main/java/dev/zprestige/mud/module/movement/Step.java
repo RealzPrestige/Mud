@@ -36,11 +36,12 @@ public class Step extends Module {
             1.45f,
             1.43f
     };
-    private boolean timer;
+    private static boolean timer;
 
     @Override
     public void onDisable() {
         mc.player.stepHeight = 0.6f;
+        ((ITimer) ((IMinecraft) mc).getTimer()).setTickLength(50.0f);
     }
 
     @EventListener
@@ -105,5 +106,9 @@ public class Step extends Module {
 
     private boolean isBoundingEmpty(float[] i, float y) {
         return mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox().offset(i[0], y, i[1])).isEmpty();
+    }
+
+    public static boolean isTimer() {
+        return timer;
     }
 }
