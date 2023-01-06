@@ -20,7 +20,7 @@ import java.util.Arrays;
 public class Offhand extends Module {
     private final ModeSetting mode = setting("Mode", "Totem", Arrays.asList("Totem", "Crystal", "Gapple"));
     private final FloatSetting health = setting("Health", 14.0f, 0.1f, 36.0f).invokeVisibility(z -> !mode.getValue().equals("Totem"));
-    private final FloatSetting safeHealth = setting("Health", 10.0f, 0.1f, 36.0f).invokeVisibility(z -> !mode.getValue().equals("Totem"));
+    private final FloatSetting safeHealth = setting("Safe Health", 10.0f, 0.1f, 36.0f).invokeVisibility(z -> !mode.getValue().equals("Totem"));
     private final BooleanSetting hotbar = setting("Hotbar", false);
     private final BooleanSetting swordGapple = setting("Sword Gapple", false);
     private final BooleanSetting whileHolding = setting("While Holding", false).invokeVisibility(z -> swordGapple.getValue());
