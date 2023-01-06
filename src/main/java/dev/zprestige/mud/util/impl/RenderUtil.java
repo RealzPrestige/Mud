@@ -248,30 +248,6 @@ public class RenderUtil implements MC {
         glPopMatrix();
     }
 
-    public static void circleOutline(float x, float y, float radius, Color color, int verts) {
-        final double pi = Math.PI;
-        x = x - radius / 2.0f;
-        y = y - radius / 2.0f;
-
-        glPushMatrix();
-        glDisable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glDisable(GL_ALPHA_TEST);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glShadeModel(GL_SMOOTH);
-        glColor(color);
-        glBegin(GL_LINE_STRIP);
-
-        for (int i = 0; i < verts; i++) {
-            glVertex2d(x + radius + Math.sin(i * pi / 180.0) * radius * -1.0, y + radius + Math.cos(i * pi / 180.0) * radius * -1.0);
-        }
-
-        glEnd();
-        glDisable(GL_BLEND);
-        glEnable(GL_TEXTURE_2D);
-        glPopMatrix();
-    }
-
     public static void invokeScale(float scale) {
         glPushMatrix();
         glScalef(scale, scale, scale);
@@ -308,17 +284,6 @@ public class RenderUtil implements MC {
     public static void setAlphaLimit(float limit) {
         glEnable(GL_ALPHA_TEST);
         glAlphaFunc(GL_GREATER, (float) (limit * .01));
-    }
-
-    public static void roundedTex(float x, float y, float width, float height, float radius, Color color) {
-        bindBlank();
-        setupDefault(color);
-        glBegin(GL_TRIANGLE_FAN);
-        for (int i = 1; i <= 4; i++) {
-            glTexCoord2f(0.0f, 0.0f);
-            corner(x, y, width, height, radius, i);
-        }
-        releaseDefault();
     }
 
     public static void rounded(float x, float y, float width, float height, float radius, Color color) {
