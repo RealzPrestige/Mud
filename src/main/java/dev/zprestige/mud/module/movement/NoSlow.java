@@ -22,9 +22,9 @@ import java.util.Arrays;
 public class NoSlow extends Module {
     private final BooleanSetting items = setting("Items", false);
     private final BooleanSetting inventory = setting("Inventory", false);
-    private final BooleanSetting strictInventory = setting("Strict Inventory", false).invokeVisibility(z -> inventory.getValue());
     private final ModeSetting mode = setting("Mode", "NCP", Arrays.asList("NCP", "Sneak", "Swap"));
-    private boolean sneaking;
+
+    private boolean sneaking, sprinting;
 
 
     @EventListener
@@ -38,6 +38,10 @@ public class NoSlow extends Module {
     @EventListener
     public void onTick(TickEvent event) {
         if (isNotElytraFlying()) {
+            if (sprinting){
+                PacketUtil.invoke(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SPRINTING));
+                sprinting = true;
+            }
             if (sneaking && !mc.player.isHandActive()) {
                 PacketUtil.invoke(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
                 sneaking = false;
@@ -77,11 +81,6 @@ public class NoSlow extends Module {
 
     @EventListener
     public void onPacketSend(PacketSendEvent event) {
-        if (inventory.getValue() && strictInventory.getValue()) {
-            if (event.getPacket() instanceof CPacketClickWindow) {
-                PacketUtil.invoke(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
-            }
-        }
         if (mode.getValue().equals("NCP")) {
             if (event.getPacket() instanceof CPacketPlayer) {
                 PacketUtil.invoke(new CPacketPlayerDigging(CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, mc.player.getPosition(), EnumFacing.DOWN));
