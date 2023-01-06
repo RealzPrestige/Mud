@@ -2,15 +2,29 @@ package dev.zprestige.mud.util.impl;
 
 import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.util.MC;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class EntityUtil implements MC {
+    private static final KeyBinding[] movementKeys = new KeyBinding[] {
+            mc.gameSettings.keyBindForward,
+            mc.gameSettings.keyBindRight,
+            mc.gameSettings.keyBindBack,
+            mc.gameSettings.keyBindLeft,
+            mc.gameSettings.keyBindJump,
+            mc.gameSettings.keyBindSprint
+    };
 
     public static boolean isMoving(){
-        return mc.gameSettings.keyBindForward.isKeyDown() || mc.gameSettings.keyBindBack.isKeyDown() || mc.gameSettings.keyBindLeft.isKeyDown() || mc.gameSettings.keyBindRight.isKeyDown();
+        return Arrays.stream(getMovementKeys()).anyMatch(KeyBinding::isKeyDown);
+    }
+
+    public static KeyBinding[] getMovementKeys() {
+        return movementKeys;
     }
 
     public static void setSpeed(double speed) {

@@ -2,13 +2,14 @@ package dev.zprestige.mud.manager;
 
 import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.impl.player.CameraSetupEvent;
+import dev.zprestige.mud.events.impl.player.ItemUsedEvent;
 import dev.zprestige.mud.events.impl.render.*;
 import dev.zprestige.mud.events.impl.system.ConnectEvent;
 import dev.zprestige.mud.events.impl.system.DisconnectEvent;
 import dev.zprestige.mud.util.MC;
-import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
@@ -93,6 +94,14 @@ public class EventManager implements MC {
     public void onInputUpdate(InputUpdateEvent event) {
         dev.zprestige.mud.events.impl.player.InputUpdateEvent itemInputUpdateEvent = new dev.zprestige.mud.events.impl.player.InputUpdateEvent(event.getMovementInput());
         Mud.eventBus.invoke(itemInputUpdateEvent);
+    }
+
+    @SubscribeEvent
+    public void onEntityItemUse(LivingEntityUseItemEvent event) {
+        if (event.getEntity().equals(mc.player)) {
+            ItemUsedEvent itemUsedEvent = new ItemUsedEvent();
+            Mud.eventBus.invoke(itemUsedEvent);
+        }
     }
 
     public static boolean nullCheck() {
