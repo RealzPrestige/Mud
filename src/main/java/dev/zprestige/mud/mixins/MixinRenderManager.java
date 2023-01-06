@@ -8,9 +8,8 @@ import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(RenderManager.class)
 public class MixinRenderManager implements MC {
@@ -21,17 +20,45 @@ public class MixinRenderManager implements MC {
         this.entityIn = entityIn;
     }
 
-    @ModifyArgs(method = "renderEntityStatic", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderManager;renderEntity(Lnet/minecraft/entity/Entity;DDDFFZ)V"))
-    private void renderEntityStatic(Args args){
-        if (entityIn == null){
-            return;
+    // ModifyArgs creates indexoutofbounds???
+
+    @ModifyArg(method = "renderEntityStatic", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderManager;renderEntity(Lnet/minecraft/entity/Entity;DDDFFZ)V"), index = 1)
+    private double renderEntityStaticX(double x){
+        if (entityIn == null || mc.world == null){
+            return x;
         }
         InterpolateEvent event = new InterpolateEvent();
         Mud.eventBus.invoke(event);
         if (event.isCancelled()) {
-            args.set(1, entityIn.posX - mc.getRenderManager().viewerPosX);
-            args.set(2, entityIn.posY - mc.getRenderManager().viewerPosY);
-            args.set(3, entityIn.posZ - mc.getRenderManager().viewerPosZ);
+            return entityIn.posX - mc.getRenderManager().viewerPosX;
         }
+        return x;
+    }
+
+
+    @ModifyArg(method = "renderEntityStatic", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderManager;renderEntity(Lnet/minecraft/entity/Entity;DDDFFZ)V"), index = 2)
+    private double renderEntityStaticY(double y){
+        if (entityIn == null || mc.world == null){
+            return y;
+        }
+        InterpolateEvent event = new InterpolateEvent();
+        Mud.eventBus.invoke(event);
+        if (event.isCancelled()) {
+            return entityIn.posY - mc.getRenderManager().viewerPosY;
+        }
+        return y;
+    }
+
+    @ModifyArg(method = "renderEntityStatic", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderManager;renderEntity(Lnet/minecraft/entity/Entity;DDDFFZ)V"), index = 3)
+    private double renderEntityStaticZ(double z){
+        if (entityIn == null || mc.world == null){
+            return z;
+        }
+        InterpolateEvent event = new InterpolateEvent();
+        Mud.eventBus.invoke(event);
+        if (event.isCancelled()) {
+            return entityIn.posZ - mc.getRenderManager().viewerPosZ;
+        }
+        return z;
     }
 }
