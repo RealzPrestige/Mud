@@ -57,7 +57,7 @@ public class PacketMine extends Module {
                 if (pos != null) {
                     float scale = Math.min(1.0f, ((System.currentTimeMillis() - time) / 1000.0f) * multiplier(pos));
                     AxisAlignedBB bb = new AxisAlignedBB(pos);
-                    RenderUtil.drawBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.minY + scale, bb.maxZ);
+                    RenderUtil.drawBB(bb.minX, bb.minY, bb.minZ, bb.maxX                                                           , bb.minY + scale, bb.maxZ);
                 }
             }
     );
@@ -66,6 +66,7 @@ public class PacketMine extends Module {
     public void onMotionUpdate(MotionUpdateEvent event) {
         if (prevPos != null && prevFace != null) {
             if (instant.getValue()) {
+                System.out.println(key.getValue() != Keyboard.KEY_NONE && Keyboard.isKeyDown(key.getValue()) && System.currentTimeMillis() - sys > timing.getValue());
                 if (key.getValue() != Keyboard.KEY_NONE && Keyboard.isKeyDown(key.getValue())) {
                     if (System.currentTimeMillis() - sys > timing.getValue()) {
                         int currentItem = mc.player.inventory.currentItem;
