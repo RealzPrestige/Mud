@@ -15,8 +15,8 @@ import dev.zprestige.mud.util.impl.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemSword;
+import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketHeldItemChange;
-import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 
@@ -34,7 +34,7 @@ public class Aura extends Module {
     private final BooleanSetting delay = setting("Delay", true);
     private final BooleanSetting disable = setting("Disable", false);
 
-    private final BooleanSetting packet = setting("Packet", true).invokeTab("Server");
+    private final BooleanSetting sprintBypass = setting("Sprint Bypass", true).invokeTab("Server");
     private final BooleanSetting strictTrace = setting("Strict Trace", false).invokeTab("Server");
     private final BooleanSetting tpsSync = setting("TPS Sync", false).invokeTab("Server");
 
@@ -86,12 +86,16 @@ public class Aura extends Module {
                 if (rotations.getValue().equals("Hit")) {
                     RotationUtil.faceEntity(entityPlayer, event);
                 }
-                if (packet.getValue()) {
-                    PacketUtil.invoke(new CPacketUseEntity(entityPlayer));
-                } else {
-                    mc.playerController.attackEntity(mc.player, entityPlayer);
+                boolean sprint = mc.player.isSprinting();
+                if (sprintBypass.getValue() && sprint) {
+                    PacketUtil.invoke(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SPRINTING));
                 }
+                mc.playerController.attackEntity(mc.player, entityPlayer);
                 mc.player.swingArm(EnumHand.MAIN_HAND);
+
+                if (sprintBypass.getValue() && sprint) {
+                    PacketUtil.invoke(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SPRINTING));
+                }
                 sys = System.currentTimeMillis();
             }
         } else if (disable.getValue()) {
@@ -100,8 +104,8 @@ public class Aura extends Module {
     }
 
     @EventListener
-    public void onPacketSend(PacketSendEvent event){
-        if (event.getPacket() instanceof CPacketHeldItemChange){
+    public void onPacketSend(PacketSendEvent event) {
+        if (event.getPacket() instanceof CPacketHeldItemChange) {
             sys = System.currentTimeMillis();
         }
     }

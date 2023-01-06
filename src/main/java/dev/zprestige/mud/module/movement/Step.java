@@ -11,6 +11,7 @@ import dev.zprestige.mud.setting.impl.BooleanSetting;
 import dev.zprestige.mud.setting.impl.FloatSetting;
 import dev.zprestige.mud.setting.impl.ModeSetting;
 import dev.zprestige.mud.util.impl.EntityUtil;
+import dev.zprestige.mud.util.impl.PacketUtil;
 import net.minecraft.network.play.client.CPacketPlayer;
 
 import java.util.Arrays;
@@ -97,7 +98,7 @@ public class Step extends Module {
 
     protected void sendOffsets(final int amount, final float[] i) {
         for (float j : amount == 1 ? singleOffsets : checkFirstHeight(i) ? singleOffsets : doubleOffsets) {
-            mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + j, mc.player.posZ, mc.player.onGround));
+            PacketUtil.invoke(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + j, mc.player.posZ, mc.player.onGround));
         }
         mc.player.setPosition(mc.player.posX, mc.player.posY + (amount == 2 ? checkFirstHeight(i) ? 1 : 2 : 1), mc.player.posZ);
     }
