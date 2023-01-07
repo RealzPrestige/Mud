@@ -29,7 +29,7 @@ public class AnvilEsp extends Module {
                         continue;
                     }
                     AxisAlignedBB bb = entityPlayer.getEntityBoundingBox();
-                    bb = bb.setMaxY(125.0f);
+                    bb = bb.setMaxY(mc.player.posY);
                     RenderUtil.drawBB(bb);
                 }
             });
