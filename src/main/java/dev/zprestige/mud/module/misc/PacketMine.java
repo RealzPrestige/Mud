@@ -52,7 +52,6 @@ public class PacketMine extends Module {
     private EnumFacing face, prevFace;
     private BlockPos pos, prevPos;
     private long time, sys;
-    private static BlockPos activePos;
     private final BufferGroup bufferGroup = new BufferGroup(this, z -> true, lineWidth, color1, color2, step, speed, opacity,
             () -> {
                 if (pos != null) {
@@ -65,7 +64,6 @@ public class PacketMine extends Module {
 
     @EventListener
     public void onMotionUpdate(MotionUpdateEvent event) {
-        activePos = pos;
         if (prevPos != null && prevFace != null) {
             if (instant.getValue()) {
                 if (key.getValue() != Keyboard.KEY_NONE && Keyboard.isKeyDown(key.getValue())) {
@@ -173,10 +171,6 @@ public class PacketMine extends Module {
         this.pos = pos;
         this.face = face;
         this.time = System.currentTimeMillis();
-    }
-
-    public static BlockPos getActivePos() {
-        return activePos;
     }
 
     private boolean canBreak(BlockPos pos) {

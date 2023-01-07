@@ -78,7 +78,7 @@ public class NoSlow extends Module {
     @EventListener
     public void onPacketSend(PacketSendEvent event) {
         if (mode.getValue().equals("NCP")) {
-            if (event.getPacket() instanceof CPacketPlayer && PacketMine.getActivePos() == null) {
+            if (event.getPacket() instanceof CPacketPlayer) {
                 PacketUtil.invoke(new CPacketPlayerDigging(CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, mc.player.getPosition(), EnumFacing.DOWN));
             }
         }
