@@ -14,7 +14,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 import java.awt.*;
 
-public class AnvilESP extends Module {
+public class AnvilEsp extends Module {
     private final FloatSetting speed = setting("Speed", 1.0f, 0.1f, 5.0f).invokeTab("Render");
     private final FloatSetting step = setting("Step", 0.2f, 0.1f, 2.0f).invokeTab("Render");
     private final FloatSetting opacity = setting("Opacity", 150.0f, 0.0f, 255.0f).invokeTab("Render");
