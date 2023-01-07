@@ -160,6 +160,58 @@ public class RenderUtil implements MC {
         glPopMatrix();
     }
 
+    public static void drawBB(AxisAlignedBB bb, Color color) {
+        bb = bb.offset(renderOffset());
+        bindBlank();
+        glPushMatrix();
+        glEnable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_LIGHTING);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glColor(color);
+        glBegin(GL_TRIANGLE_STRIP);
+
+        glVertex3d(bb.minX, bb.minY, bb.minZ);
+        glVertex3d(bb.minX, bb.minY, bb.minZ);
+        glVertex3d(bb.minX, bb.minY, bb.minZ);
+        glVertex3d(bb.minX, bb.minY, bb.maxZ);
+        glVertex3d(bb.minX, bb.maxY, bb.minZ);
+        glVertex3d(bb.minX, bb.maxY, bb.maxZ);
+        glVertex3d(bb.minX, bb.maxY, bb.maxZ);
+        glVertex3d(bb.minX, bb.minY, bb.maxZ);
+        glVertex3d(bb.maxX, bb.maxY, bb.maxZ);
+        glVertex3d(bb.maxX, bb.minY, bb.maxZ);
+        glVertex3d(bb.maxX, bb.minY, bb.maxZ);
+        glVertex3d(bb.maxX, bb.minY, bb.minZ);
+        glVertex3d(bb.maxX, bb.maxY, bb.maxZ);
+        glVertex3d(bb.maxX, bb.maxY, bb.minZ);
+        glVertex3d(bb.maxX, bb.maxY, bb.minZ);
+        glVertex3d(bb.maxX, bb.minY, bb.minZ);
+        glVertex3d(bb.minX, bb.maxY, bb.minZ);
+        glVertex3d(bb.minX, bb.minY, bb.minZ);
+        glVertex3d(bb.minX, bb.minY, bb.minZ);
+        glVertex3d(bb.maxX, bb.minY, bb.minZ);
+        glVertex3d(bb.minX, bb.minY, bb.maxZ);
+        glVertex3d(bb.maxX, bb.minY, bb.maxZ);
+        glVertex3d(bb.maxX, bb.minY, bb.maxZ);
+        glVertex3d(bb.minX, bb.maxY, bb.minZ);
+        glVertex3d(bb.minX, bb.maxY, bb.minZ);
+        glVertex3d(bb.minX, bb.maxY, bb.maxZ);
+        glVertex3d(bb.maxX, bb.maxY, bb.minZ);
+        glVertex3d(bb.maxX, bb.maxY, bb.maxZ);
+        glVertex3d(bb.maxX, bb.maxY, bb.maxZ);
+        glVertex3d(bb.maxX, bb.maxY, bb.maxZ);
+
+        glEnd();
+        glColor(Color.WHITE);
+        glEnable(GL_TEXTURE_2D);
+        glDisable(GL_LIGHTING);
+        glEnable(GL_DEPTH_TEST);
+        glDisable(GL_BLEND);
+        glPopMatrix();
+    }
+
     public static void gradient(float x, float y, float width, float height, Color topLeft, Color topRight, Color bottomLeft, Color bottomRight) {
         setupDefault(Color.WHITE);
         glShadeModel(GL_SMOOTH);
