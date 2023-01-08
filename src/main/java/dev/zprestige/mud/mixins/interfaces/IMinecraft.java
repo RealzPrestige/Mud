@@ -1,6 +1,7 @@
 package dev.zprestige.mud.mixins.interfaces;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.Session;
 import net.minecraft.util.Timer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -13,4 +14,7 @@ public interface IMinecraft {
 
     @Accessor("rightClickDelayTimer")
     void setRightClickDelayTimer(int rightClickDelayTimer);
+
+    @Accessor("session")
+    void setSession(Session session);
 }

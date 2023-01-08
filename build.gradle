@@ -43,11 +43,15 @@ repositories {
     maven {
         url 'https://repo.spongepowered.org/maven/'
     }
+    maven {
+        url 'https://litarvan.github.io/maven'
+    }
     mavenCentral()
 }
 
 dependencies {
     prestige group: 'club.minnced', name: 'java-discord-rpc', version: '2.0.1'
+    prestige 'fr.litarvan:openauth:1.1.3'
     prestige("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
         exclude module: 'launchwrapper'
         exclude module: 'guava'
@@ -77,6 +81,7 @@ shadowJar {
         include(dependency('org.spongepowered:mixin'))
         include(dependency('club.minnced:java-discord-rpc:2.0.1'))
         include(dependency('club.minnced:discord-rpc-release:v3.3.0'))
+        include(dependency('fr.litarvan:openauth:1.1.3'))
     }
     configurations = [project.configurations.prestige]
     duplicatesStrategy DuplicatesStrategy.EXCLUDE
@@ -104,7 +109,9 @@ jar {
                 "TweakOrder": 0,
                 "FMLCorePluginContainsFMLMod": "true",
                 "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
-                "MixinConfigs": "mixins.mud.json")
+                "MixinConfigs": "mixins.mud.json",
+                'FMLAT': 'mud_at.cfg'
+        )
     }
 }
 

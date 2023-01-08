@@ -62,11 +62,26 @@ public class InventoryUtil implements MC {
         return itemSlot;
     }
 
+    public static int getBlockSlotByName(String name) {
+        int itemSlot = -1;
+        for (int i = 1; i <= 45; ++i) {
+            ItemStack stack = mc.player.inventory.getStackInSlot(i);
+            if (stack.getDisplayName().toLowerCase().contains(name)) {
+                itemSlot = i;
+                break;
+            }
+        }
+        return itemSlot;
+    }
+
 
     public static int getBlockFromHotbar(Block block) {
         int slot = -1;
         for (int i = 0; i < 9; ++i) {
             ItemStack stack = mc.player.inventory.getStackInSlot(i);
+            if (stack.getDisplayName().toLowerCase().contains("anchor")){
+                continue;
+            }
             if (stack.getItem().equals(Item.getItemFromBlock(block)))
                 slot = i;
         }

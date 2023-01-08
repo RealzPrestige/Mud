@@ -2,9 +2,15 @@ package dev.zprestige.mud.util.impl;
 
 import dev.zprestige.mud.util.MC;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
@@ -15,6 +21,38 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class RenderUtil implements MC {
     private static final ResourceLocation blank = new ResourceLocation("textures/blank.png");
+
+    public static void drawEntityOnScreen(float x, float y, float scale, float yaw, float pitch, EntityLivingBase player) {
+        GlStateManager.enableColorMaterial();
+        GlStateManager.pushMatrix();
+        glDepthMask(true);
+        glEnable(GL_DEPTH_TEST);
+        GlStateManager.translate(x, y, 50.0F);
+        GlStateManager.scale(-scale, scale, scale);
+        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.rotate(135.0F, 0.0F, 1.0F, 0.0F);
+        RenderHelper.enableStandardItemLighting();
+        GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+        player.renderYawOffset = yaw;
+        player.rotationYaw = yaw;
+        player.rotationPitch = pitch;
+        player.rotationYawHead = yaw;
+        player.prevRotationYawHead = yaw;
+        GlStateManager.translate(0.0F, 0.0F, 0.0F);
+        RenderManager rendermanager = mc.getRenderManager();
+        rendermanager.setPlayerViewY(180.0F);
+        rendermanager.setRenderShadow(false);
+        rendermanager.renderEntity(player, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+        rendermanager.setRenderShadow(true);
+        GlStateManager.popMatrix();
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        glDisable(GL_DEPTH_TEST);
+        glDepthMask(false);
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+    }
 
     public static double interpolateLastTickPos(double pos, double lastPos) {
         return lastPos + (pos - lastPos) * mc.getRenderPartialTicks();

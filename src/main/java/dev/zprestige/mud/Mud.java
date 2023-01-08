@@ -4,6 +4,7 @@ import dev.zprestige.mud.events.bus.EventBus;
 import dev.zprestige.mud.manager.*;
 import dev.zprestige.mud.module.Category;
 import dev.zprestige.mud.ui.Interface;
+import dev.zprestige.mud.ui.alt.AltManagerScreen;
 import dev.zprestige.mud.util.impl.DiscordUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.Mod;
@@ -34,6 +35,7 @@ public class Mud {
     public static final FrustumManager frustumManager = new FrustumManager();
     public static final Interface clickGui = new Interface();
     public static final TPSManager tpsManager = new TPSManager();
+    public static final AltManagerScreen altManagerScreen = new AltManagerScreen();
     public static final Thread thread = new Thread(() -> {
         configManager.save("AutoSave", false, new ArrayList<>(Arrays.asList(Category.values())));
         DiscordUtil.onExit();

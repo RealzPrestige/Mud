@@ -1,5 +1,6 @@
 package dev.zprestige.mud.module.visual;
 
+import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.render.Render2DEvent;
 import dev.zprestige.mud.events.impl.render.Render3DEvent;
@@ -8,11 +9,15 @@ import dev.zprestige.mud.setting.impl.ColorSetting;
 import dev.zprestige.mud.setting.impl.FloatSetting;
 import dev.zprestige.mud.shader.impl.BufferGroup;
 import dev.zprestige.mud.shader.impl.GlowShader;
+import dev.zprestige.mud.util.impl.BlockUtil;
 import dev.zprestige.mud.util.impl.RenderUtil;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 
 import java.awt.*;
+import java.util.stream.IntStream;
 
 public class AnvilEsp extends Module {
     private final FloatSetting speed = setting("Speed", 1.0f, 0.1f, 5.0f).invokeTab("Render");
@@ -25,7 +30,7 @@ public class AnvilEsp extends Module {
     private final BufferGroup bufferGroup = new BufferGroup(this, z -> true, lineWidth, color1, color2, step, speed, opacity,
             () -> {
                 for (EntityPlayer entityPlayer : mc.world.playerEntities) {
-                    if (entityPlayer.equals(mc.player)) {
+                    if (entityPlayer.equals(mc.player) || Mud.friendManager.contains(entityPlayer) || entityPlayer.posY > mc.player.posY) {
                         continue;
                     }
                     AxisAlignedBB bb = entityPlayer.getEntityBoundingBox();

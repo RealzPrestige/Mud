@@ -76,6 +76,7 @@ public class AutoCrystal extends Module {
     private long placeTime, breakTime;
     private BlockPos pos;
     private int ticks, shiftTicks;
+    public static long time;
 
     private final BufferGroup bufferGroup = new BufferGroup(this, z -> true, lineWidth, color1, color2, step, speed, opacity,
             () -> {
@@ -88,6 +89,7 @@ public class AutoCrystal extends Module {
 
     @EventListener
     public void onMotion(MotionUpdateEvent event) {
+        boolean active = false;
         EntityPlayer entityPlayer = EntityUtil.getEntityPlayer(targetRange.getValue());
         if (entityPlayer != null) {
             if (raytraceBypass.getValue()) {
@@ -118,6 +120,7 @@ public class AutoCrystal extends Module {
                 if (pos != null) {
 
                     placeCrystal(pos, event);
+                    active = true;
 
                     placeTime = sys;
                     if (!simultaneously.getValue()) {
@@ -133,6 +136,8 @@ public class AutoCrystal extends Module {
 
                 if (crystal != null) {
                     breakCrystal(crystal, event);
+                    active = true;
+
                     breakTime = sys;
                 }
                 this.pos = crystal != null ? crystal.getPosition().down() : null;
@@ -140,6 +145,9 @@ public class AutoCrystal extends Module {
         } else {
             pos = null;
             invokeAppend("");
+        }
+        if (active){
+            time = System.currentTimeMillis();
         }
     }
 
