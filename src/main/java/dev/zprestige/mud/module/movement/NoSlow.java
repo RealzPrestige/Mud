@@ -22,7 +22,7 @@ import java.util.Arrays;
 public class NoSlow extends Module {
     private final BooleanSetting items = setting("Items", false);
     private final BooleanSetting inventory = setting("Inventory", false);
-    private final BooleanSetting inventoryStrict = setting("Inventory Struct", false).invokeVisibility(z -> inventory.getValue());
+    private final BooleanSetting inventoryStrict = setting("Inventory Strict", false).invokeVisibility(z -> inventory.getValue());
     private final ModeSetting mode = setting("Mode", "NCP", Arrays.asList("None", "NCP", "Sneak", "Swap"));
 
     private boolean sneaking;
