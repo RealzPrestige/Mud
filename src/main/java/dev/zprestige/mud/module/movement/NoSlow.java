@@ -6,7 +6,6 @@ import dev.zprestige.mud.events.impl.player.ItemUsedEvent;
 import dev.zprestige.mud.events.impl.system.PacketSendEvent;
 import dev.zprestige.mud.events.impl.world.TickEvent;
 import dev.zprestige.mud.module.Module;
-import dev.zprestige.mud.module.misc.PacketMine;
 import dev.zprestige.mud.setting.impl.BooleanSetting;
 import dev.zprestige.mud.setting.impl.ModeSetting;
 import dev.zprestige.mud.util.impl.EntityUtil;
@@ -23,6 +22,7 @@ import java.util.Arrays;
 public class NoSlow extends Module {
     private final BooleanSetting items = setting("Items", false);
     private final BooleanSetting inventory = setting("Inventory", false);
+    private final BooleanSetting inventoryStrict = setting("Inventory Struct", false).invokeVisibility(z -> inventory.getValue());
     private final ModeSetting mode = setting("Mode", "NCP", Arrays.asList("None", "NCP", "Sneak", "Swap"));
 
     private boolean sneaking;
@@ -77,6 +77,12 @@ public class NoSlow extends Module {
 
     @EventListener
     public void onPacketSend(PacketSendEvent event) {
+        if (inventoryStrict.getValue()) {
+            if (event.getPacket() instanceof CPacketClickWindow) {
+                PacketUtil.invoke(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SPRINTING));
+            }
+        }
+
         if (mode.getValue().equals("NCP")) {
             if (event.getPacket() instanceof CPacketPlayer) {
                 PacketUtil.invoke(new CPacketPlayerDigging(CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, mc.player.getPosition(), EnumFacing.DOWN));
@@ -85,11 +91,11 @@ public class NoSlow extends Module {
     }
 
     @Override
-    public void onDisable(){
-        if (mc.player == null){
+    public void onDisable() {
+        if (mc.player == null) {
             return;
         }
-        if (sneaking){
+        if (sneaking) {
             PacketUtil.invoke(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
             sneaking = false;
         }
