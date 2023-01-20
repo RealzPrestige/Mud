@@ -13,7 +13,7 @@ public class MixinGuiNewChat {
 
     @Inject(method = "drawChat", at = @At("HEAD"), cancellable = true)
     private void drawScreen(int updateCounter, CallbackInfo ci) {
-        RenderChatEvent event = new RenderChatEvent();
+        RenderChatEvent event = new RenderChatEvent(updateCounter);
         Mud.eventBus.invoke(event);
         if (event.isCancelled()) {
             ci.cancel();

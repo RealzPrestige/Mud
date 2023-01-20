@@ -27,10 +27,12 @@ import java.util.ArrayList;
 
 public class AutoAnchor extends Module {
     private final IntSetting timing = setting("Timing", 50, 1, 500);
+    private final BooleanSetting waitBlock = setting("Wait Block", false);
     private final FloatSetting range = setting("Range", 5.0f, 0.1f, 10.0f);
     private final BooleanSetting packet = setting("Packet", true);
     private final BooleanSetting rotate = setting("Rotate", false);
     private final BooleanSetting strict = setting("Strict", false);
+    private final BooleanSetting instant = setting("Instant", false);
 
     private final FloatSetting speed = setting("Speed", 1.0f, 0.1f, 5.0f).invokeTab("Render");
     private final FloatSetting step = setting("Step", 0.2f, 0.1f, 2.0f).invokeTab("Render");
@@ -52,7 +54,7 @@ public class AutoAnchor extends Module {
 
     @EventListener
     public void onMotionUpdate(MotionUpdateEvent event) {
-        if (System.currentTimeMillis() - AutoCrystal.time < 100){
+        if (System.currentTimeMillis() - AutoCrystal.time < 100) {
             return;
         }
         new ArrayList<>(anchors).stream().filter(pos -> mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) || BlockUtil.distance(pos) > range.getValue()).forEach(anchors::remove);
@@ -61,9 +63,7 @@ public class AutoAnchor extends Module {
         if (entityPlayer == null || EntityUtil.isMoving()) {
             return;
         }
-        if (System.currentTimeMillis() - time < timing.getValue()) {
-            return;
-        }
+        boolean allow = System.currentTimeMillis() - time > timing.getValue();
         BlockPos pos = BlockUtil.getPosition(entityPlayer).up().up();
         boolean canPlace = false;
         for (Vec3i vec3i : offsets) {
@@ -73,15 +73,19 @@ public class AutoAnchor extends Module {
             }
         }
         if (canPlace) {
-            if (!anchors.contains(pos)) {
+            if (!anchors.contains(pos) && (allow || !waitBlock.getValue())) {
                 int slot = InventoryUtil.getBlockSlotByName("anchor");
                 if (slot == -1) {
                     return;
                 }
                 Mud.interactionManager.placeBlock(pos, rotate.getValue(), packet.getValue(), strict.getValue(), false, slot);
                 anchors.add(pos);
-                time = System.currentTimeMillis();
-            } else if (!glowStoned.contains(pos)) {
+                if (!instant.getValue()) {
+                    time = System.currentTimeMillis();
+                    return;
+                }
+            }
+            if (allow && !glowStoned.contains(pos)) {
                 int slot = InventoryUtil.getBlockSlot(Blocks.GLOWSTONE);
                 if (slot == -1) {
                     return;
@@ -91,12 +95,18 @@ public class AutoAnchor extends Module {
                 PacketUtil.invoke(new CPacketPlayerTryUseItemOnBlock(pos, EnumFacing.DOWN, EnumHand.MAIN_HAND, 0.5f, 0.5f, 0.5f));
                 InventoryUtil.switchBack(currentItem);
                 glowStoned.add(pos);
-                time = System.currentTimeMillis();
-            } else {
-                PacketUtil.invoke(new CPacketPlayerTryUseItemOnBlock(pos, EnumFacing.DOWN, EnumHand.MAIN_HAND, 0.5f, 0.5f, 0.5f));
-                time = System.currentTimeMillis();
+                if (!instant.getValue()) {
+                    time = System.currentTimeMillis();
+                    return;
+                }
             }
-        } else {
+            if (allow) {
+                PacketUtil.invoke(new CPacketPlayerTryUseItemOnBlock(pos, EnumFacing.DOWN, EnumHand.MAIN_HAND, 0.5f, 0.5f, 0.5f));
+                if (!instant.getValue()) {
+                    time = System.currentTimeMillis();
+                }
+            }
+        } else if (allow){
             BlockPos placeable = null;
             BlockPos pos1 = pos.down();
             for (Vec3i vec3i : offsets) {
