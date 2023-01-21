@@ -3,7 +3,6 @@ package dev.zprestige.mud.module.visual;
 import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.render.NameplateEvent;
-import dev.zprestige.mud.events.impl.render.Render3DEvent;
 import dev.zprestige.mud.events.impl.render.Render3DPostEvent;
 import dev.zprestige.mud.events.impl.render.Render3DPreEvent;
 import dev.zprestige.mud.module.Module;
@@ -37,9 +36,7 @@ public class Nametags extends Module {
     }
 
     @EventListener
-    public void onRender3D(Render3DPreEvent event) {
-        glTranslated(0.0f, 0.0f, 0.0f);
-        glRotatef(0.0f, 0.0f, 0.0f, 0.0f);
+    public void onRender3D(Render3DPostEvent event) {
         float scaleVal = this.scale.getValue() / 1000.0f;
         for (EntityPlayer entityPlayer : mc.world.playerEntities) {
             if (entityPlayer.equals(mc.player)) {
@@ -60,11 +57,12 @@ public class Nametags extends Module {
             float health = round(entityPlayer.getHealth() + entityPlayer.getAbsorptionAmount(), 1);
             String text = entityPlayer.getName() + " " + health;
 
-            RenderUtil.rounded(-Mud.fontManager.stringWidth(text) / 2.0f - 2.5f, -2.5f, Mud.fontManager.stringWidth(text) / 2.0f + 2.5f, 9.0f, 3.0f, new Color(0, 0, 0, 50));
 
             GradientShader.setup(step.getValue(), speed.getValue(), color1.getValue(), color2.getValue());
             RenderUtil.roundedOutlineTex(-Mud.fontManager.stringWidth(text) / 2.0f - 2.5f, -2.5f, Mud.fontManager.stringWidth(text) / 2.0f + 2.5f, 9.0f, 3.0f, Color.WHITE);
             GradientShader.finish();
+
+            RenderUtil.rounded(-Mud.fontManager.stringWidth(text) / 2.0f - 2.5f, -2.5f, Mud.fontManager.stringWidth(text) / 2.0f + 2.5f, 9.0f, 3.0f, new Color(0, 0, 0, 50));
 
             Mud.fontManager.string(entityPlayer.getName(), -Mud.fontManager.stringWidth(text) / 2.0f, 0, Color.WHITE);
             Mud.fontManager.string(" " + health, (-Mud.fontManager.stringWidth(text) / 2.0f) + Mud.fontManager.stringWidth(entityPlayer.getName()), 0, healthColor(health));
@@ -73,24 +71,16 @@ public class Nametags extends Module {
             stacks.add(entityPlayer.getHeldItemMainhand());
             stacks.addAll(entityPlayer.inventory.armorInventory);
             stacks.add(entityPlayer.getHeldItemOffhand());
+
             float i = -48.0f;
             for (ItemStack itemStack : stacks) {
-                glPushMatrix();
-                glClear(256);
                 RenderHelper.enableStandardItemLighting();
-                glEnable(GL_DEPTH_TEST);
-                mc.getRenderItem().zLevel = -150.0f;
                 mc.getRenderItem().renderItemAndEffectIntoGUI(itemStack, (int) i, -20);
                 mc.getRenderItem().renderItemOverlays(mc.fontRenderer, itemStack, (int) i, -20);
-                mc.getRenderItem().zLevel = 0.0f;
                 RenderHelper.disableStandardItemLighting();
-                glDisable(GL_DEPTH_TEST);
-                glPopMatrix();
                 i += 16.0f;
             }
-
-            glEnable(GL_BLEND);
-            glEnable(GL_DEPTH_TEST);
+            glDisable(GL_DEPTH_TEST);
             glPopMatrix();
         }
     }

@@ -15,6 +15,7 @@
     "MixinGuiMainMenu",
     "MixinGuiNewChat",
     "MixinGuiScreen",
+    "MixinItemBlock",
     "MixinItemRenderer",
     "MixinLayerHeldItem",
     "MixinMinecraft",
