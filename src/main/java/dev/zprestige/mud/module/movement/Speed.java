@@ -41,7 +41,7 @@ public class Speed extends Module {
 
     @EventListener
     public void onMove(MoveEvent event) {
-        if ((!liquid.getValue() && (mc.player.isInWater() || mc.player.isInLava())) || mc.player.isCreative() || mc.currentScreen != null) {
+        if ((!liquid.getValue() && (mc.player.isInWater() || mc.player.isInLava())) || mc.player.isCreative()) {
             return;
         }
         invokeAppend(activeMode);
@@ -98,8 +98,8 @@ public class Speed extends Module {
                 forward *= Math.sin(0.7853981633974483);
                 strafe *= Math.cos(0.7853981633974483);
             }
-            event.setMotionX((forward * motionSpeed * -Math.sin(Math.toRadians(yaw)) + strafe * motionSpeed * Math.cos(Math.toRadians(yaw))) * 0.99);
-            event.setMotionZ((forward * motionSpeed * Math.cos(Math.toRadians(yaw)) - strafe * motionSpeed * -Math.sin(Math.toRadians(yaw))) * 0.99);
+            event.setMotionX((forward * motionSpeed * -Math.sin(Math.toRadians(yaw)) + strafe * motionSpeed * Math.cos(Math.toRadians(yaw))));
+            event.setMotionZ((forward * motionSpeed * Math.cos(Math.toRadians(yaw)) - strafe * motionSpeed * -Math.sin(Math.toRadians(yaw))));
             ++currentState;
         }
     }
