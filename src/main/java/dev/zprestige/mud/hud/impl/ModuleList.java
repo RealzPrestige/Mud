@@ -28,7 +28,6 @@ public class ModuleList extends HudModule {
 
         ArrayList<Runnable> names = new ArrayList<>(), appends = new ArrayList<>(), shadows = new ArrayList<>();
 
-
         float deltaY = y;
         for (Module module : new ArrayList<>(modules)) {
             module.anim = MathUtil.lerp(module.anim, module.getEnabled().getValue() ? 1.0f : 0.0f, 0.005f * EventManager.deltaTime);

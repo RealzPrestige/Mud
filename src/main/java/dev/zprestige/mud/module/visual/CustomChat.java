@@ -2,14 +2,14 @@ package dev.zprestige.mud.module.visual;
 
 import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
-import dev.zprestige.mud.events.impl.chat.CustomChatMessageEvent;
 import dev.zprestige.mud.events.impl.chat.GuiChatTypeEvent;
 import dev.zprestige.mud.events.impl.render.Render2DEvent;
 import dev.zprestige.mud.events.impl.render.RenderChatEvent;
 import dev.zprestige.mud.events.impl.render.RenderTextBoxEvent;
 import dev.zprestige.mud.events.impl.system.DisconnectEvent;
-import dev.zprestige.mud.events.impl.system.PacketReceiveEvent;
+import dev.zprestige.mud.events.impl.world.TickEvent;
 import dev.zprestige.mud.manager.EventManager;
+import dev.zprestige.mud.mixins.interfaces.IGuiNewChat;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.BooleanSetting;
 import dev.zprestige.mud.setting.impl.ColorSetting;
@@ -17,10 +17,9 @@ import dev.zprestige.mud.setting.impl.FloatSetting;
 import dev.zprestige.mud.shader.impl.GradientShader;
 import dev.zprestige.mud.util.impl.MathUtil;
 import dev.zprestige.mud.util.impl.RenderUtil;
+import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.network.play.server.SPacketChat;
-import net.minecraft.util.text.ChatType;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
@@ -28,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class  CustomChat extends Module {
+public class CustomChat extends Module {
     private final FloatSetting y = setting("Y", 0.0f, 0.0f, 500.0f);
     private final BooleanSetting clear = setting("Clear", true);
     private final FloatSetting speed = setting("Speed", 1.0f, 0.1f, 5.0f).invokeTab("Render");
@@ -40,7 +39,7 @@ public class  CustomChat extends Module {
     private float scroll, scrollTarget;
 
     @EventListener
-    public void onDisconnect(DisconnectEvent event){
+    public void onDisconnect(DisconnectEvent event) {
         if (clear.getValue()) {
             messages.clear();
         }
@@ -123,13 +122,18 @@ public class  CustomChat extends Module {
     }
 
     @EventListener
-    public void onPacketReceive(PacketReceiveEvent event) {
-        if (event.getPacket() instanceof SPacketChat) {
-            SPacketChat packet = (SPacketChat) event.getPacket();
-            if (!packet.getType().equals(ChatType.GAME_INFO) || !packet.getChatComponent().getFormattedText().contains("combat")) {
-                messages.add(new Message(packet.getChatComponent().getFormattedText()));
-                Mud.threadManager.invokeThread(() -> messages = messages.stream().sorted(Comparator.comparing(Message::getTime)).collect(Collectors.toCollection(ArrayList::new)));
-            }
+    public void onTick(TickEvent event) {
+        for (ChatLine chatLine : ((IGuiNewChat) mc.ingameGUI.getChatGUI()).getDrawnChatLines()) {
+            Mud.threadManager.invokeThread(() -> {
+                String text = chatLine.getChatComponent().getFormattedText();
+                for (Message message : messages) {
+                    if (text.equals(message.getText())) {
+                        return;
+                    }
+                }
+                messages.add(new Message(text));
+                messages = messages.stream().sorted(Comparator.comparing(Message::getTime)).collect(Collectors.toCollection(ArrayList::new));
+            });
         }
     }
 
@@ -148,14 +152,6 @@ public class  CustomChat extends Module {
         }
         strings.add(current.toString());
         this.strings = strings;
-    }
-
-    @EventListener
-    public void onCustomChatMessage(CustomChatMessageEvent event) {
-        // Misschien later nog iets van delete maken ?
-        messages.add(new Message(event.getText()));
-        Mud.threadManager.invokeThread(() -> messages = messages.stream().sorted(Comparator.comparing(Message::getTime)).collect(Collectors.toCollection(ArrayList::new)));
-
     }
 
     @EventListener

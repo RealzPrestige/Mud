@@ -3,7 +3,6 @@ package dev.zprestige.mud.module.client;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
-import dev.zprestige.mud.events.impl.chat.CustomChatMessageEvent;
 import dev.zprestige.mud.events.impl.system.PacketReceiveEvent;
 import dev.zprestige.mud.events.impl.system.ToggleEvent;
 import dev.zprestige.mud.events.impl.world.TickEvent;
@@ -32,7 +31,6 @@ public class Notifications extends Module {
         if (popMap.containsKey(entityPlayer.getName())) {
             String text = "[Mud] " + entityPlayer.getName() + ChatFormatting.GRAY + " has popped " + ChatFormatting.WHITE + pops + ChatFormatting.GRAY + (pops == 1 ? " totem." : " totems.");
             mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(new TextComponentString(text), 1);
-            Mud.eventBus.invoke(new CustomChatMessageEvent(text));
         }
     }
 
@@ -88,6 +86,5 @@ public class Notifications extends Module {
             return;
         }
         mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(new TextComponentString(text), 1);
-        Mud.eventBus.invoke(new CustomChatMessageEvent(text));
     }
 }

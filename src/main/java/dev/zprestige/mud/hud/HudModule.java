@@ -50,7 +50,6 @@ public class HudModule implements MC {
             GL11.glLineWidth(1.0f);
         }
     }
-
     private void enable() {
         Mud.eventBus.registerListener(this);
     }

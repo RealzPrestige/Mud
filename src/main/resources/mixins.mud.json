@@ -32,6 +32,7 @@
     "MixinWorld",
     "interfaces.IEntity",
     "interfaces.IEntityRenderer",
+    "interfaces.IGuiNewChat",
     "interfaces.IItemRenderer",
     "interfaces.IKeybinding",
     "interfaces.IMinecraft",
