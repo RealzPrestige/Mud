@@ -19,7 +19,7 @@ public class Welcomer extends HudModule {
     public void onRender2DPost(Render2DPostEvent event) {
         String text = "Welcome to " + Mud.MODNAME + " " + Mud.VERSION + " " + mc.player.getName();
 
-        Mud.fontManager.stringNoShadowHud(text, x + 0.5f - Mud.fontManager.stringWidthHud(text) / 2.0f, y + 0.5f, new Color(0, 0, 0, 50));
+        Mud.fontManager.stringNoShadowHud(text, x + 0.5f - Mud.fontManager.stringWidthHud(text) / 2.0f, y + 0.5f, new Color(0, 0, 0, 150));
 
         enableShader();
         Mud.fontManager.stringNoShadowHud(text, x - Mud.fontManager.stringWidthHud(text) / 2.0f, y, getRenderColor());

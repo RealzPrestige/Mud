@@ -19,7 +19,7 @@ public class Watermark extends HudModule {
     public void onRender2DPost(Render2DPostEvent event) {
         String text = Mud.MODNAME + " " + Mud.VERSION;
 
-        Mud.fontManager.stringNoShadowHud(text, x + 0.5f, y + 0.5f, new Color(0, 0, 0, 50));
+        Mud.fontManager.stringNoShadowHud(text, x + 0.5f, y + 0.5f, new Color(0, 0, 0, 150));
 
         enableShader();
         Mud.fontManager.stringNoShadowHud(text, x, y, getRenderColor());

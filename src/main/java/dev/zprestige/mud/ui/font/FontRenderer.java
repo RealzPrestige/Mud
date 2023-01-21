@@ -47,13 +47,13 @@ public class FontRenderer {
                 final String builtString = String.valueOf(newString);
                 drawText(builtString, deltaX, y, color1);
                 if (dropShadow)
-                    drawText(builtString, deltaX + 0.5f, y + 0.5f, new Color(0, 0, 0, 50).getRGB());
+                    drawText(builtString, deltaX + 0.5f, y + 0.5f, new Color(0, 0, 0, 150).getRGB());
                 deltaX += getStringWidth(builtString);
             }
         } else {
             if (dropShadow) {
                 drawText(text, Integer.MAX_VALUE, Integer.MAX_VALUE, new Color(0, 0, 0, 0).getRGB());
-                drawText(text, x + 1.0f, y + 1.0f, new Color(0, 0, 0, 50).getRGB());
+                drawText(text, x + 0.5f, y + 0.5f, new Color(0, 0, 0, 150).getRGB());
             }
             drawText(text, x, y, color);
         }

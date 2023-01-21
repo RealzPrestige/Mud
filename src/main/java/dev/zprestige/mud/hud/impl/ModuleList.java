@@ -6,7 +6,10 @@ import dev.zprestige.mud.events.impl.render.Render2DPostEvent;
 import dev.zprestige.mud.hud.HudModule;
 import dev.zprestige.mud.manager.EventManager;
 import dev.zprestige.mud.module.Module;
+import dev.zprestige.mud.shader.impl.BlurShader;
+import dev.zprestige.mud.shader.impl.ShadowGradientShader;
 import dev.zprestige.mud.util.impl.MathUtil;
+import dev.zprestige.mud.util.impl.RenderUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -38,7 +41,7 @@ public class ModuleList extends HudModule {
             final float x = this.x + width + module.getStringWidthFull() * module.anim;
 
             final float finalDeltaY = deltaY;
-            shadows.add(() -> Mud.fontManager.stringNoShadowHud(module.getName(), x + 0.5f, finalDeltaY + 0.5f, new Color(0, 0, 0, 50)));
+            shadows.add(() -> Mud.fontManager.stringNoShadowHud(module.getName(), x + 0.5f, finalDeltaY + 0.5f, new Color(0, 0, 0, 150)));
             names.add(() -> Mud.fontManager.stringNoShadowHud(module.getName(), x, finalDeltaY, Color.WHITE));
             appends.add(() -> Mud.fontManager.stringHud(module.getAppend(), x + module.getStringWidth(), finalDeltaY, Color.GRAY));
 
