@@ -20,7 +20,7 @@ import java.util.Objects;
 public class Speed extends Module {
     private final ModeSetting mode = setting("Strafe", "Strafe", Arrays.asList("Strafe", "Strict Strafe"));
     private final BooleanSetting liquid = setting("Liquid", false);
-    private final FloatSetting factor = setting("Factor", 1.0f, 0.1f, 2.0f);
+    private final FloatSetting factor = setting("Factor", 10.0f, 1.0f, 20.0f);
     private final BindSetting toggleControl = setting("Toggle Control", Keyboard.KEY_NONE);
     private String activeMode = "";
     private float previousDistance, motionSpeed;
@@ -64,7 +64,7 @@ public class Speed extends Module {
             event.setMotionX(direction[0]);
             event.setMotionZ(direction[1]);
         } else if (activeMode.equals("Strafe") || activeMode.equals("Strict Strafe")) {
-            float strafeFactor = factor.getValue();
+            float strafeFactor = factor.getValue() / 10.0f;
             switch (currentState) {
                 case 0:
                     ++currentState;
