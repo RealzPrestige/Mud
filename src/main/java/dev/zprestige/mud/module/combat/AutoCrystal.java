@@ -109,7 +109,9 @@ public class AutoCrystal extends Module {
             }
             invokeAppend(entityPlayer.getName());
             if (constBypass.getValue()) {
-                PacketUtil.invoke(new CPacketCloseWindow());
+                if (mc.currentScreen == null) {
+                    PacketUtil.invoke(new CPacketCloseWindow());
+                }
             }
             long sys = System.currentTimeMillis();
             if (sys - placeTime > placeInterval.getValue()) {
