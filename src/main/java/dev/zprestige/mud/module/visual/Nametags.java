@@ -4,7 +4,6 @@ import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.render.NameplateEvent;
 import dev.zprestige.mud.events.impl.render.Render3DPostEvent;
-import dev.zprestige.mud.events.impl.render.Render3DPreEvent;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.ColorSetting;
 import dev.zprestige.mud.setting.impl.FloatSetting;
@@ -80,7 +79,7 @@ public class Nametags extends Module {
                 RenderHelper.disableStandardItemLighting();
                 i += 16.0f;
             }
-            glDisable(GL_DEPTH_TEST);
+            glEnable(GL_DEPTH_TEST);
             glPopMatrix();
         }
     }

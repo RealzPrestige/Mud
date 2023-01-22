@@ -45,9 +45,9 @@ public class FontRenderer {
                     }
                 }
                 final String builtString = String.valueOf(newString);
-                drawText(builtString, deltaX, y, color1);
                 if (dropShadow)
                     drawText(builtString, deltaX + 0.5f, y + 0.5f, new Color(0, 0, 0, 150).getRGB());
+                drawText(builtString, deltaX, y, color1);
                 deltaX += getStringWidth(builtString);
             }
         } else {

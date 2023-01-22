@@ -36,6 +36,10 @@ public class BlockUtil implements MC {
         return new BlockPos(Math.floor(entityPlayer.posX), Math.floor(entityPlayer.posY), Math.floor(entityPlayer.posZ));
     }
 
+    public static boolean isReplaceable(BlockPos pos){
+        return mc.world.getBlockState(pos).getMaterial().isReplaceable();
+    }
+
 
     public static boolean isSelfSafe() {
         BlockPos pos = getPosition();

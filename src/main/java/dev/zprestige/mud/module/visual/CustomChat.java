@@ -84,7 +84,7 @@ public class CustomChat extends Module {
                 float diff = 0.0f;
                 float y1 = deltaY + deltaS - 1.0f + 10.0f * (1.0f - time);
                 if (string.startsWith("[Mud]")) {
-                    Mud.fontManager.stringNoShadow("[Mud]", x + 5.5f, y1 + 0.5f, new Color(0, 0, 0, 50));
+                    Mud.fontManager.stringNoShadow("[Mud]", x + 5.5f, y1 + 0.5f, new Color(0, 0, 0, 150));
                     GradientShader.setup(step.getValue(), speed.getValue(), color1.getValue(), color2.getValue());
                     Mud.fontManager.stringNoShadow("[Mud]", x + 5.0f, y1, Color.WHITE);
                     GradientShader.finish();
