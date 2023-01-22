@@ -115,7 +115,6 @@ public class AutoCrystal extends Module {
             }
             long sys = System.currentTimeMillis();
             if (sys - placeTime > placeInterval.getValue()) {
-
                 calculating = true;
                 BlockPos pos = findPos(entityPlayer);
                 calculating = false;
@@ -192,7 +191,6 @@ public class AutoCrystal extends Module {
 
         if (rotate.getValue().equals("Both") || rotate.getValue().equals("Break")) {
             RotationUtil.faceEntity(entity, event);
-
         }
         int handleWeakness = handleWeakness();
         if (packet.getValue().equals("Both") || packet.getValue().equals("Break")) {
