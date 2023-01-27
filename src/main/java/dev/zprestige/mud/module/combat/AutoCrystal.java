@@ -5,28 +5,34 @@ import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.player.MotionUpdateEvent;
 import dev.zprestige.mud.events.impl.render.Render2DEvent;
 import dev.zprestige.mud.events.impl.render.Render3DEvent;
+import dev.zprestige.mud.events.impl.system.PacketReceiveEvent;
 import dev.zprestige.mud.events.impl.world.WebExplosionEvent;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.*;
 import dev.zprestige.mud.shader.impl.BufferGroup;
 import dev.zprestige.mud.shader.impl.GlowShader;
 import dev.zprestige.mud.util.impl.*;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.client.CPacketCloseWindow;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.network.play.client.CPacketUseEntity;
+import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeMap;
 
@@ -47,6 +53,7 @@ public class AutoCrystal extends Module {
 
     private final ModeSetting calculations = setting("Calculations", "Damage", Arrays.asList("Damage", "Net")).invokeTab("Calculations");
     private final BooleanSetting smartCalculations = setting("Smart Calculations", true).invokeTab("Calculations");
+    private final BooleanSetting removeDesync = setting("Remove Desync", true).invokeTab("Calculations");
     private final FloatSetting minimumDamage = setting("Minimum Damage", 6.0f, 0.1f, 20.0f).invokeTab("Calculations");
     private final FloatSetting maximumSelfDamage = setting("Maximum Self Damage", 8.0f, 0.1f, 20.0f).invokeTab("Calculations");
     private final BooleanSetting antiSuicide = setting("Anti Suicide", true).invokeTab("Calculations");
@@ -61,8 +68,11 @@ public class AutoCrystal extends Module {
     private final FloatSetting placeWallRange = setting("Place Wall Range", 5.0f, 0.1f, 6.0f).invokeVisibility(z -> !strictTrace.getValue()).invokeTab("Ranges");
     private final FloatSetting breakWallRange = setting("Break Wall Range", 5.0f, 0.1f, 6.0f).invokeVisibility(z -> !strictTrace.getValue()).invokeTab("Ranges");
 
-    private final ModeSetting renderMode = setting("Render Mode", "Gradient", Arrays.asList("Gradient", "Static")).invokeTab("Render");
+    private final BooleanSetting predictMotion = setting("Predict Motion", false).invokeTab("Motion Predict");
+    private final IntSetting predictMotionFactor = setting("Predict Motion", 2, 1, 20).invokeVisibility(z -> predictMotion.getValue()).invokeTab("Motion Predict");
+    private final BooleanSetting predictMotionVisualize = setting("Visualize", false).invokeVisibility(z -> predictMotion.getValue()).invokeTab("Motion Predict");
 
+    private final ModeSetting renderMode = setting("Render Mode", "Gradient", Arrays.asList("Gradient", "Static")).invokeTab("Render");
     private final FloatSetting speed = setting("Speed", 1.0f, 0.1f, 5.0f).invokeVisibility(z -> renderMode.getValue().equals("Gradient")).invokeTab("Render");
     private final FloatSetting step = setting("Step", 0.2f, 0.1f, 2.0f).invokeVisibility(z -> renderMode.getValue().equals("Gradient")).invokeTab("Render");
     private final FloatSetting opacity = setting("Opacity", 150.0f, 0.0f, 255.0f).invokeVisibility(z -> renderMode.getValue().equals("Gradient")).invokeTab("Render");
@@ -77,6 +87,7 @@ public class AutoCrystal extends Module {
     private BlockPos pos;
     private int ticks, shiftTicks;
     public static long time;
+    private EntityOtherPlayerMP entityOtherPlayerMP;
 
     private final BufferGroup bufferGroup = new BufferGroup(this, z -> true, lineWidth, color1, color2, step, speed, opacity,
             () -> {
@@ -112,6 +123,19 @@ public class AutoCrystal extends Module {
                     PacketUtil.invoke(new CPacketCloseWindow());
                 }
             }
+
+            double[] position = new double[]{entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ};
+            Vec3d vec = Mud.motionPredictManager.getPredictedPosByPlayer(entityPlayer, predictMotionFactor.getValue());
+            if (predictMotion.getValue()) {
+                entityPlayer.setPosition(vec.x, vec.y, vec.z);
+                if (predictMotionVisualize.getValue()) {
+                    entityOtherPlayerMP = EntityUtil.setupEntity(entityPlayer, vec);
+                } else {
+                    entityOtherPlayerMP = null;
+                }
+            } else {
+                entityOtherPlayerMP = null;
+            }
             long sys = System.currentTimeMillis();
             if (sys - placeTime > placeInterval.getValue()) {
                 calculating = true;
@@ -143,11 +167,13 @@ public class AutoCrystal extends Module {
                 }
                 this.pos = crystal != null ? crystal.getPosition().down() : null;
             }
+            entityPlayer.setPosition(position[0], position[1], position[2]);
         } else {
+            entityOtherPlayerMP = null;
             pos = null;
             invokeAppend("");
         }
-        if (active){
+        if (active) {
             time = System.currentTimeMillis();
         }
     }
@@ -161,6 +187,9 @@ public class AutoCrystal extends Module {
                 RenderUtil.renderBox(new AxisAlignedBB(pos), color.getValue());
                 RenderUtil.renderOutline(new AxisAlignedBB(pos), color.getValue(), outlineWidth.getValue());
             }
+        }
+        if (predictMotionVisualize.getValue()) {
+            mc.getRenderManager().renderEntityStatic(entityOtherPlayerMP, event.getPartialTicks(), true);
         }
     }
 
@@ -176,6 +205,22 @@ public class AutoCrystal extends Module {
     public void onWebExplosion(WebExplosionEvent event) {
         if (calculating) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventListener
+    public void onPacketReceive(PacketReceiveEvent event) {
+        if (removeDesync.getValue() && event.getPacket() instanceof SPacketSoundEffect) {
+            SPacketSoundEffect packet = (SPacketSoundEffect) event.getPacket();
+            if (packet.getCategory() == SoundCategory.BLOCKS && packet.getSound() == SoundEvents.ENTITY_GENERIC_EXPLODE) {
+                for (Entity entity : new ArrayList<>(mc.world.loadedEntityList)) {
+                    if (entity instanceof EntityEnderCrystal) {
+                        if (Math.sqrt(entity.getDistanceSq(packet.getX(), packet.getY(), packet.getZ())) <= 5.0f) {
+                            entity.setDead();
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -256,7 +301,7 @@ public class AutoCrystal extends Module {
             if (antiSuicide.getValue() && selfDamage > mc.player.getHealth() + mc.player.getAbsorptionAmount() - antiSuicideSafety.getValue()) {
                 continue;
             }
-            if (damage < minimumDamage.getValue()) {
+            if (damage < Math.min(EntityUtil.getHealth(entityPlayer), minimumDamage.getValue())) {
                 continue;
             }
             posses.put(calculations.getValue().equals("Damage") ? damage : damage - selfDamage, (EntityEnderCrystal) entity);
@@ -292,7 +337,7 @@ public class AutoCrystal extends Module {
             if (antiSuicide.getValue() && selfDamage > mc.player.getHealth() + mc.player.getAbsorptionAmount() - antiSuicideSafety.getValue()) {
                 continue;
             }
-            if (damage < minimumDamage.getValue()) {
+            if (damage < Math.min(EntityUtil.getHealth(entityPlayer), minimumDamage.getValue())) {
                 continue;
             }
             posses.put(calculations.getValue().equals("Damage") ? damage : damage - selfDamage, pos);

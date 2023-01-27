@@ -18,6 +18,7 @@ import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemSword;
+import net.minecraft.network.play.client.CPacketCloseWindow;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketHeldItemChange;
 import net.minecraft.network.play.client.CPacketUseEntity;
@@ -44,6 +45,7 @@ public class Aura extends Module {
     private final BooleanSetting sprintBypass = setting("Sprint Bypass", true).invokeTab("Server");
     private final BooleanSetting strictTrace = setting("Strict Trace", false).invokeTab("Server");
     private final BooleanSetting tpsSync = setting("TPS Sync", false).invokeTab("Server");
+    private final BooleanSetting constBypass = setting("Const Bypass", false).invokeTab("Server");
 
     private final BooleanSetting render = setting("Render", false).invokeTab("Render");
     private final FloatSetting speed = setting("Speed", 1.0f, 0.5f, 1.5f).invokeVisibility(z -> render.getValue()).invokeTab("Render");
@@ -58,6 +60,11 @@ public class Aura extends Module {
     public void onMotionUpdate(MotionUpdateEvent event) {
         if (mc.player == null) {
             return;
+        }
+        if (constBypass.getValue()) {
+            if (mc.currentScreen == null) {
+                PacketUtil.invoke(new CPacketCloseWindow());
+            }
         }
         switch (weapon.getValue()) {
             case "Require":

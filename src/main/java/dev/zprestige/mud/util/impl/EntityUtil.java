@@ -2,9 +2,11 @@ package dev.zprestige.mud.util.impl;
 
 import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.util.MC;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -18,6 +20,23 @@ public class EntityUtil implements MC {
             mc.gameSettings.keyBindJump,
             mc.gameSettings.keyBindSprint
     };
+
+    public static EntityOtherPlayerMP setupEntity(EntityPlayer entityPlayer, Vec3d vec) {
+        EntityOtherPlayerMP entityOtherPlayerMP1 = new EntityOtherPlayerMP(mc.world, entityPlayer.getGameProfile());
+        entityOtherPlayerMP1.copyLocationAndAnglesFrom(entityPlayer);
+        entityOtherPlayerMP1.rotationYawHead = entityPlayer.rotationYawHead;
+        entityOtherPlayerMP1.prevRotationYawHead = entityPlayer.rotationYawHead;
+        entityOtherPlayerMP1.rotationYaw = entityPlayer.rotationYaw;
+        entityOtherPlayerMP1.prevRotationYaw = entityPlayer.rotationYaw;
+        entityOtherPlayerMP1.rotationPitch = entityPlayer.rotationPitch;
+        entityOtherPlayerMP1.prevRotationPitch = entityPlayer.rotationPitch;
+        entityOtherPlayerMP1.cameraYaw = entityPlayer.rotationYaw;
+        entityOtherPlayerMP1.cameraPitch = entityPlayer.rotationPitch;
+        entityOtherPlayerMP1.limbSwing = entityPlayer.limbSwing;
+        entityOtherPlayerMP1.setPosition(vec.x, vec.y, vec.z);
+        return entityOtherPlayerMP1;
+    }
+
 
     public static boolean isMoving(){
         return Arrays.stream(getMovementKeys()).anyMatch(KeyBinding::isKeyDown);

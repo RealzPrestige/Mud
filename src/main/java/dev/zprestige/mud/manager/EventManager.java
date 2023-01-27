@@ -8,6 +8,7 @@ import dev.zprestige.mud.events.impl.system.ConnectEvent;
 import dev.zprestige.mud.events.impl.system.DisconnectEvent;
 import dev.zprestige.mud.events.impl.world.FogEvent;
 import dev.zprestige.mud.util.MC;
+import net.minecraft.client.gui.GuiIngame;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
@@ -39,15 +40,17 @@ public class EventManager implements MC {
     }
 
     @SubscribeEvent
-    public void onRenderGameOverlayEvent(final RenderGameOverlayEvent.Text event) {
+    public void onRenderGameOverlayEvent(RenderGameOverlayEvent.Text event) {
         if (!nullCheck()) {
-            final Render2DEvent render2DEvent = new Render2DEvent(event.getPartialTicks(), event.getResolution());
+            Render2DEvent render2DEvent = new Render2DEvent(event.getPartialTicks(), event.getResolution());
             Mud.eventBus.invoke(render2DEvent);
 
-            final Render2DPostEvent render2DPostEvent = new Render2DPostEvent(event.getPartialTicks(), event.getResolution());
+            Render2DPostEvent render2DPostEvent = new Render2DPostEvent(event.getPartialTicks(), event.getResolution());
             Mud.eventBus.invoke(render2DPostEvent);
         }
     }
+
+
 
     @SubscribeEvent
     public void onClientConnect(FMLNetworkEvent.ClientConnectedToServerEvent ignoredEvent) {
@@ -62,7 +65,7 @@ public class EventManager implements MC {
     }
 
     @SubscribeEvent
-    public void onRenderGameOverlay(final RenderGameOverlayEvent event) {
+    public void onRenderGameOverlay(RenderGameOverlayEvent event) {
         if (!nullCheck()) {
             RenderOverlayEvent renderOverlayEvent = new RenderOverlayEvent(event.getType(), event.getResolution());
             Mud.eventBus.invoke(renderOverlayEvent);
@@ -84,7 +87,7 @@ public class EventManager implements MC {
     }
 
     @SubscribeEvent
-    public void onCameraSetup(final EntityViewRenderEvent.CameraSetup event) {
+    public void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
         CameraSetupEvent cameraSetupEvent = new CameraSetupEvent(event.getYaw(), event.getPitch());
         Mud.eventBus.invoke(cameraSetupEvent);
         event.setYaw(cameraSetupEvent.getYaw());

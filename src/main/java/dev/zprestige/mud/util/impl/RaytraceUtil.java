@@ -3,6 +3,7 @@ package dev.zprestige.mud.util.impl;
 import dev.zprestige.mud.util.MC;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class RaytraceUtil implements MC {

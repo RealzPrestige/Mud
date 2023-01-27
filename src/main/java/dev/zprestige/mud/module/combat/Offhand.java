@@ -35,7 +35,7 @@ public class Offhand extends Module {
     }
 
     private int slot() {
-        invokeAppend(mc.player.getHeldItemOffhand().getDisplayName());
+        invokeAppend(mode.getValue());
         if (mc.currentScreen != null) {
             return -1;
         }

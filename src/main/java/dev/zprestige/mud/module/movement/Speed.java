@@ -1,107 +1,93 @@
 package dev.zprestige.mud.module.movement;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.player.MoveEvent;
-import dev.zprestige.mud.events.impl.system.KeyEvent;
+import dev.zprestige.mud.events.impl.system.PacketReceiveEvent;
 import dev.zprestige.mud.module.Module;
-import dev.zprestige.mud.module.client.Notifications;
-import dev.zprestige.mud.setting.impl.BindSetting;
 import dev.zprestige.mud.setting.impl.BooleanSetting;
 import dev.zprestige.mud.setting.impl.FloatSetting;
 import dev.zprestige.mud.setting.impl.ModeSetting;
 import dev.zprestige.mud.util.impl.EntityUtil;
+import dev.zprestige.mud.util.impl.MathUtil;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.init.MobEffects;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.Arrays;
 import java.util.Objects;
 
 public class Speed extends Module {
     private final ModeSetting mode = setting("Strafe", "Strafe", Arrays.asList("Strafe", "Strict Strafe"));
-    private final BooleanSetting liquid = setting("Liquid", false);
-    private final FloatSetting factor = setting("Factor", 10.0f, 1.0f, 20.0f);
-    private final BindSetting toggleControl = setting("Toggle Control", Keyboard.KEY_NONE);
-    private String activeMode = "";
-    private float previousDistance, motionSpeed;
-    private int currentState = 1;
+    private final FloatSetting factor = setting("Factor", 1.0f, 0.1f, 2.0f);
+    private final BooleanSetting boost = setting("Boost", false);
+    private final FloatSetting reduction = setting("Reduction", 1.0f, 0.1f, 10.0f).invokeVisibility(z -> boost.getValue());
+    private final FloatSetting decelerate = setting("Decelerate", 1.0f, 0.1f, 10.0f).invokeVisibility(z -> boost.getValue());
 
-    @EventListener
-    public void onKey(KeyEvent event) {
-        if (mc.currentScreen != null || PacketFly.isActive()) {
-            return;
-        }
-        if (toggleControl.getValue() != Keyboard.KEY_NONE) {
-            if (event.getKey() == toggleControl.getValue()) {
-                activeMode = activeMode.equals(mode.getValue()) ? "Control" : mode.getValue();
-                Notifications.post("[Mud] " + ChatFormatting.WHITE + "Speed " + ChatFormatting.GRAY + "mode switched to " + ChatFormatting.WHITE + activeMode + ChatFormatting.GRAY + ".");
-            }
-        }
-    }
+    private float multiplier;
+    private double playerSpeed;
+    private boolean slowdown;
 
     @EventListener
     public void onMove(MoveEvent event) {
-        if ((!liquid.getValue() && (mc.player.isInWater() || mc.player.isInLava())) || mc.player.isCreative()) {
+        invokeAppend(mode.getValue());
+        if ((mc.player.isInWater() || mc.player.isInLava()) || mc.player.isCreative() || mc.player.isRiding() || mc.player.isElytraFlying()) {
             return;
         }
-        invokeAppend(activeMode);
-        if (mc.player.isRiding() || mc.player.isElytraFlying()) {
-            return;
-        }
-        if (activeMode.equals("") || (!activeMode.equals(mode.getValue()) && !activeMode.equals("Control"))) {
-            activeMode = mode.getValue();
-        }
+
         mc.player.setSprinting(true);
-        if (activeMode.equals("Control")) {
-            if (mc.player.isSneaking()) {
-                return;
+
+        double speedY = mode.getValue().equals("Strafe Strict") ? 0.42f : 0.4f;
+        if (mc.player.onGround && EntityUtil.isMoving()) {
+            if (mc.player.isPotionActive(MobEffects.JUMP_BOOST)) {
+                speedY += (Objects.requireNonNull(mc.player.getActivePotionEffect(MobEffects.JUMP_BOOST)).getAmplifier() + 1) * 0.1f;
             }
-            if (!EntityUtil.isMoving()) {
-                event.setMotionX(0.0f);
-                event.setMotionZ(0.0f);
+            event.setMotionY(mc.player.motionY = speedY);
+            playerSpeed = EntityUtil.getBaseMoveSpeed() * (isColliding(-0.5f) instanceof BlockLiquid ? 0.9f : 1.9f);
+            slowdown = true;
+        } else {
+            if (slowdown || mc.player.collidedHorizontally) {
+                playerSpeed -= (isColliding(-0.8f) instanceof BlockLiquid) ? 0.4f : 0.7f * EntityUtil.getBaseMoveSpeed();
+                slowdown = false;
+            } else {
+                playerSpeed -= playerSpeed / 159.0f;
             }
-            float[] direction = EntityUtil.forward(EntityUtil.getBaseMoveSpeed());
-            event.setMotionX(direction[0]);
-            event.setMotionZ(direction[1]);
-        } else if (activeMode.equals("Strafe") || activeMode.equals("Strict Strafe")) {
-            float strafeFactor = factor.getValue() / 10.0f;
-            switch (currentState) {
-                case 0:
-                    ++currentState;
-                    previousDistance = 0.0f;
-                    break;
-                case 1:
-                default:
-                    if ((mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox().offset(0.0, mc.player.motionY, 0.0)).size() > 0 || mc.player.collidedVertically) && currentState > 0) {
-                        currentState = mc.player.moveForward == 0.0F && mc.player.moveStrafing == 0.0F ? 0 : 1;
-                    }
-                    motionSpeed = previousDistance - previousDistance / 160.0f;
-                    break;
-                case 2:
-                    float motionY = mode.getValue().equals("Strict Strafe") ? 0.42f : 0.40f;
-                    if ((mc.player.moveForward != 0.0f || mc.player.moveStrafing != 0.0f) && mc.player.onGround) {
-                        if (mc.player.isPotionActive(MobEffects.JUMP_BOOST)) {
-                            motionY += (Objects.requireNonNull(mc.player.getActivePotionEffect(MobEffects.JUMP_BOOST)).getAmplifier() + 1) * 0.1f;
-                        }
-                        event.setMotionY(mc.player.motionY = motionY);
-                        motionSpeed *= 2.149;
-                    }
-                    break;
-                case 3:
-                    motionSpeed = previousDistance - 0.76f * (previousDistance - EntityUtil.getBaseMoveSpeed() * strafeFactor);
+        }
+
+        multiplier = MathUtil.lerp(multiplier, 0.0f, decelerate.getValue() / 10.0f);
+
+        playerSpeed = Math.max(playerSpeed, EntityUtil.getBaseMoveSpeed());
+        float[] forward = EntityUtil.forward(playerSpeed * factor.getValue() * (boost.getValue() ? multiplier + 1.0f : 1.0f));
+        event.setMotionX(forward[0]);
+        event.setMotionZ(forward[1]);
+    }
+
+    @EventListener
+    public void onPacketReceive(PacketReceiveEvent event) {
+        if (event.getPacket() instanceof SPacketEntityVelocity) {
+            SPacketEntityVelocity packet = (SPacketEntityVelocity) event.getPacket();
+            if (packet.getEntityID() == mc.player.getEntityId()) {
+                multiplier += ((packet.getMotionX() < 0 ? -packet.getMotionX() : packet.getMotionX()) + (packet.getMotionZ() < 0 ? -packet.getMotionZ() : packet.getMotionZ())) / reduction.getValue() / 10000.0f;
             }
-            motionSpeed = Math.max(motionSpeed, EntityUtil.getBaseMoveSpeed() * strafeFactor);
-            float forward = mc.player.movementInput.moveForward,
-                    strafe = mc.player.movementInput.moveStrafe,
-                    yaw = mc.player.rotationYaw;
-            if (forward != 0.0 && strafe != 0.0) {
-                forward *= Math.sin(0.7853981633974483);
-                strafe *= Math.cos(0.7853981633974483);
-            }
-            event.setMotionX((forward * motionSpeed * -Math.sin(Math.toRadians(yaw)) + strafe * motionSpeed * Math.cos(Math.toRadians(yaw))));
-            event.setMotionZ((forward * motionSpeed * Math.cos(Math.toRadians(yaw)) - strafe * motionSpeed * -Math.sin(Math.toRadians(yaw))));
-            ++currentState;
         }
     }
+
+    private Block isColliding(double posY) {
+        Block block = null;
+        if (mc.player != null) {
+            final AxisAlignedBB bb = mc.player.getRidingEntity() != null ? mc.player.getRidingEntity().getEntityBoundingBox().contract(0.0d, 0.0d, 0.0d).offset(0, posY, 0) : mc.player.getEntityBoundingBox().contract(0.0d, 0.0d, 0.0d).offset(0, posY, 0);
+            int y = (int) bb.minY;
+            for (int x = MathHelper.floor(bb.minX); x < MathHelper.floor(bb.maxX) + 1; x++) {
+                for (int z = MathHelper.floor(bb.minZ); z < MathHelper.floor(bb.maxZ) + 1; z++) {
+                    block = mc.world.getBlockState(new BlockPos(x, y, z)).getBlock();
+                }
+            }
+        }
+        return block;
+    }
+
 
 }

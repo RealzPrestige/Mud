@@ -64,7 +64,7 @@ public class PacketMine extends Module {
 
     @EventListener
     public void onMotionUpdate(MotionUpdateEvent event) {
-        if (prevPos != null && prevFace != null) {
+        if (prevPos != null && prevFace != null && mc.currentScreen == null) {
             if (instant.getValue()) {
                 if (key.getValue() != Keyboard.KEY_NONE && Keyboard.isKeyDown(key.getValue())) {
                     if (System.currentTimeMillis() - sys > timing.getValue()) {

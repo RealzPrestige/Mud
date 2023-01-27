@@ -3,7 +3,7 @@ package dev.zprestige.mud.module.visual;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.render.FireEvent;
 import dev.zprestige.mud.events.impl.render.Render2DEvent;
-import dev.zprestige.mud.events.impl.render.Render3DPostEvent;
+import dev.zprestige.mud.events.impl.render.Render3DPreEvent;
 import dev.zprestige.mud.mixins.interfaces.IEntityRenderer;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.ColorSetting;
@@ -27,7 +27,7 @@ public class HandShader extends Module {
     );
 
     @EventListener
-    public void onRender3DPost(Render3DPostEvent event) {
+    public void onRender3D(Render3DPreEvent event) {
         GlowShader.render3D(bufferGroup);
     }
 
@@ -37,7 +37,7 @@ public class HandShader extends Module {
     }
 
     @EventListener
-    public void onFire(FireEvent event){
+    public void onFire(FireEvent event) {
         event.setCancelled(true);
     }
 }
