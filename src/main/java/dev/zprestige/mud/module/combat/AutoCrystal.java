@@ -95,7 +95,6 @@ public class AutoCrystal extends Module {
                     RenderUtil.drawBB(new AxisAlignedBB(pos));
                 }
             }
-
     );
 
     @Override
@@ -116,6 +115,7 @@ public class AutoCrystal extends Module {
         boolean active = false;
         EntityPlayer entityPlayer = EntityUtil.getEntityPlayer(targetRange.getValue());
         if (entityPlayer != null) {
+            invokeAppend(entityPlayer.getName());
             if (raytraceBypass.getValue()) {
                 if (ticks > 0) {
                     shiftTicks = timeout.getValue();
@@ -130,7 +130,7 @@ public class AutoCrystal extends Module {
                     }
                 }
             }
-            invokeAppend(entityPlayer.getName());
+
             if (constBypass.getValue()) {
                 if (mc.currentScreen == null) {
                     PacketUtil.invoke(new CPacketCloseWindow());
@@ -154,6 +154,7 @@ public class AutoCrystal extends Module {
                 calculating = true;
                 BlockPos pos = findPos(entityPlayer);
                 calculating = false;
+
 
                 if (pos != null) {
 
