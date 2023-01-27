@@ -1,6 +1,5 @@
 package dev.zprestige.mud.manager;
 
-import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.util.MC;
 import dev.zprestige.mud.util.impl.BlockUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,11 +8,6 @@ import net.minecraft.util.math.Vec3d;
 
 
 public class MotionPredictionManager implements MC {
-
-    public MotionPredictionManager() {
-        Mud.eventBus.registerListener(this);
-    }
-
 
     public Vec3d getPredictedPosByPlayer(EntityPlayer entityPlayer, int amount) {
         Vec3d vec = new Vec3d(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ);

@@ -46,7 +46,7 @@ public class AutoCrystal extends Module {
     private final ModeSetting placements = setting("Placements", "1.12.2", Arrays.asList("1.12.2", "1.13+")).invokeTab("AntiCheat");
     private final BooleanSetting autoSwitch = setting("Auto Switch", false).invokeTab("AntiCheat");
     private final BooleanSetting constBypass = setting("Const Bypass", false).invokeTab("AntiCheat");
-    private final ModeSetting blockFace = setting("Block Face", "Closest", Arrays.asList("Closest", "Up")).invokeTab("AntiCheat");
+    private final BooleanSetting superTrace = setting("Super Trace", false).invokeTab("AntiCheat");
     private final BooleanSetting raytraceBypass = setting("Raytrace Bypass", false).invokeTab("AntiCheat");
     private final IntSetting wait = setting("Wait", 1, 1, 20).invokeVisibility(z -> raytraceBypass.getValue()).invokeTab("AntiCheat");
     private final IntSetting timeout = setting("Timeout", 1, 1, 20).invokeVisibility(z -> raytraceBypass.getValue()).invokeTab("AntiCheat");
@@ -100,7 +100,7 @@ public class AutoCrystal extends Module {
 
     @Override
     public void onEnable() {
-        if (autoSwitch.getValue()){
+        if (autoSwitch.getValue()) {
             EntityPlayer entityPlayer = EntityUtil.getEntityPlayer(targetRange.getValue());
             if (entityPlayer != null) {
                 int slot = InventoryUtil.getItemFromHotbar(Items.END_CRYSTAL);
@@ -270,23 +270,31 @@ public class AutoCrystal extends Module {
         if (enumHand == null) {
             return;
         }
+
         if (event != null && (rotate.getValue().equals("Both") || rotate.getValue().equals("Place"))) {
             RotationUtil.facePos(pos, event);
         }
 
-        EnumFacing enumFacing = blockFace.getValue().equals("Closest") ? Mud.interactionManager.getClosestEnumFacing(pos) : EnumFacing.UP;
-        if (enumFacing == null) {
-            enumFacing = EnumFacing.UP;
-        }
+        EnumFacing enumFacing = EnumFacing.UP;
 
         if (packet.getValue().equals("Both") || packet.getValue().equals("Place")) {
-            PacketUtil.invoke(new CPacketPlayerTryUseItemOnBlock(pos, enumFacing, enumHand, enumFacing.getDirectionVec().getX(), enumFacing.getDirectionVec().getY(), enumFacing.getDirectionVec().getZ()));
+            if (superTrace.getValue()) {
+                Vec3d vec = RaytraceUtil.getRaytraceSides(pos);
+                AxisAlignedBB bb = new AxisAlignedBB(pos);
+                PacketUtil.invoke(new CPacketPlayerTryUseItemOnBlock(pos, enumFacing, enumHand, (float) (vec == null ? 0.5f : (vec.x - bb.minX)), (float) (vec == null ? 0.5f : (vec.y - bb.minY)), (float) (vec == null ? 0.5f : (vec.z - bb.minZ))));
+                if (vec != null && event != null && (rotate.getValue().equals("Both") || rotate.getValue().equals("Place"))) {
+                    RotationUtil.facePos(vec, event);
+                }
+                mc.player.swingArm(enumHand);
+
+            } else {
+                PacketUtil.invoke(new CPacketPlayerTryUseItemOnBlock(pos, enumFacing, enumHand, enumFacing.getDirectionVec().getX(), enumFacing.getDirectionVec().getY(), enumFacing.getDirectionVec().getZ()));
+                mc.player.swingArm(enumHand);
+            }
         } else {
             mc.playerController.processRightClickBlock(mc.player, mc.world, pos, enumFacing, new Vec3d(mc.player.posX, -mc.player.posY, -mc.player.posZ), enumHand);
+            mc.player.swingArm(enumHand);
         }
-
-        mc.player.swingArm(enumHand);
-
     }
 
     private EntityEnderCrystal crystal(EntityPlayer entityPlayer) {
@@ -331,11 +339,6 @@ public class AutoCrystal extends Module {
             if (!BlockUtil.valid(pos, placements.getValue().equals("1.13+"))) {
                 continue;
             }
-            boolean raytrace = RaytraceUtil.raytrace(pos.up());
-            float range = raytrace ? placeRange.getValue() : (strictTrace.getValue() ? 0.0f : placeWallRange.getValue());
-            if (Math.sqrt(mc.player.getDistanceSq(BlockUtil.center(pos))) > range) {
-                continue;
-            }
             float selfDamage = BlockUtil.calculatePosDamage(pos, mc.player);
             float damage = BlockUtil.calculatePosDamage(pos, entityPlayer);
             if (smartCalculations.getValue() && damage - selfDamage < 0) {
@@ -353,6 +356,13 @@ public class AutoCrystal extends Module {
             if (damage < Math.min(EntityUtil.getHealth(entityPlayer), minimumDamage.getValue())) {
                 continue;
             }
+
+            Vec3d raytrace = RaytraceUtil.getRaytraceSides(pos);
+            float range = raytrace != null ? placeRange.getValue() : (strictTrace.getValue() ? 0.0f : placeWallRange.getValue());
+            if (Math.sqrt(mc.player.getDistanceSq(BlockUtil.center(pos))) > range) {
+                continue;
+            }
+
             posses.put(calculations.getValue().equals("Damage") ? damage : damage - selfDamage, pos);
         }
         if (!posses.isEmpty()) {

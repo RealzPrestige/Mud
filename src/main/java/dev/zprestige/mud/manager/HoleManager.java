@@ -151,10 +151,10 @@ public class HoleManager implements MC {
     }
 
     private boolean notUnsafe(BlockPos pos) {
-        if (pos == null){
+        if (pos == null || mc.world == null){
             return false;
         }
-        return mc.world != null && !mc.world.getBlockState(pos).getBlock().equals(Blocks.BEDROCK) && !mc.world.getBlockState(pos).getBlock().equals(Blocks.OBSIDIAN);
+        return  !mc.world.getBlockState(pos).getBlock().equals(Blocks.BEDROCK) && !mc.world.getBlockState(pos).getBlock().equals(Blocks.OBSIDIAN);
     }
 
     private boolean notSafe(BlockPos pos) {

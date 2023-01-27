@@ -40,6 +40,13 @@ public class RotationUtil implements MC {
         event.setPitch(angle[1]);
     }
 
+
+    public static void facePos(Vec3d vec, MotionUpdateEvent event) {
+        float[] angle = calculateAngle(vec);
+        event.setYaw(angle[0]);
+        event.setPitch(angle[1]);
+    }
+
     public static void faceEntity(Entity entity, MotionUpdateEvent event) {
         float partialTicks = mc.getRenderPartialTicks();
         float[] angle = calculateAngle(entity.getPositionEyes(partialTicks));
