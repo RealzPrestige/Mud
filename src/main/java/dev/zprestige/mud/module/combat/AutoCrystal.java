@@ -44,12 +44,12 @@ public class AutoCrystal extends Module {
     private final ModeSetting rotate = setting("Rotate", "None", Arrays.asList("Both", "Place", "Break", "None")).invokeTab("AntiCheat");
     private final ModeSetting packet = setting("Packet", "Both", Arrays.asList("Place", "Break", "Both", "None")).invokeTab("AntiCheat");
     private final ModeSetting placements = setting("Placements", "1.12.2", Arrays.asList("1.12.2", "1.13+")).invokeTab("AntiCheat");
+    private final BooleanSetting autoSwitch = setting("Auto Switch", false).invokeTab("AntiCheat");
     private final BooleanSetting constBypass = setting("Const Bypass", false).invokeTab("AntiCheat");
     private final ModeSetting blockFace = setting("Block Face", "Closest", Arrays.asList("Closest", "Up")).invokeTab("AntiCheat");
     private final BooleanSetting raytraceBypass = setting("Raytrace Bypass", false).invokeTab("AntiCheat");
     private final IntSetting wait = setting("Wait", 1, 1, 20).invokeVisibility(z -> raytraceBypass.getValue()).invokeTab("AntiCheat");
     private final IntSetting timeout = setting("Timeout", 1, 1, 20).invokeVisibility(z -> raytraceBypass.getValue()).invokeTab("AntiCheat");
-
 
     private final ModeSetting calculations = setting("Calculations", "Damage", Arrays.asList("Damage", "Net")).invokeTab("Calculations");
     private final BooleanSetting smartCalculations = setting("Smart Calculations", true).invokeTab("Calculations");
@@ -97,6 +97,19 @@ public class AutoCrystal extends Module {
             }
 
     );
+
+    @Override
+    public void onEnable() {
+        if (autoSwitch.getValue()){
+            EntityPlayer entityPlayer = EntityUtil.getEntityPlayer(targetRange.getValue());
+            if (entityPlayer != null) {
+                int slot = InventoryUtil.getItemFromHotbar(Items.END_CRYSTAL);
+                if (slot != -1) {
+                    mc.player.inventory.currentItem = slot;
+                }
+            }
+        }
+    }
 
     @EventListener
     public void onMotion(MotionUpdateEvent event) {
