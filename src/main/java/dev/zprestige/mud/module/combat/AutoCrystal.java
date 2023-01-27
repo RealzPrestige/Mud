@@ -358,8 +358,8 @@ public class AutoCrystal extends Module {
                 continue;
             }
 
-            Vec3d raytrace = RaytraceUtil.getRaytraceSides(pos);
-            float range = raytrace != null ? placeRange.getValue() : (strictTrace.getValue() ? 0.0f : placeWallRange.getValue());
+            boolean raytrace = RaytraceUtil.hasVisibleVec(pos);
+            float range = raytrace ? placeRange.getValue() : (strictTrace.getValue() ? 0.0f : placeWallRange.getValue());
             if (Math.sqrt(mc.player.getDistanceSq(BlockUtil.center(pos))) > range) {
                 continue;
             }
