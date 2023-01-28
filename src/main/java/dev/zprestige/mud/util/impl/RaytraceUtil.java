@@ -12,13 +12,13 @@ public class RaytraceUtil implements MC {
 
     public static boolean hasVisibleVec(BlockPos pos) {
         AxisAlignedBB bb = new AxisAlignedBB(pos);
-        for (int x = 0; x <= 10; x++) {
-            for (int y = 0; y <= 10; y++) {
-                for (int z = 0; z <= 10; z++) {
-                    if (x != 10 && x != 0 && y != 10 && z != 10 && z != 0) {
+        for (int x = 0; x <= 2; x++) {
+            for (int y = 0; y <= 2; y++) {
+                for (int z = 0; z <= 2; z++) {
+                    if (x == 1 && y == 1 && z == 1) {
                         continue;
                     }
-                    float x1 = (float) (bb.minX + x / 10.0f), y1 = (float) (bb.minY + y / 10.0f), z1 = (float) (bb.minZ + z / 10.0f);
+                    float x1 = (float) (bb.minX + x / 2.0f), y1 = (float) (bb.minY + y / 2.0f), z1 = (float) (bb.minZ + z / 2.0f);
                     Vec3d vec = new Vec3d(x1, y1, z1);
                     if (raytrace(vec)) {
                         return true;
@@ -33,13 +33,13 @@ public class RaytraceUtil implements MC {
     public static Vec3d getRaytraceSides(BlockPos pos) {
         AxisAlignedBB bb = new AxisAlignedBB(pos);
         TreeMap<Double, Vec3d> map = new TreeMap<>();
-        for (int x = 0; x <= 10; x++) {
-            for (int y = 0; y <= 10; y++) {
-                for (int z = 0; z <= 10; z++) {
-                    if (x != 10 && x != 0 && y != 10 && z != 10 && z != 0) {
+        for (int x = 0; x <= 2; x++) {
+            for (int y = 0; y <= 2; y++) {
+                for (int z = 0; z <= 2; z++) {
+                    if (x == 1 && y == 1 && z == 1) {
                         continue;
                     }
-                    float x1 = (float) (bb.minX + x / 10.0f), y1 = (float) (bb.minY + y / 10.0f), z1 = (float) (bb.minZ + z / 10.0f);
+                    float x1 = (float) (bb.minX + x / 2.0f), y1 = (float) (bb.minY + y / 2.0f), z1 = (float) (bb.minZ + z / 2.0f);
                     Vec3d vec = new Vec3d(x1, y1, z1);
                     if (raytrace(vec)) {
                         map.put(Math.sqrt(mc.player.getPositionEyes(mc.getRenderPartialTicks()).squareDistanceTo(x1, y1, z1)), vec);
@@ -47,7 +47,7 @@ public class RaytraceUtil implements MC {
                 }
             }
         }
-        if (!map.isEmpty()){
+        if (!map.isEmpty()) {
             return map.firstEntry().getValue();
         }
 

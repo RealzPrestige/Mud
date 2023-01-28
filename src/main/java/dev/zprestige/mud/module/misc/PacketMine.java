@@ -174,10 +174,10 @@ public class PacketMine extends Module {
     }
 
     private boolean canBreak(BlockPos pos) {
-        return BlockUtil.is(pos, Blocks.OBSIDIAN) || BlockUtil.is(pos, Blocks.ENDER_CHEST);
+        return BlockUtil.is(pos, Blocks.OBSIDIAN) || BlockUtil.is(pos, Blocks.ENDER_CHEST) || BlockUtil.is(pos, Blocks.NETHERRACK);
     }
 
     private float multiplier(BlockPos pos) {
-        return pos == null ? 1.0f : BlockUtil.is(pos, Blocks.OBSIDIAN) ? 0.5f : 1.0f;
+        return pos == null ? 1.0f : BlockUtil.is(pos, Blocks.OBSIDIAN) ? 0.5f : BlockUtil.is(pos, Blocks.NETHERRACK) ? 5.0f : 1.0f;
     }
 }
