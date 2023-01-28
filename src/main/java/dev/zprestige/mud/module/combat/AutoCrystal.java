@@ -190,7 +190,7 @@ public class AutoCrystal extends Module {
             }
             entityPlayer.setPosition(position[0], position[1], position[2]);
 
-            if (action && isNull){
+            if ((action && isNull) || System.currentTimeMillis() - time > 200){
                 pos = null;
             }
             if (prev != null) {

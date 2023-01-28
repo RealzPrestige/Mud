@@ -56,7 +56,6 @@ public class Blink extends Module {
     private final BufferGroup bufferGroup = new BufferGroup(this, z -> render.getValue() && entity != null, lineWidth, color1, color2, step, speed, opacity,
             () -> mc.getRenderManager().renderEntityStatic(entity, mc.getRenderPartialTicks(), false)
     );
-
     public Blink() {
         setAlwaysListening(true);
         Mud.eventBus.registerListener(this);
