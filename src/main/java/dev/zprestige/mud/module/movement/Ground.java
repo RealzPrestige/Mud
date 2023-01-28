@@ -3,6 +3,7 @@ package dev.zprestige.mud.module.movement;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.player.MoveEvent;
 import dev.zprestige.mud.events.impl.system.PacketReceiveEvent;
+import dev.zprestige.mud.events.impl.world.TickEvent;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.BooleanSetting;
 import dev.zprestige.mud.setting.impl.FloatSetting;
@@ -16,6 +17,11 @@ public class Ground extends Module {
     private final FloatSetting decelerate = setting("Decelerate", 1.0f, 0.1f, 10.0f).invokeVisibility(z -> boost.getValue());
 
     private float multiplier;
+
+    @EventListener
+    public void onTick(TickEvent event){
+        multiplier = MathUtil.lerp(multiplier, 0.0f, decelerate.getValue() / 10.0f);
+    }
 
     @EventListener
     public void onMove(MoveEvent event) {
@@ -33,7 +39,7 @@ public class Ground extends Module {
             event.setMotionX(0.0f);
             event.setMotionZ(0.0f);
         }
-        multiplier = MathUtil.lerp(multiplier, 0.0f, decelerate.getValue() / 10.0f);
+
         float[] direction = EntityUtil.forward(EntityUtil.getBaseMoveSpeed() * (boost.getValue() ? multiplier + 1.0f : 1.0f));
         event.setMotionX(direction[0]);
         event.setMotionZ(direction[1]);
