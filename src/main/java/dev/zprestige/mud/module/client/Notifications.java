@@ -1,12 +1,12 @@
 package dev.zprestige.mud.module.client;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
-import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.system.PacketReceiveEvent;
 import dev.zprestige.mud.events.impl.system.ToggleEvent;
 import dev.zprestige.mud.events.impl.world.TickEvent;
 import dev.zprestige.mud.module.Module;
+import dev.zprestige.mud.setting.impl.BooleanSetting;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.SPacketEntityStatus;
@@ -15,6 +15,8 @@ import net.minecraft.util.text.TextComponentString;
 import java.util.HashMap;
 
 public class Notifications extends Module {
+    private final BooleanSetting modules = setting("Modules", false);
+    private final BooleanSetting pops = setting("Pops", false);
     private final HashMap<String, Integer> popMap = new HashMap<>();
 
     private void onPop(EntityPlayer entityPlayer) {
@@ -50,6 +52,9 @@ public class Notifications extends Module {
 
     @EventListener
     public void onToggle(ToggleEvent event) {
+        if (!modules.getValue()){
+            return;
+        }
         String text;
         if (event.isEnable()) {
             text = "[Mud] " + event.getModule().getName() + ChatFormatting.RESET + " has been" + ChatFormatting.GREEN + " Enabled";
@@ -61,6 +66,9 @@ public class Notifications extends Module {
 
     @EventListener
     public void onTick(TickEvent event) {
+        if (!pops.getValue()){
+            return;
+        }
         for (EntityPlayer entityPlayer : mc.world.playerEntities) {
             if (entityPlayer.equals(mc.player) || entityPlayer.getHealth() > 0.0f) {
                 continue;
@@ -72,6 +80,9 @@ public class Notifications extends Module {
 
     @EventListener
     public void onPacketReceive(PacketReceiveEvent event) {
+        if (!pops.getValue()){
+            return;
+        }
         if (mc.world != null && mc.player != null && event.getPacket() instanceof SPacketEntityStatus) {
             final SPacketEntityStatus packet = (SPacketEntityStatus) event.getPacket();
             final Entity entity = packet.getEntity(mc.world);
