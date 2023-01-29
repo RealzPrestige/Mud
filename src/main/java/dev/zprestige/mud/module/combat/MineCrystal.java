@@ -4,6 +4,7 @@ import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.player.BreakBlockEvent;
 import dev.zprestige.mud.events.impl.player.MotionUpdateEvent;
+import dev.zprestige.mud.events.impl.system.PacketReceiveEvent;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.BindSetting;
 import dev.zprestige.mud.setting.impl.BooleanSetting;
