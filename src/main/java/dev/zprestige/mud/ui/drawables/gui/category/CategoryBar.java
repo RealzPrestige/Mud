@@ -11,6 +11,7 @@ import dev.zprestige.mud.ui.drawables.gui.module.ModuleButton;
 import dev.zprestige.mud.util.impl.MathUtil;
 import dev.zprestige.mud.util.impl.RenderUtil;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class CategoryBar extends Drawable {
     private final Category category;
     public float x, y, width, height, lAnim, rAnim;
     private float anim, target, shift;
+    private float scroll, scrollTarget;
 
     public CategoryBar(Category category) {
         this.category = category;
@@ -81,9 +83,16 @@ public class CategoryBar extends Drawable {
         /* Shift */
         shift = MathUtil.lerp(shift, target, Interface.getDelta());
 
+        if (Interface.getActiveCategory() == null || Interface.getActiveCategory() != category){
+            scrollTarget = 0.0f;
+        }
+
+        scrollTarget += Mouse.getDWheel() / 5.0f;
+        scroll = MathUtil.lerp(scroll, scrollTarget, Interface.getDelta());
+
         /* Setup Module Buttons */
         for (ModuleButton moduleButton : moduleButtons) {
-            moduleButton.x = x + 37.5f + moduleButton.deltaX + shift;
+            moduleButton.x = x + 37.5f + moduleButton.deltaX + shift + scroll;
             moduleButton.y = y + 5.0f;
             moduleButton.height = height - 10.0f;
             moduleButton.width = 110.0f;
