@@ -17,7 +17,8 @@ import static org.lwjgl.opengl.GL11.*;
 public class ModuleButton extends Drawable {
     private final Module module;
     private final ResourceLocation icon;
-    public final float deltaX;
+    public float deltaX;
+    public float deltaXTarget;
     public float x, y, height, width,
             hover, guiY, alpha, c,
             guiX, guiWidth;
@@ -31,6 +32,7 @@ public class ModuleButton extends Drawable {
                         + "/" + module.getName().toLowerCase().replace(" ", "")
                         + ".png");
         this.deltaX = deltaX;
+        this.deltaXTarget = deltaX;
     }
 
     public void background() {
@@ -40,6 +42,7 @@ public class ModuleButton extends Drawable {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        deltaX = MathUtil.lerp(deltaX, deltaXTarget, Interface.getDelta());
         float barY = y + height - 15.0f;
 
         /* Bottom bar */
@@ -171,5 +174,9 @@ public class ModuleButton extends Drawable {
             return ".";
         }
         return "";
+    }
+
+    public Module getModule() {
+        return module;
     }
 }

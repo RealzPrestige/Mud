@@ -24,7 +24,6 @@ public class CategoryBar extends Drawable {
     private final Category category;
     public float x, y, width, height, lAnim, rAnim;
     private float anim, target, shift;
-    private float scroll, scrollTarget;
 
     public CategoryBar(Category category) {
         this.category = category;
@@ -83,16 +82,33 @@ public class CategoryBar extends Drawable {
         /* Shift */
         shift = MathUtil.lerp(shift, target, Interface.getDelta());
 
-        if (Interface.getActiveCategory() == null || Interface.getActiveCategory() != category){
-            scrollTarget = 0.0f;
+        if (Interface.getActiveCategory() == null || Interface.getActiveCategory() != category) {
+            target = 0.0f;
         }
 
-        scrollTarget += Mouse.getDWheel() / 5.0f;
-        scroll = MathUtil.lerp(scroll, scrollTarget, Interface.getDelta());
+        target += Mouse.getDWheel() / 5.0f;
+        shift = MathUtil.lerp(shift, target, Interface.getDelta());
+
+            float delta = 1.0f;
+            float deltaX = 1.0f;
+            boolean neg = true;
+            for (ModuleButton moduleButton : moduleButtons) {
+                if (!Interface.search.isEmpty() && !moduleButton.getModule().getName().toLowerCase().contains(Interface.search.toLowerCase())) {
+                    continue;
+                }
+                moduleButton.deltaXTarget = deltaX * 120.0f;
+                deltaX -= neg ? delta : -delta;
+                neg = !neg;
+                delta += 1.0f;
+            }
+
 
         /* Setup Module Buttons */
         for (ModuleButton moduleButton : moduleButtons) {
-            moduleButton.x = x + 37.5f + moduleButton.deltaX + shift + scroll;
+            if (!Interface.search.isEmpty() && !moduleButton.getModule().getName().toLowerCase().contains(Interface.search.toLowerCase())) {
+                continue;
+            }
+            moduleButton.x = x + 37.5f + moduleButton.deltaX + shift;
             moduleButton.y = y + 5.0f;
             moduleButton.height = height - 10.0f;
             moduleButton.width = 110.0f;
@@ -103,10 +119,13 @@ public class CategoryBar extends Drawable {
 
         /* Blur background */
         BlurShader.invokeBlur();
-        for (ModuleButton moduleButton1 : moduleButtons) {
+        for (ModuleButton moduleButton : moduleButtons) {
+            if (!Interface.search.isEmpty() && !moduleButton.getModule().getName().toLowerCase().contains(Interface.search.toLowerCase())) {
+                continue;
+            }
             /* Scissor Module Buttons */
             RenderUtil.prepareScissor(x + 32.5f, this.y - 30.0f, x + width - 32.5f, this.y + height);
-            moduleButton1.background();
+            moduleButton.background();
             /* Release Scissor */
             RenderUtil.releaseScissor();
         }
@@ -114,10 +133,13 @@ public class CategoryBar extends Drawable {
 
         /* Shadow around */
         ShadowShader.invokeShadow();
-        for (ModuleButton button : moduleButtons) {
+        for (ModuleButton moduleButton : moduleButtons) {
+            if (!Interface.search.isEmpty() && !moduleButton.getModule().getName().toLowerCase().contains(Interface.search.toLowerCase())) {
+                continue;
+            }
             /* Scissor Module Buttons */
             RenderUtil.prepareScissor(x + 32.5f, this.y - 30.0f, x + width - 32.5f, this.y + height);
-            button.background();
+            moduleButton.background();
             /* Release Scissor */
             RenderUtil.releaseScissor();
         }
@@ -125,6 +147,9 @@ public class CategoryBar extends Drawable {
 
         /* Render each after blur & setup */
         for (ModuleButton moduleButton : moduleButtons) {
+            if (!Interface.search.isEmpty() && !moduleButton.getModule().getName().toLowerCase().contains(Interface.search.toLowerCase())) {
+                continue;
+            }
             /* Scissor Module Buttons */
             RenderUtil.prepareScissor(x + 32.5f, this.y - 30.0f, x + width - 32.5f, this.y + height);
             moduleButton.drawScreen(mouseX, mouseY, partialTicks);

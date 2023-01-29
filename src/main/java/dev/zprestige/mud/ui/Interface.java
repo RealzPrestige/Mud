@@ -41,7 +41,7 @@ public class Interface extends GuiScreen {
     private static long delta, lastFrame;
     private float x, y, searchCol;
     public static String selectedScreen = "Default";
-    public String search = "";
+    public static String search = "";
     private boolean searching;
 
     @Override
