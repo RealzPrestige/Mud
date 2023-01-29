@@ -4,6 +4,7 @@ import club.minnced.discord.rpc.DiscordEventHandlers;
 import club.minnced.discord.rpc.DiscordRPC;
 import club.minnced.discord.rpc.DiscordRichPresence;
 import dev.zprestige.mud.Mud;
+import dev.zprestige.mud.events.impl.system.RPCDetailsEvent;
 import dev.zprestige.mud.util.MC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -76,6 +77,12 @@ public class DiscordUtil implements MC {
     }
 
     private static String generateDetails(Minecraft mc) {
+        RPCDetailsEvent event = new RPCDetailsEvent();
+        Mud.eventBus.invoke(event);
+        if (event.isCancelled()){
+            return event.getDetails();
+        }
+
         if (mc.currentScreen instanceof GuiMainMenu)
             return "Main Screen";
 

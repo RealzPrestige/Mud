@@ -64,6 +64,7 @@ public class MineCrystal extends Module {
                     RotationUtil.facePos(pos, event);
                 }
                 PacketUtil.invoke(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, pos, face), slot);
+                mc.player.swingArm(EnumHand.MAIN_HAND);
             } else {
                 EnumHand enumHand =
                         mc.player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(Items.END_CRYSTAL) ? EnumHand.MAIN_HAND
@@ -80,7 +81,6 @@ public class MineCrystal extends Module {
                 EnumFacing face = EnumFacing.UP;
                 PacketUtil.invoke(new CPacketPlayerTryUseItemOnBlock(pos, face, enumHand, face.getDirectionVec().getX(), face.getDirectionVec().getY(), face.getDirectionVec().getZ()));
 
-                mc.player.swingArm(enumHand);
             }
         } else {
             if (BlockUtil.hasCrystal(pos)) {
@@ -118,8 +118,8 @@ public class MineCrystal extends Module {
                     InventoryUtil.switchBack(currentItem);
                 }
             }
+            time = System.currentTimeMillis();
         }
-        time = System.currentTimeMillis();
     }
 
     public static void onBreakBlock(BreakBlockEvent event) {

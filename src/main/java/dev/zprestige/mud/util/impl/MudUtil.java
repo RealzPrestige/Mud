@@ -5,7 +5,7 @@ import dev.zprestige.mud.util.MC;
 public class MudUtil implements MC {
 
     private static final String[] offTheMudPt2 = new String[]{
-            "Like, grrah",
+            "Like", "grrah",
             "Like, grrah-grrah",
             "Like, drop my 4's, I'm takin' all of yours, you heard?",
             "Sleeze, Ewokk",
@@ -108,7 +108,60 @@ public class MudUtil implements MC {
             "Grra-ta, grra-ta, double Drilly"
     };
 
+    private static final String[] deadOpps = new String[]{
+            "NAZZY",
+            "RIPPY",
+            "BOBBY",
+            "DIDDY",
+            "NOAH",
+            "GRITS",
+            "CHARLIE",
+            "MEG",
+            "ZAY",
+            "C-HII",
+            "MEZZY",
+            "BERRY",
+            "MARKY",
+            "TANQ",
+            "RIPK",
+            "GLO",
+            "YELLOW",
+            "NAZZZYY",
+            "QUADO",
+            "U.E",
+            "BUDDA",
+            "BDOT",
+            "EDOT",
+            "NOTTI",
+            "BENJI",
+            "COUNTRY",
+            "SDOT",
+            "JAH LOC",
+            "SMELLY",
+            "RB",
+            "TG",
+            "RAH GZ",
+            "BLAY",
+            "ZOULI",
+            "EX",
+            "JACOB",
+            "THUNDA BLU",
+            "MILLY",
+            "JAY",
+            "REY",
+            "JB",
+            "CAINE",
+            "RICO",
+            "EK PAPS",
+            "DOUGIE PAPS"
+    };
+
+
     public static String[] getOffTheMudPt2() {
         return offTheMudPt2;
+    }
+
+    public static String[] getDeadOpps() {
+        return deadOpps;
     }
 }
