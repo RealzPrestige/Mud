@@ -44,6 +44,7 @@ public class AutoCrystal extends Module {
     private final ModeSetting rotate = setting("Rotate", "None", Arrays.asList("Both", "Place", "Break", "None")).invokeTab("AntiCheat");
     private final ModeSetting packet = setting("Packet", "Both", Arrays.asList("Place", "Break", "Both", "None")).invokeTab("AntiCheat");
     private final ModeSetting placements = setting("Placements", "1.12.2", Arrays.asList("1.12.2", "1.13+")).invokeTab("AntiCheat");
+    private final BooleanSetting damageTick = setting("Damage Tick", false).invokeTab("AntiCheat");
     private final BooleanSetting autoSwitch = setting("Auto Switch", false).invokeTab("AntiCheat");
     private final BooleanSetting constBypass = setting("Const Bypass", false).invokeTab("AntiCheat");
     private final BooleanSetting superTrace = setting("Super Trace", false).invokeTab("AntiCheat");
@@ -152,6 +153,8 @@ public class AutoCrystal extends Module {
             } else {
                 entityOtherPlayerMP = null;
             }
+
+
             long sys = System.currentTimeMillis();
             if (sys - placeTime > placeInterval.getValue()) {
                 action = true;
@@ -190,7 +193,7 @@ public class AutoCrystal extends Module {
             }
             entityPlayer.setPosition(position[0], position[1], position[2]);
 
-            if ((action && isNull) || System.currentTimeMillis() - time > 200){
+            if ((action && isNull) || System.currentTimeMillis() - time > 200) {
                 pos = null;
             }
             if (prev != null) {
@@ -315,6 +318,7 @@ public class AutoCrystal extends Module {
 
     private EntityEnderCrystal crystal(EntityPlayer entityPlayer) {
         final TreeMap<Float, EntityEnderCrystal> posses = new TreeMap<>();
+        boolean resistant = damageTick.getValue() && entityPlayer.hurtResistantTime >  entityPlayer.maxHurtResistantTime / 2.0f;
         for (Entity entity : mc.world.loadedEntityList) {
             if (!(entity instanceof EntityEnderCrystal)) {
                 continue;
@@ -329,6 +333,10 @@ public class AutoCrystal extends Module {
             }
             float selfDamage = BlockUtil.calculateEntityDamage((EntityEnderCrystal) entity, mc.player);
             float damage = BlockUtil.calculateEntityDamage((EntityEnderCrystal) entity, entityPlayer);
+
+            if (resistant && damage <= entityPlayer.lastDamage) {
+                continue;
+            }
             if (smartCalculations.getValue() && damage - selfDamage < 0) {
                 continue;
             }
@@ -351,12 +359,17 @@ public class AutoCrystal extends Module {
 
     private BlockPos findPos(EntityPlayer entityPlayer) {
         final TreeMap<Float, BlockPos> posses = new TreeMap<>();
+        boolean resistant = damageTick.getValue() && entityPlayer.hurtResistantTime > (float) entityPlayer.maxHurtResistantTime / 2.0f;
+        float lastDamage = Mud.lastDamageManager.getLastDamage(entityPlayer);
         for (BlockPos pos : BlockUtil.getBlocksInRadius(scanRange.getValue())) {
             if (!BlockUtil.valid(pos, placements.getValue().equals("1.13+"))) {
                 continue;
             }
             float selfDamage = BlockUtil.calculatePosDamage(pos, mc.player);
             float damage = BlockUtil.calculatePosDamage(pos, entityPlayer);
+            if (resistant && damage <= lastDamage) {
+                continue;
+            }
             if (smartCalculations.getValue() && damage - selfDamage < 0) {
                 continue;
             }

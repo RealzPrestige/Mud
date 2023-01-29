@@ -24,6 +24,7 @@ public class Burrow extends Module {
     private final BooleanSetting cancelRotations = setting("Cancel Rotations", false);
     private final BooleanSetting rotate = setting("Rotate", false);
     private final BooleanSetting strict = setting("Strict", false);
+    private final BooleanSetting bypass = setting("Bypass", false);
 
     private final float[] offsets = new float[]{0.41f, 0.75f, 1.00f, 1.16f};
     private BlockPos startPos;

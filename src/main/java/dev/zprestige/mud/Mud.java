@@ -37,24 +37,14 @@ public class Mud {
     public static final TPSManager tpsManager = new TPSManager();
     public static final AltManagerScreen altManagerScreen = new AltManagerScreen();
     public static final MotionPredictionManager motionPredictManager = new MotionPredictionManager();
+    public static final LastDamageManager lastDamageManager = new LastDamageManager();
     public static final Thread thread = new Thread(() -> {
         configManager.save("AutoSave", false, new ArrayList<>(Arrays.asList(Category.values())));
         DiscordUtil.onExit();
     });
 
     @Mod.EventHandler
-    public void onPreInit(FMLPreInitializationEvent event) {
-        DiscordUtil.init();
-        DiscordUtil.onPre();
-    }
-
-    @Mod.EventHandler
     public void onInit(FMLInitializationEvent event) {
         Runtime.getRuntime().addShutdownHook(thread);
-    }
-
-    @Mod.EventHandler
-    public void onPostInit(FMLPostInitializationEvent event) {
-        DiscordUtil.onPost();
     }
 }
