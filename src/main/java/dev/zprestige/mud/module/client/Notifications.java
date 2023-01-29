@@ -23,6 +23,7 @@ public class Notifications extends Module {
         if (entityPlayer.equals(mc.player)) {
             return;
         }
+
         int pops = 1;
         if (popMap.containsKey(entityPlayer.getName())) {
             pops = popMap.get(entityPlayer.getName());
@@ -40,6 +41,7 @@ public class Notifications extends Module {
         if (entityPlayer.equals(mc.player)) {
             return;
         }
+
         if (popMap.containsKey(entityPlayer.getName())) {
             int pops = popMap.get(entityPlayer.getName());
 
@@ -55,6 +57,7 @@ public class Notifications extends Module {
         if (!modules.getValue()){
             return;
         }
+
         String text;
         if (event.isEnable()) {
             text = "[Mud] " + event.getModule().getName() + ChatFormatting.RESET + " has been" + ChatFormatting.GREEN + " Enabled";
@@ -69,6 +72,7 @@ public class Notifications extends Module {
         if (!pops.getValue()){
             return;
         }
+
         for (EntityPlayer entityPlayer : mc.world.playerEntities) {
             if (entityPlayer.equals(mc.player) || entityPlayer.getHealth() > 0.0f) {
                 continue;
@@ -83,6 +87,7 @@ public class Notifications extends Module {
         if (!pops.getValue()){
             return;
         }
+
         if (mc.world != null && mc.player != null && event.getPacket() instanceof SPacketEntityStatus) {
             final SPacketEntityStatus packet = (SPacketEntityStatus) event.getPacket();
             final Entity entity = packet.getEntity(mc.world);
