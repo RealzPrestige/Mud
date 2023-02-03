@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 
 public class CustomChat extends Module {
     private final FloatSetting y = setting("Y", 0.0f, 0.0f, 500.0f);
-    private final BooleanSetting clear = setting("Clear", true);
     private final FloatSetting speed = setting("Speed", 1.0f, 0.1f, 5.0f).invokeTab("Render");
     private final FloatSetting step = setting("Step", 0.2f, 0.1f, 2.0f).invokeTab("Render");
     private final ColorSetting color1 = setting("Color 1", new Color(113, 93, 214)).invokeTab("Render");
@@ -41,9 +40,7 @@ public class CustomChat extends Module {
 
     @EventListener
     public void onDisconnect(DisconnectEvent event) {
-        if (clear.getValue()) {
             messages.clear();
-        }
     }
 
     @EventListener
