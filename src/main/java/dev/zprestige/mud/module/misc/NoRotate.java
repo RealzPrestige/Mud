@@ -12,10 +12,12 @@ public class NoRotate extends Module {
     public void onPacketReceive(PacketReceiveEvent event) {
         if (event.getPacket() instanceof SPacketPlayerPosLook) {
             SPacketPlayerPosLook packet = (SPacketPlayerPosLook) event.getPacket();
-            ((ISPacketPlayerPosLook) packet).setYaw(mc.player.rotationYaw);
-            ((ISPacketPlayerPosLook) packet).setPitch(mc.player.rotationPitch);
-            packet.getFlags().remove(SPacketPlayerPosLook.EnumFlags.X_ROT);
-            packet.getFlags().remove(SPacketPlayerPosLook.EnumFlags.Y_ROT);
+            if (packet != null) {
+                ((ISPacketPlayerPosLook) packet).setYaw(mc.player.rotationYaw);
+                ((ISPacketPlayerPosLook) packet).setPitch(mc.player.rotationPitch);
+                packet.getFlags().remove(SPacketPlayerPosLook.EnumFlags.X_ROT);
+                packet.getFlags().remove(SPacketPlayerPosLook.EnumFlags.Y_ROT);
+            }
         }
     }
 }
