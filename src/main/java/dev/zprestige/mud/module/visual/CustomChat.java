@@ -3,7 +3,6 @@ package dev.zprestige.mud.module.visual;
 import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.chat.GuiChatTypeEvent;
-import dev.zprestige.mud.events.impl.render.Render2DEvent;
 import dev.zprestige.mud.events.impl.render.Render2DPostEvent;
 import dev.zprestige.mud.events.impl.render.RenderChatEvent;
 import dev.zprestige.mud.events.impl.render.RenderTextBoxEvent;
@@ -12,7 +11,6 @@ import dev.zprestige.mud.events.impl.world.TickEvent;
 import dev.zprestige.mud.manager.EventManager;
 import dev.zprestige.mud.mixins.interfaces.IGuiNewChat;
 import dev.zprestige.mud.module.Module;
-import dev.zprestige.mud.setting.impl.BooleanSetting;
 import dev.zprestige.mud.setting.impl.ColorSetting;
 import dev.zprestige.mud.setting.impl.FloatSetting;
 import dev.zprestige.mud.shader.impl.GradientShader;
@@ -40,7 +38,7 @@ public class CustomChat extends Module {
 
     @EventListener
     public void onDisconnect(DisconnectEvent event) {
-            messages.clear();
+        messages.clear();
     }
 
     @EventListener
@@ -121,18 +119,16 @@ public class CustomChat extends Module {
 
     @EventListener
     public void onTick(TickEvent event) {
-        for (ChatLine chatLine : ((IGuiNewChat) mc.ingameGUI.getChatGUI()).getDrawnChatLines()) {
-            Mud.threadManager.invokeThread(() -> {
+        Mud.threadManager.invokeThread(() -> {
+            for (ChatLine chatLine : ((IGuiNewChat) mc.ingameGUI.getChatGUI()).getDrawnChatLines()) {
                 String text = chatLine.getChatComponent().getFormattedText();
-                for (Message message : messages) {
-                    if (text.equals(message.getText())) {
-                        return;
-                    }
+                if (messages.stream().anyMatch(message -> text.equals(message.getText()))) {
+                    continue;
                 }
                 messages.add(new Message(text));
                 messages = messages.stream().sorted(Comparator.comparing(Message::getTime)).collect(Collectors.toCollection(ArrayList::new));
-            });
-        }
+            }
+        });
     }
 
     @EventListener
