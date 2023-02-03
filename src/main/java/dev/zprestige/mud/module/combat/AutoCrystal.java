@@ -116,9 +116,9 @@ public class AutoCrystal extends Module {
     @EventListener
     public void onMotion(MotionUpdateEvent event) {
 
-        if (limit.getValue()){
-            for (Map.Entry<EntityEnderCrystal, Long> c : new HashMap<>(limitCrystals).entrySet()){
-                if (System.currentTimeMillis() - c.getValue() > limitTimeout.getValue()){
+        if (limit.getValue()) {
+            for (Map.Entry<EntityEnderCrystal, Long> c : new HashMap<>(limitCrystals).entrySet()) {
+                if (System.currentTimeMillis() - c.getValue() > limitTimeout.getValue()) {
                     limitCrystals.remove(c.getKey());
                 }
             }
@@ -128,25 +128,14 @@ public class AutoCrystal extends Module {
         if (entityPlayer != null) {
 
             invokeAppend(entityPlayer.getName());
-            if (raytraceBypass.getValue()) {
-                if (ticks > 0) {
-                    shiftTicks = timeout.getValue();
-                    ticks--;
-                } else {
-                    if (shiftTicks > 0) {
-                        shiftTicks--;
-                        event.setPitch(-90);
-                        return;
-                    } else {
-                        ticks = wait.getValue();
-                    }
-                }
+
+            if (attemptRaytraceBypass()){
+                event.setPitch(-90.0f);
+                return;
             }
 
-            if (constBypass.getValue()) {
-                if (mc.currentScreen == null) {
-                    PacketUtil.invoke(new CPacketCloseWindow());
-                }
+            if (constBypass.getValue() && mc.currentScreen == null) {
+                PacketUtil.invoke(new CPacketCloseWindow());
             }
 
             double[] position = new double[]{entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ};
@@ -162,41 +151,35 @@ public class AutoCrystal extends Module {
                 entityOtherPlayerMP = null;
             }
 
+            calculating = true;
+            EntityEnderCrystal crystal = crystal(entityPlayer);
+            BlockPos pos = findPos(entityPlayer);
+            calculating = false;
 
             long sys = System.currentTimeMillis();
-            if (sys - placeTime > placeInterval.getValue()) {
-                pos = null;
 
-                calculating = true;
-                BlockPos pos = findPos(entityPlayer);
-                calculating = false;
-
+            if (sys - placeTime > placeInterval.getValue() && pos != null) {
                 active = true;
-                if (pos != null) {
-                    placeCrystal(pos, event);
-
-                    placeTime = sys;
-                    if (!simultaneously.getValue()) {
-                        return;
-                    }
-                    this.pos = pos;
-                }
+                placeCrystal(pos, event);
+                placeTime = sys;
             }
-            if (sys - breakTime > breakInterval.getValue()) {
-                pos = null;
 
-                calculating = true;
-                EntityEnderCrystal crystal = crystal(entityPlayer);
-                calculating = false;
-
-                if (crystal != null) {
-                    breakCrystal(crystal, event);
+            if (!active || simultaneously.getValue()) {
+                if (sys - breakTime > breakInterval.getValue() && crystal != null) {
                     active = true;
-
+                    breakCrystal(crystal, event);
                     breakTime = sys;
-                    this.pos = crystal.getPosition().down();
                 }
             }
+
+            if ((rotate.getValue().equals("Place") || rotate.getValue().equals("Both")) && pos != null) {
+                RotationUtil.facePos(pos, event);
+            } else if ((rotate.getValue().equals("Break") || rotate.getValue().equals("Both")) && crystal != null) {
+                RotationUtil.faceEntity(crystal, event);
+            }
+
+            this.pos = crystal != null ? crystal.getPosition().down() : pos;
+
             entityPlayer.setPosition(position[0], position[1], position[2]);
 
         } else {
@@ -277,7 +260,7 @@ public class AutoCrystal extends Module {
             InventoryUtil.switchBack(handleWeakness);
         }
 
-        if (limit.getValue()){
+        if (limit.getValue()) {
             limitCrystals.put(entity, System.currentTimeMillis());
         }
         mc.player.swingArm(enumHand);
@@ -293,7 +276,7 @@ public class AutoCrystal extends Module {
         }
 
         if (event != null && (rotate.getValue().equals("Both") || rotate.getValue().equals("Place"))) {
-             RotationUtil.facePos(pos, event);
+            RotationUtil.facePos(pos, event);
         }
 
         EnumFacing enumFacing = EnumFacing.UP;
@@ -320,7 +303,7 @@ public class AutoCrystal extends Module {
 
     private EntityEnderCrystal crystal(EntityPlayer entityPlayer) {
         final TreeMap<Float, EntityEnderCrystal> posses = new TreeMap<>();
-        boolean resistant = damageTick.getValue() && entityPlayer.hurtResistantTime >  entityPlayer.maxHurtResistantTime / 2.0f;
+        boolean resistant = damageTick.getValue() && entityPlayer.hurtResistantTime > entityPlayer.maxHurtResistantTime / 2.0f;
         for (Entity entity : mc.world.loadedEntityList) {
             if (!(entity instanceof EntityEnderCrystal)) {
                 continue;
@@ -351,7 +334,7 @@ public class AutoCrystal extends Module {
             if (damage < Math.min(EntityUtil.getHealth(entityPlayer), minimumDamage.getValue())) {
                 continue;
             }
-            if (limit.getValue() && limitCrystals.containsKey(entity)){
+            if (limit.getValue() && limitCrystals.containsKey(entity)) {
                 continue;
             }
 
@@ -417,5 +400,22 @@ public class AutoCrystal extends Module {
             }
         }
         return currentItem;
+    }
+
+    private boolean attemptRaytraceBypass(){
+        if (raytraceBypass.getValue()) {
+            if (ticks > 0) {
+                shiftTicks = timeout.getValue();
+                ticks--;
+            } else {
+                if (shiftTicks > 0) {
+                    shiftTicks--;
+                    return true;
+                } else {
+                    ticks = wait.getValue();
+                }
+            }
+        }
+        return false;
     }
 }
