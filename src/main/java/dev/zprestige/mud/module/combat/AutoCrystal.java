@@ -7,6 +7,7 @@ import dev.zprestige.mud.events.impl.render.Render2DEvent;
 import dev.zprestige.mud.events.impl.render.Render3DEvent;
 import dev.zprestige.mud.events.impl.system.PacketReceiveEvent;
 import dev.zprestige.mud.events.impl.world.WebExplosionEvent;
+import dev.zprestige.mud.mixins.interfaces.ICPacketUseEntity;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.*;
 import dev.zprestige.mud.shader.impl.BufferGroup;
@@ -259,7 +260,11 @@ public class AutoCrystal extends Module {
                 int latency = Objects.requireNonNull(mc.getConnection()).getPlayerInfo(mc.getConnection().getGameProfile().getId()).getResponseTime() / 50;
                 for (int i = latency; i < latency + 10; i++) {
                     try {
-                        PacketUtil.invoke(new CPacketUseEntity(highestEntity));
+                        CPacketUseEntity cPacketUseEntity = new CPacketUseEntity();
+
+                        ((ICPacketUseEntity) cPacketUseEntity).setEntityId(highestEntity.getEntityId() + i);
+                        ((ICPacketUseEntity) cPacketUseEntity).setAction(CPacketUseEntity.Action.ATTACK);
+                        PacketUtil.invoke(cPacketUseEntity);
                     } catch (Exception ignored) {
                     }
                 }

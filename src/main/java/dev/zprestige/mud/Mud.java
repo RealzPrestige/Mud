@@ -29,7 +29,7 @@ public class Mud {
     public static final HoleManager holeManager = new HoleManager();
     public static final InteractionManager interactionManager = new InteractionManager();
     public static final FrustumManager frustumManager = new FrustumManager();
-    public static final Interface clickGui = new Interface();
+    public static Interface clickGui;
     public static final TPSManager tpsManager = new TPSManager();
     public static final MotionPredictionManager motionPredictManager = new MotionPredictionManager();
     public static final LastDamageManager lastDamageManager = new LastDamageManager();
@@ -39,6 +39,8 @@ public class Mud {
     });
     @Mod.EventHandler
     public void onInit(FMLInitializationEvent event) {
+        moduleManager.init();
+        clickGui = new Interface();
         Runtime.getRuntime().addShutdownHook(thread);
     }
 

@@ -29,9 +29,14 @@ public class Module implements MC {
         this.settings.addAll(Arrays.asList(enabled, keybind));
     }
 
-    public Module invoke(String name, Category category) {
+    public Module invoke(String name) {
         this.name = name;
-        this.category = category;
+        this.category = Mud.moduleManager.getCategory();
+        return this;
+    }
+
+    public Module invokeSection(Category category){
+        Mud.moduleManager.startSection(category);
         return this;
     }
 
