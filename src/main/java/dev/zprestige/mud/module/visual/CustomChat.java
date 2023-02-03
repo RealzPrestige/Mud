@@ -90,11 +90,12 @@ public class CustomChat extends Module {
                     GradientShader.finish();
                     diff += Mud.fontManager.stringWidth("[Mud] ");
                 }
-                if (string.contains("\uDE82")){
-                    float stringWidth =  Mud.fontManager.stringWidth(string.replace("[Mud]", "").replace("\uDE82", ""));
+                if (string.contains("\uDE82")) {
+                    float stringWidth = Mud.fontManager.stringWidth(string.replace("[Mud]", "").replace("\uDE82", ""));
                     RenderUtil.invokeScale(0.8f);
-                   RenderHelper.enableGUIStandardItemLighting();
-                    mc.getRenderItem().renderItemAndEffectIntoGUI(new ItemStack(Items.TOTEM_OF_UNDYING), (int) ((x  - 2.5f + stringWidth) / 0.8f), (int) ((y1 - 2.5f) / 0.8f));
+                   mc.fontRenderer.drawString("d", -43, 1, -1);
+                    RenderHelper.enableGUIStandardItemLighting();
+                    mc.getRenderItem().renderItemAndEffectIntoGUI(new ItemStack(Items.TOTEM_OF_UNDYING), (int) ((x - 2.5f + stringWidth) / 0.8f), (int) ((y1 - 2.5f) / 0.8f));
                     RenderHelper.disableStandardItemLighting();
                     RenderUtil.resetScale();
                 }
@@ -172,9 +173,10 @@ public class CustomChat extends Module {
     }
 
     @EventListener
-    public void onCustomChat(CustomChatEvent event){
+    public void onCustomChat(CustomChatEvent event) {
         event.setCancelled(true);
     }
+
     private long s = System.currentTimeMillis();
 
     private String typingIcon() {

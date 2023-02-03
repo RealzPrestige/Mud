@@ -22,9 +22,7 @@ public class Notifications extends Module {
     private final HashMap<String, Integer> popMap = new HashMap<>();
 
     private void onPop(EntityPlayer entityPlayer) {
-        if (entityPlayer.equals(mc.player)) {
-            return;
-        }
+
 
         int pops = 1;
         if (popMap.containsKey(entityPlayer.getName())) {
