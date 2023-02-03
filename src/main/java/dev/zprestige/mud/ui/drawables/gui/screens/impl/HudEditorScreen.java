@@ -1,6 +1,8 @@
 package dev.zprestige.mud.ui.drawables.gui.screens.impl;
 
 import dev.zprestige.mud.Mud;
+import dev.zprestige.mud.events.bus.EventListener;
+import dev.zprestige.mud.events.impl.gui.ScrollEvent;
 import dev.zprestige.mud.hud.HudModule;
 import dev.zprestige.mud.ui.HudEditorInterface;
 import dev.zprestige.mud.ui.Interface;
@@ -22,6 +24,7 @@ public class HudEditorScreen extends DrawableScreen {
         for (HudModule hudModule : Mud.hudModuleManager.getHudModules()) {
             hudModuleButtons.add(new HudModuleButton(hudModule));
         }
+        Mud.eventBus.registerListener(this);
     }
 
     @Override
@@ -54,11 +57,6 @@ public class HudEditorScreen extends DrawableScreen {
 
         RenderUtil.releaseScissor();
 
-        if (mouseX > x && mouseX < this.x + guiWidth && mouseY > y && mouseY < y + guiHeight) {
-            if (Interface.selectedScreen.equals("HudEditor")) {
-                scrollTarget += Mouse.getDWheel() / 10.0f;
-            }
-        }
         scroll = MathUtil.lerp(scroll, scrollTarget, Interface.getDelta());
         if (!Interface.selectedScreen.equals("HudEditor")) {
             scrollTarget = 0.0f;
@@ -108,6 +106,15 @@ public class HudEditorScreen extends DrawableScreen {
             float x = this.x + sidebarWidth + 15.0f;
             if (mouseX > x + width / 2.0f - 75.0f && mouseX < x + width / 2.0f + 75.0f && mouseY > y + guiHeight - 50.0f + 60.0f * anim && mouseY < y + guiHeight - 30.0f + 60.0f * anim) {
                 mc.displayGuiScreen(new HudEditorInterface());
+            }
+        }
+    }
+
+    @EventListener
+    public void onScroll(ScrollEvent event) {
+        if (event.getMouseX() > x && event.getMouseX() < this.x + guiWidth && event.getMouseY() > y && event.getMouseY() < y + guiHeight) {
+            if (Interface.selectedScreen.equals("HudEditor")) {
+                scrollTarget += event.getAmount() / 10.0f;
             }
         }
     }

@@ -116,7 +116,6 @@ public class ConfigScreen extends DrawableScreen {
         expandAnim = MathUtil.lerp(expandAnim, open ? 1.0f : 0.0f, Interface.getDelta());
         reloadAnim = MathUtil.lerp(reloadAnim, insideReload(mouseX, mouseY, rightWidth, boxY) ? 1.0f : 0.4f, Interface.getDelta());
 
-        scrollTarget += Mouse.getDWheel() / 10.0f;
         scroll = MathUtil.lerp(scroll, scrollTarget, Interface.getDelta());
         if (!open) {
             scrollTarget = 0.0f;

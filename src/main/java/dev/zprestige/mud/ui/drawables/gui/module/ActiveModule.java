@@ -1,5 +1,8 @@
 package dev.zprestige.mud.ui.drawables.gui.module;
 
+import dev.zprestige.mud.Mud;
+import dev.zprestige.mud.events.bus.EventListener;
+import dev.zprestige.mud.events.impl.gui.ScrollEvent;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.Setting;
 import dev.zprestige.mud.ui.Interface;
@@ -38,14 +41,12 @@ public class ActiveModule extends Drawable {
             }
         }
         moduleTabs.forEach(ModuleTab::init);
+        Mud.eventBus.registerListener(this);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         if (DefaultScreen.getActiveModule() != null && DefaultScreen.getActiveModule().equals(module)) {
-            if (mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height) {
-                scrollTarget += Mouse.getDWheel() / 10.0f;
-            }
             scroll = MathUtil.lerp(scroll, scrollTarget, Interface.getDelta());
         } else {
             scrollTarget = 0.0f;
@@ -86,6 +87,13 @@ public class ActiveModule extends Drawable {
     public void keyTyped(char typedChar, int keyCode) {
         if ((DefaultScreen.getActiveModule() != null && DefaultScreen.getActiveModule() == module) || Interface.selectedScreen.equals("HudEditor")) {
             moduleTabs.stream().filter(moduleTab -> !moduleTab.ignore()).forEach(moduleTab -> moduleTab.keyTyped(typedChar, keyCode));
+        }
+    }
+
+    @EventListener
+    public void onScroll(ScrollEvent event) {
+        if (event.getMouseX() > x && event.getMouseX() < x + width && event.getMouseY() > y && event.getMouseY() < y + height) {
+            scrollTarget +=event.getAmount() / 10.0f;
         }
     }
 }

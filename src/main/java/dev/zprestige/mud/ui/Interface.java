@@ -2,6 +2,7 @@ package dev.zprestige.mud.ui;
 
 import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.impl.gui.GuiPrimaryEvent;
+import dev.zprestige.mud.events.impl.gui.ScrollEvent;
 import dev.zprestige.mud.events.impl.system.GuiClosedEvent;
 import dev.zprestige.mud.module.Category;
 import dev.zprestige.mud.shader.impl.ShadowShader;
@@ -15,8 +16,10 @@ import dev.zprestige.mud.util.impl.MathUtil;
 import dev.zprestige.mud.util.impl.RenderUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
+import net.minecraft.util.MouseFilter;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 import java.io.IOException;
@@ -133,6 +136,12 @@ public class Interface extends GuiScreen {
         /* Delta time */
         delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
+
+        int wheel = Mouse.getDWheel();
+        if (wheel != 0){
+            ScrollEvent event = new ScrollEvent(mouseX, mouseY, wheel);
+            Mud.eventBus.invoke(event);
+        }
     }
 
     @Override

@@ -1,6 +1,8 @@
 package dev.zprestige.mud.ui.drawables.gui.screens.impl;
 
 import dev.zprestige.mud.Mud;
+import dev.zprestige.mud.events.bus.EventListener;
+import dev.zprestige.mud.events.impl.gui.ScrollEvent;
 import dev.zprestige.mud.ui.Interface;
 import dev.zprestige.mud.ui.drawables.Drawable;
 import dev.zprestige.mud.ui.drawables.gui.screens.DrawableScreen;
@@ -21,6 +23,10 @@ public class FriendScreen extends DrawableScreen {
     private String search = "";
     private boolean searching;
     private long sys;
+
+    public FriendScreen(){
+        Mud.eventBus.registerListener(this);
+    }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -43,11 +49,6 @@ public class FriendScreen extends DrawableScreen {
                 boxY = y + categoryBarY + 30.0f,
                 boxHeight = y + 30.0f + guiHeight - 100.0f;
 
-        if (mouseX > x && mouseX < this.x + guiWidth && mouseY > y && mouseY < y + guiHeight) {
-            if (Interface.selectedScreen.equals("Friends")) {
-                scrollTarget += Mouse.getDWheel() / 10.0f;
-            }
-        }
         if (!Interface.selectedScreen.equals("Friends")) {
             scrollTarget = 0.0f;
         }
@@ -153,6 +154,14 @@ public class FriendScreen extends DrawableScreen {
         }
     }
 
+    @EventListener
+    public void onScroll(ScrollEvent event){
+        if (event.getMouseX() > x && event.getMouseX() < this.x + guiWidth && event.getMouseY() > y && event.getMouseY() < y + guiHeight) {
+            if (Interface.selectedScreen.equals("Friends")) {
+                scrollTarget += event.getAmount() / 10.0f;
+            }
+        }
+    }
     private long sys1 = 0L;
 
     private String typingIcon() {
