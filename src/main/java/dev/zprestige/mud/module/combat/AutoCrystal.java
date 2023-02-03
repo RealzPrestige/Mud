@@ -45,6 +45,7 @@ public class AutoCrystal extends Module {
     private final BooleanSetting limit = setting("Limit", false).invokeTab("AntiCheat");
     private final IntSetting limitTimeout = setting("Limit Timeout", 100, 0, 500).invokeVisibility(z -> limit.getValue()).invokeTab("AntiCheat");
     private final BooleanSetting silentSwap = setting("Silent Swap", false).invokeTab("AntiCheat");
+    private final BooleanSetting boost = setting("Boost", false).invokeTab("AntiCheat");
     private final BooleanSetting damageTick = setting("Damage Tick", false).invokeTab("AntiCheat");
     private final BooleanSetting autoSwitch = setting("Auto Switch", false).invokeTab("AntiCheat");
     private final BooleanSetting constBypass = setting("Const Bypass", false).invokeTab("AntiCheat");
@@ -130,7 +131,7 @@ public class AutoCrystal extends Module {
 
             invokeAppend(entityPlayer.getName());
 
-            if (attemptRaytraceBypass()){
+            if (attemptRaytraceBypass()) {
                 event.setPitch(-90.0f);
                 return;
             }
@@ -237,16 +238,41 @@ public class AutoCrystal extends Module {
                 }
             }
         }
+        if (boost.getValue() && event.getPacket() instanceof CPacketPlayerTryUseItemOnBlock) {
+            CPacketPlayerTryUseItemOnBlock packet = (CPacketPlayerTryUseItemOnBlock) event.getPacket();
+
+            if (!BlockUtil.valid(packet.getPos(), placements.getValue().equals("1.13+"))) {
+                return;
+            }
+
+            Entity highestEntity = null;
+            int entityId = 0;
+            for (Entity entity : mc.world.loadedEntityList) {
+                if (entity instanceof EntityEnderCrystal) {
+                    if (entity.getEntityId() > entityId) {
+                        entityId = entity.getEntityId();
+                    }
+                    highestEntity = entity;
+                }
+            }
+
+            if (highestEntity != null) {
+                int latency = Objects.requireNonNull(mc.getConnection()).getPlayerInfo(mc.getConnection().getGameProfile().getId()).getResponseTime() / 50;
+                for (int i = latency; i < latency + 10; i++) {
+                    try {
+                        PacketUtil.invoke(new CPacketUseEntity(highestEntity));
+                    } catch (Exception ignored) {
+                    }
+                }
+            }
+        }
     }
 
     private void breakCrystal(EntityEnderCrystal entity, MotionUpdateEvent event) {
         EnumHand enumHand =
                 mc.player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(Items.END_CRYSTAL) ? EnumHand.MAIN_HAND
                         : mc.player.getHeldItem(EnumHand.OFF_HAND).getItem().equals(Items.END_CRYSTAL) ? EnumHand.OFF_HAND
-                        : null;
-        if (enumHand == null) {
-            return;
-        }
+                        : EnumHand.MAIN_HAND;
 
         if (rotate.getValue().equals("Both") || rotate.getValue().equals("Break")) {
             RotationUtil.faceEntity(entity, event);
@@ -271,10 +297,7 @@ public class AutoCrystal extends Module {
         EnumHand enumHand =
                 mc.player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(Items.END_CRYSTAL) ? EnumHand.MAIN_HAND
                         : mc.player.getHeldItem(EnumHand.OFF_HAND).getItem().equals(Items.END_CRYSTAL) ? EnumHand.OFF_HAND
-                        : null;
-        if (enumHand == null) {
-            return;
-        }
+                        : EnumHand.MAIN_HAND;
 
         if (event != null && (rotate.getValue().equals("Both") || rotate.getValue().equals("Place"))) {
             RotationUtil.facePos(pos, event);
@@ -299,13 +322,13 @@ public class AutoCrystal extends Module {
             }
         } else {
             int currentItem = mc.player.inventory.currentItem;
-            if (slot != -1){
+            if (slot != -1) {
                 InventoryUtil.switchToSlot(slot);
             }
             mc.playerController.processRightClickBlock(mc.player, mc.world, pos, enumFacing, new Vec3d(mc.player.posX, -mc.player.posY, -mc.player.posZ), enumHand);
-         if (slot != -1){
-             InventoryUtil.switchBack(slot);
-         }
+            if (slot != -1) {
+                InventoryUtil.switchBack(currentItem);
+            }
             mc.player.swingArm(enumHand);
         }
 
@@ -413,7 +436,7 @@ public class AutoCrystal extends Module {
         return currentItem;
     }
 
-    private boolean attemptRaytraceBypass(){
+    private boolean attemptRaytraceBypass() {
         if (raytraceBypass.getValue()) {
             if (ticks > 0) {
                 shiftTicks = timeout.getValue();
