@@ -5,6 +5,8 @@ import dev.zprestige.mud.util.MC;
 import dev.zprestige.mud.util.impl.MathUtil;
 import dev.zprestige.mud.util.impl.RenderUtil;
 import dev.zprestige.mud.util.impl.StencilUtil;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.shader.Framebuffer;
 import org.lwjgl.BufferUtils;
 
@@ -43,9 +45,9 @@ public class BlurShader implements MC {
     }
 
     private static void renderBlur(float radius) {
-        glEnable(GL_BLEND);
-        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.enableBlend();
+        GlStateManager.color(1, 1, 1, 1);
+        OpenGlHelper.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 
         framebuffer = RenderUtil.createFrameBuffer(framebuffer);
         framebuffer.framebufferClear();
@@ -67,7 +69,9 @@ public class BlurShader implements MC {
 
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         framebuffer = RenderUtil.createFrameBuffer(framebuffer);
-        glBindTexture(GL_TEXTURE_2D, 0);
+
+        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.bindTexture(0);
     }
 
 }

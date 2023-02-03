@@ -23,6 +23,7 @@ public class GlowShader implements MC {
     public static void render3D(BufferGroup bufferGroup) {
         bufferGroup.renderBuffer();
         mc.getFramebuffer().bindFramebuffer(true);
+        GlStateManager.disableLighting();
     }
 
     public static void render2D(BufferGroup bufferGroup) {
@@ -34,7 +35,6 @@ public class GlowShader implements MC {
         if (bufferGroup.bound && bufferGroup.shouldRender) {
             shader(bufferGroup, bufferGroup.lineWidthSetting.getValue());
         }
-        GlStateManager.disableBlend();
     }
 
 
@@ -46,6 +46,7 @@ public class GlowShader implements MC {
 
         GlStateManager.alphaFunc(GL11.GL_GREATER, GL11.GL_ZERO);
         OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+
         group.outlineFrameBuffer.framebufferClear();
         group.outlineFrameBuffer.bindFramebuffer(true);
         outlineShader.attachShader();
@@ -80,7 +81,6 @@ public class GlowShader implements MC {
 
         glowShader.releaseShader();
         group.bound = false;
-        GL11.glDisable(GL11.GL_BLEND);
     }
 
 

@@ -66,7 +66,6 @@ public class BufferGroup implements MC {
 
         runnable.run();
 
-
         mc.gameSettings.entityShadows = entityShadows;
         framebuffer.unbindFramebuffer();
         cleared = false;
