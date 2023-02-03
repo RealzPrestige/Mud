@@ -3,8 +3,6 @@ package dev.zprestige.mud.shader.impl;
 import dev.zprestige.mud.shader.ShaderUtil;
 import dev.zprestige.mud.util.MC;
 import dev.zprestige.mud.util.impl.RenderUtil;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.shader.Framebuffer;
 
 import java.awt.*;
@@ -25,9 +23,10 @@ public class GradientShader implements MC {
     }
 
     public static void setup(float step, float speed, Color color, Color color2) {
-        GlStateManager.enableBlend();
-        GlStateManager.color(1, 1, 1, 1);
-        OpenGlHelper.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+        glPushMatrix();
+        glEnable(GL_BLEND);
+        glColor(Color.WHITE);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         framebuffer = RenderUtil.createFrameBuffer(framebuffer);
 
@@ -41,7 +40,9 @@ public class GradientShader implements MC {
     public static void finish() {
         shader.releaseShader();
 
-        GlStateManager.color(1, 1, 1, 1);
-        GlStateManager.bindTexture(0);
+        glColor(Color.WHITE);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_BLEND);
+        glPopMatrix();
     }
 }

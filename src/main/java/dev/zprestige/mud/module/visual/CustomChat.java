@@ -6,6 +6,7 @@ import dev.zprestige.mud.events.impl.chat.GuiChatTypeEvent;
 import dev.zprestige.mud.events.impl.render.Render2DPostEvent;
 import dev.zprestige.mud.events.impl.render.RenderChatEvent;
 import dev.zprestige.mud.events.impl.render.RenderTextBoxEvent;
+import dev.zprestige.mud.events.impl.system.CustomChatEvent;
 import dev.zprestige.mud.events.impl.system.DisconnectEvent;
 import dev.zprestige.mud.events.impl.world.TickEvent;
 import dev.zprestige.mud.manager.EventManager;
@@ -19,6 +20,9 @@ import dev.zprestige.mud.util.impl.RenderUtil;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
@@ -86,7 +90,15 @@ public class CustomChat extends Module {
                     GradientShader.finish();
                     diff += Mud.fontManager.stringWidth("[Mud] ");
                 }
-                Mud.fontManager.string(string.replace("[Mud]", ""), x + 5.0f + diff, y1, Color.WHITE);
+                if (string.contains("\uDE82")){
+                    float stringWidth =  Mud.fontManager.stringWidth(string.replace("[Mud]", "").replace("\uDE82", ""));
+                    RenderUtil.invokeScale(0.8f);
+                   RenderHelper.enableGUIStandardItemLighting();
+                    mc.getRenderItem().renderItemAndEffectIntoGUI(new ItemStack(Items.TOTEM_OF_UNDYING), (int) ((x  - 2.5f + stringWidth) / 0.8f), (int) ((y1 - 2.5f) / 0.8f));
+                    RenderHelper.disableStandardItemLighting();
+                    RenderUtil.resetScale();
+                }
+                Mud.fontManager.string(string.replace("[Mud]", "").replace("\uDE82", ""), x + 5.0f + diff, y1, Color.WHITE);
                 deltaS += 10.0f;
             }
             deltaY -= 20.0f * time;
@@ -159,6 +171,10 @@ public class CustomChat extends Module {
         event.setCancelled(true);
     }
 
+    @EventListener
+    public void onCustomChat(CustomChatEvent event){
+        event.setCancelled(true);
+    }
     private long s = System.currentTimeMillis();
 
     private String typingIcon() {

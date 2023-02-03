@@ -1,7 +1,9 @@
 package dev.zprestige.mud.module.client;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
+import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
+import dev.zprestige.mud.events.impl.system.CustomChatEvent;
 import dev.zprestige.mud.events.impl.system.PacketReceiveEvent;
 import dev.zprestige.mud.events.impl.system.ToggleEvent;
 import dev.zprestige.mud.events.impl.world.TickEvent;
@@ -20,9 +22,6 @@ public class Notifications extends Module {
     private final HashMap<String, Integer> popMap = new HashMap<>();
 
     private void onPop(EntityPlayer entityPlayer) {
-        if (entityPlayer.equals(mc.player)) {
-            return;
-        }
 
         int pops = 1;
         if (popMap.containsKey(entityPlayer.getName())) {
@@ -32,7 +31,10 @@ public class Notifications extends Module {
             popMap.put(entityPlayer.getName(), pops);
         }
         if (popMap.containsKey(entityPlayer.getName())) {
-            String text = "[Mud] " + entityPlayer.getName() + ChatFormatting.GRAY + " has popped " + ChatFormatting.WHITE + pops + ChatFormatting.GRAY + (pops == 1 ? " totem." : " totems.");
+            CustomChatEvent event = new CustomChatEvent();
+            Mud.eventBus.invoke(event);
+            String text = "[Mud] " + entityPlayer.getName() + ChatFormatting.GRAY + " has popped " + ChatFormatting.WHITE + pops + ChatFormatting.GRAY + (event.isCancelled() ? "\uDE82" : (pops == 1 ? " totem." : " totems."));
+
             mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(new TextComponentString(text), 1);
         }
     }
@@ -79,7 +81,9 @@ public class Notifications extends Module {
             }
             onDeath(entityPlayer);
         }
-
+        if (mc.player.isSneaking()) {
+            onPop(mc.player);
+        }
     }
 
     @EventListener
