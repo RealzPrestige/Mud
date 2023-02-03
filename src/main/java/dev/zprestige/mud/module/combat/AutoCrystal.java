@@ -44,6 +44,7 @@ public class AutoCrystal extends Module {
     private final ModeSetting placements = setting("Placements", "1.12.2", Arrays.asList("1.12.2", "1.13+")).invokeTab("AntiCheat");
     private final BooleanSetting limit = setting("Limit", false).invokeTab("AntiCheat");
     private final IntSetting limitTimeout = setting("Limit Timeout", 100, 0, 500).invokeVisibility(z -> limit.getValue()).invokeTab("AntiCheat");
+    private final BooleanSetting silentSwap = setting("Silent Swap", false).invokeTab("AntiCheat");
     private final BooleanSetting damageTick = setting("Damage Tick", false).invokeTab("AntiCheat");
     private final BooleanSetting autoSwitch = setting("Auto Switch", false).invokeTab("AntiCheat");
     private final BooleanSetting constBypass = setting("Const Bypass", false).invokeTab("AntiCheat");
@@ -279,8 +280,9 @@ public class AutoCrystal extends Module {
             RotationUtil.facePos(pos, event);
         }
 
-        EnumFacing enumFacing = EnumFacing.UP;
+        int slot = !silentSwap.getValue() ? -1 : InventoryUtil.getItemFromHotbar(Items.END_CRYSTAL);
 
+        EnumFacing enumFacing = EnumFacing.UP;
         if (packet.getValue().equals("Both") || packet.getValue().equals("Place")) {
             if (superTrace.getValue()) {
                 Vec3d vec = RaytraceUtil.getRaytraceSides(pos);
@@ -292,13 +294,22 @@ public class AutoCrystal extends Module {
                 mc.player.swingArm(enumHand);
 
             } else {
-                PacketUtil.invoke(new CPacketPlayerTryUseItemOnBlock(pos, enumFacing, enumHand, enumFacing.getDirectionVec().getX(), enumFacing.getDirectionVec().getY(), enumFacing.getDirectionVec().getZ()));
+                PacketUtil.invoke(new CPacketPlayerTryUseItemOnBlock(pos, enumFacing, enumHand, enumFacing.getDirectionVec().getX(), enumFacing.getDirectionVec().getY(), enumFacing.getDirectionVec().getZ()), slot);
                 mc.player.swingArm(enumHand);
             }
         } else {
+            int currentItem = mc.player.inventory.currentItem;
+            if (slot != -1){
+                InventoryUtil.switchToSlot(slot);
+            }
             mc.playerController.processRightClickBlock(mc.player, mc.world, pos, enumFacing, new Vec3d(mc.player.posX, -mc.player.posY, -mc.player.posZ), enumHand);
+         if (slot != -1){
+             InventoryUtil.switchBack(slot);
+         }
             mc.player.swingArm(enumHand);
         }
+
+
     }
 
     private EntityEnderCrystal crystal(EntityPlayer entityPlayer) {
