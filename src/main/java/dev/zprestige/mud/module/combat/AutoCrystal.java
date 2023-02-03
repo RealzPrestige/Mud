@@ -158,8 +158,13 @@ public class AutoCrystal extends Module {
             BlockPos pos = findPos(entityPlayer);
             calculating = false;
 
-            long sys = System.currentTimeMillis();
+            if ((rotate.getValue().equals("Place") || rotate.getValue().equals("Both")) && pos != null) {
+                RotationUtil.facePos(pos, event);
+            } else if ((rotate.getValue().equals("Break") || rotate.getValue().equals("Both")) && crystal != null) {
+                RotationUtil.faceEntity(crystal, event);
+            }
 
+            long sys = System.currentTimeMillis();
             if (sys - placeTime > placeInterval.getValue() && pos != null) {
                 active = true;
                 placeCrystal(pos, event);
@@ -172,12 +177,6 @@ public class AutoCrystal extends Module {
                     breakCrystal(crystal, event);
                     breakTime = sys;
                 }
-            }
-
-            if ((rotate.getValue().equals("Place") || rotate.getValue().equals("Both")) && pos != null) {
-                RotationUtil.facePos(pos, event);
-            } else if ((rotate.getValue().equals("Break") || rotate.getValue().equals("Both")) && crystal != null) {
-                RotationUtil.faceEntity(crystal, event);
             }
 
             this.pos = crystal != null ? crystal.getPosition().down() : pos;
@@ -388,15 +387,15 @@ public class AutoCrystal extends Module {
             if (!BlockUtil.valid(pos, placements.getValue().equals("1.13+"))) {
                 continue;
             }
+            if (!BlockUtil.empty(pos)) {
+                continue;
+            }
             float selfDamage = BlockUtil.calculatePosDamage(pos, mc.player);
             float damage = BlockUtil.calculatePosDamage(pos, entityPlayer);
             if (resistant && damage <= lastDamage) {
                 continue;
             }
             if (smartCalculations.getValue() && damage - selfDamage < 0) {
-                continue;
-            }
-            if (!BlockUtil.empty(pos)) {
                 continue;
             }
             if (selfDamage > maximumSelfDamage.getValue()) {
