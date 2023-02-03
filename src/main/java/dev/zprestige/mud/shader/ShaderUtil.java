@@ -84,7 +84,7 @@ public class ShaderUtil implements MC {
     }
 
 
-    public static String readInputStream(InputStream inputStream) {
+    public String readInputStream(InputStream inputStream) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
