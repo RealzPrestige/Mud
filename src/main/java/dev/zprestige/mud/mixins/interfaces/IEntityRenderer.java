@@ -10,7 +10,4 @@ public interface IEntityRenderer {
     @Invoker("renderHand")
     void invokeRenderHand(float partialTicks, int pass);
 
-    @Invoker("setupCameraTransform")
-    void invokeSetupCameraTransform(float partialTicks, int pass);
-
 }

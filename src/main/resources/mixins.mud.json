@@ -13,7 +13,6 @@
     "MixinGuiChat",
     "MixinGuiContainer",
     "MixinGuiIngame",
-    "MixinGuiMainMenu",
     "MixinGuiNewChat",
     "MixinGuiScreen",
     "MixinItemBlock",
