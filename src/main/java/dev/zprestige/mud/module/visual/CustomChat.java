@@ -4,6 +4,7 @@ import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.chat.GuiChatTypeEvent;
 import dev.zprestige.mud.events.impl.render.Render2DEvent;
+import dev.zprestige.mud.events.impl.render.Render2DPostEvent;
 import dev.zprestige.mud.events.impl.render.RenderChatEvent;
 import dev.zprestige.mud.events.impl.render.RenderTextBoxEvent;
 import dev.zprestige.mud.events.impl.system.DisconnectEvent;
@@ -46,7 +47,7 @@ public class CustomChat extends Module {
     }
 
     @EventListener
-    public void onRender2D(Render2DEvent event) {
+    public void onRender2DPost(Render2DPostEvent event) {
         y.max = new ScaledResolution(mc).getScaledHeight();
 
         float stringY = 0.0f;
