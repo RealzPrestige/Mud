@@ -165,6 +165,7 @@ public class AutoCrystal extends Module {
 
             long sys = System.currentTimeMillis();
             if (sys - placeTime > placeInterval.getValue()) {
+                pos = null;
 
                 calculating = true;
                 BlockPos pos = findPos(entityPlayer);
@@ -182,6 +183,7 @@ public class AutoCrystal extends Module {
                 }
             }
             if (sys - breakTime > breakInterval.getValue()) {
+                pos = null;
 
                 calculating = true;
                 EntityEnderCrystal crystal = crystal(entityPlayer);
