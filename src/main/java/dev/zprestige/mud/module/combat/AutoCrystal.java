@@ -32,9 +32,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.TreeMap;
+import java.util.*;
 
 public class AutoCrystal extends Module {
     private final IntSetting placeInterval = setting("Place Interval", 50, 0, 500).invokeTab("Timing");
@@ -45,7 +43,7 @@ public class AutoCrystal extends Module {
     private final ModeSetting packet = setting("Packet", "Both", Arrays.asList("Place", "Break", "Both", "None")).invokeTab("AntiCheat");
     private final ModeSetting placements = setting("Placements", "1.12.2", Arrays.asList("1.12.2", "1.13+")).invokeTab("AntiCheat");
     private final BooleanSetting limit = setting("Limit", false).invokeTab("AntiCheat");
-    private final IntSetting limitTimeout = setting("Limit Timeout", 100, 0, 500);
+    private final IntSetting limitTimeout = setting("Limit Timeout", 100, 0, 500).invokeVisibility(z -> limit.getValue()).invokeTab("AntiCheat");
     private final BooleanSetting damageTick = setting("Damage Tick", false).invokeTab("AntiCheat");
     private final BooleanSetting autoSwitch = setting("Auto Switch", false).invokeTab("AntiCheat");
     private final BooleanSetting constBypass = setting("Const Bypass", false).invokeTab("AntiCheat");
@@ -91,6 +89,7 @@ public class AutoCrystal extends Module {
     private int ticks, shiftTicks;
     public static long time;
     private EntityOtherPlayerMP entityOtherPlayerMP;
+    private final HashMap<EntityEnderCrystal, Long> limitCrystals = new HashMap<>();
 
     private final BufferGroup bufferGroup = new BufferGroup(this, z -> true, lineWidth, color1, color2, step, speed, opacity,
             () -> {
@@ -116,6 +115,14 @@ public class AutoCrystal extends Module {
 
     @EventListener
     public void onMotion(MotionUpdateEvent event) {
+
+        if (limit.getValue()){
+            for (Map.Entry<EntityEnderCrystal, Long> c : new HashMap<>(limitCrystals).entrySet()){
+                if (System.currentTimeMillis() - c.getValue() > limitTimeout.getValue()){
+                    limitCrystals.remove(c.getKey());
+                }
+            }
+        }
         boolean active = false;
         EntityPlayer entityPlayer = EntityUtil.getEntityPlayer(targetRange.getValue());
         if (entityPlayer != null) {
@@ -268,6 +275,9 @@ public class AutoCrystal extends Module {
             InventoryUtil.switchBack(handleWeakness);
         }
 
+        if (limit.getValue()){
+            limitCrystals.put(entity, System.currentTimeMillis());
+        }
         mc.player.swingArm(enumHand);
     }
 
@@ -339,6 +349,10 @@ public class AutoCrystal extends Module {
             if (damage < Math.min(EntityUtil.getHealth(entityPlayer), minimumDamage.getValue())) {
                 continue;
             }
+            if (limit.getValue() && limitCrystals.containsKey(entity)){
+                continue;
+            }
+
             posses.put(calculations.getValue().equals("Damage") ? damage : damage - selfDamage, (EntityEnderCrystal) entity);
         }
         if (!posses.isEmpty()) {
