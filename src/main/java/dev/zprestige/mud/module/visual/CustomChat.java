@@ -133,7 +133,7 @@ public class CustomChat extends Module {
     @EventListener
     public void onTick(TickEvent event) {
         Mud.threadManager.invokeThread(() -> {
-            for (ChatLine chatLine : ((IGuiNewChat) mc.ingameGUI.getChatGUI()).getDrawnChatLines()) {
+            for (ChatLine chatLine : new ArrayList<>(((IGuiNewChat) mc.ingameGUI.getChatGUI()).getDrawnChatLines())) {
                 String text = chatLine.getChatComponent().getFormattedText();
                 if (messages.stream().anyMatch(message -> text.equals(message.getText()))) {
                     continue;
