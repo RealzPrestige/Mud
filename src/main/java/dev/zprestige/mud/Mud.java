@@ -4,14 +4,10 @@ import dev.zprestige.mud.events.bus.EventBus;
 import dev.zprestige.mud.manager.*;
 import dev.zprestige.mud.module.Category;
 import dev.zprestige.mud.ui.Interface;
-import dev.zprestige.mud.ui.alt.AltManagerScreen;
 import dev.zprestige.mud.util.impl.DiscordUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -35,16 +31,15 @@ public class Mud {
     public static final FrustumManager frustumManager = new FrustumManager();
     public static final Interface clickGui = new Interface();
     public static final TPSManager tpsManager = new TPSManager();
-    public static final AltManagerScreen altManagerScreen = new AltManagerScreen();
     public static final MotionPredictionManager motionPredictManager = new MotionPredictionManager();
     public static final LastDamageManager lastDamageManager = new LastDamageManager();
     public static final Thread thread = new Thread(() -> {
         configManager.save("AutoSave", false, new ArrayList<>(Arrays.asList(Category.values())));
         DiscordUtil.onExit();
     });
-
     @Mod.EventHandler
     public void onInit(FMLInitializationEvent event) {
         Runtime.getRuntime().addShutdownHook(thread);
     }
+
 }
