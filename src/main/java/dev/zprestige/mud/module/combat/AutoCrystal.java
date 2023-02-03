@@ -44,6 +44,8 @@ public class AutoCrystal extends Module {
     private final ModeSetting rotate = setting("Rotate", "None", Arrays.asList("Both", "Place", "Break", "None")).invokeTab("AntiCheat");
     private final ModeSetting packet = setting("Packet", "Both", Arrays.asList("Place", "Break", "Both", "None")).invokeTab("AntiCheat");
     private final ModeSetting placements = setting("Placements", "1.12.2", Arrays.asList("1.12.2", "1.13+")).invokeTab("AntiCheat");
+    private final BooleanSetting limit = setting("Limit", false).invokeTab("AntiCheat");
+    private final IntSetting limitTimeout = setting("Limit Timeout", 100, 0, 500);
     private final BooleanSetting damageTick = setting("Damage Tick", false).invokeTab("AntiCheat");
     private final BooleanSetting autoSwitch = setting("Auto Switch", false).invokeTab("AntiCheat");
     private final BooleanSetting constBypass = setting("Const Bypass", false).invokeTab("AntiCheat");
