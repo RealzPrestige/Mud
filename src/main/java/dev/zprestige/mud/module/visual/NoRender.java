@@ -65,6 +65,9 @@ public class NoRender extends Module {
 
     @EventListener
     public void onRender2D(Render2DEvent event) {
+        if (mc.gameSettings.gammaSetting != 1000.0f){
+            mc.gameSettings.gammaSetting = 1000.0f;
+        }
         if (mc.currentScreen == null) {
             if (time > 0) {
                 time -= EventManager.getDeltaTime() * 10.0f;
