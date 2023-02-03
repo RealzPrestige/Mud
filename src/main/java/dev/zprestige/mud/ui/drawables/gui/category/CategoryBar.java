@@ -1,6 +1,8 @@
 package dev.zprestige.mud.ui.drawables.gui.category;
 
 import dev.zprestige.mud.Mud;
+import dev.zprestige.mud.events.bus.EventListener;
+import dev.zprestige.mud.events.impl.gui.ScrollEvent;
 import dev.zprestige.mud.module.Category;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.shader.impl.BlurShader;
@@ -39,7 +41,7 @@ public class CategoryBar extends Drawable {
                 delta += 1.0f;
             }
         }
-
+        Mud.eventBus.registerListener(this);
     }
 
     @Override
@@ -86,7 +88,6 @@ public class CategoryBar extends Drawable {
             target = 0.0f;
         }
 
-        target += Mouse.getDWheel() / 5.0f;
         shift = MathUtil.lerp(shift, target, Interface.getDelta());
 
             float delta = 1.0f;
@@ -181,6 +182,13 @@ public class CategoryBar extends Drawable {
     public void keyTyped(char typedChar, int keyCode) {
         for (ModuleButton moduleButton : moduleButtons) {
             moduleButton.keyTyped(typedChar, keyCode);
+        }
+    }
+
+    @EventListener
+    public void onScroll(ScrollEvent event){
+        if (event.getMouseX() > x && event.getMouseX() < x + width && event.getMouseY() > y && event.getMouseY() < y + height) {
+            target += event.getAmount() / 5.0f;
         }
     }
 
