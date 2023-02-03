@@ -1,7 +1,6 @@
 package dev.zprestige.mud.shader.impl;
 
 import dev.zprestige.mud.Mud;
-import dev.zprestige.mud.mixins.interfaces.IEntityRenderer;
 import dev.zprestige.mud.module.Module;
 import dev.zprestige.mud.setting.impl.ColorSetting;
 import dev.zprestige.mud.setting.impl.FloatSetting;
@@ -64,9 +63,6 @@ public class BufferGroup implements MC {
 
         boolean entityShadows = mc.gameSettings.entityShadows;
         mc.gameSettings.entityShadows = false;
-
-
-            ((IEntityRenderer) mc.entityRenderer).invokeSetupCameraTransform(mc.getRenderPartialTicks(), 2);
 
         runnable.run();
 
