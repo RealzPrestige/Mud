@@ -89,7 +89,6 @@ public class AutoCrystal extends Module {
     private int ticks, shiftTicks;
     public static long time;
     private EntityOtherPlayerMP entityOtherPlayerMP;
-    private float[] prev;
 
     private final BufferGroup bufferGroup = new BufferGroup(this, z -> true, lineWidth, color1, color2, step, speed, opacity,
             () -> {
@@ -98,6 +97,7 @@ public class AutoCrystal extends Module {
                 }
             }
     );
+
 
     @Override
     public void onEnable() {
@@ -117,7 +117,6 @@ public class AutoCrystal extends Module {
         boolean active = false;
         EntityPlayer entityPlayer = EntityUtil.getEntityPlayer(targetRange.getValue());
         if (entityPlayer != null) {
-            boolean action = false, isNull = true;
 
             invokeAppend(entityPlayer.getName());
             if (raytraceBypass.getValue()) {
@@ -157,7 +156,6 @@ public class AutoCrystal extends Module {
 
             long sys = System.currentTimeMillis();
             if (sys - placeTime > placeInterval.getValue()) {
-                action = true;
 
                 calculating = true;
                 BlockPos pos = findPos(entityPlayer);
@@ -172,11 +170,9 @@ public class AutoCrystal extends Module {
                         return;
                     }
                     this.pos = pos;
-                    isNull = false;
                 }
             }
             if (sys - breakTime > breakInterval.getValue()) {
-                action = true;
 
                 calculating = true;
                 EntityEnderCrystal crystal = crystal(entityPlayer);
@@ -188,17 +184,9 @@ public class AutoCrystal extends Module {
 
                     breakTime = sys;
                     this.pos = crystal.getPosition().down();
-                    isNull = false;
                 }
             }
             entityPlayer.setPosition(position[0], position[1], position[2]);
-
-            if ((action && isNull) || System.currentTimeMillis() - time > 200) {
-                pos = null;
-            }
-            if (prev != null) {
-                RotationUtil.faceAngle(prev, event);
-            }
 
         } else {
             entityOtherPlayerMP = null;
@@ -266,7 +254,7 @@ public class AutoCrystal extends Module {
         }
 
         if (rotate.getValue().equals("Both") || rotate.getValue().equals("Break")) {
-            prev = RotationUtil.faceEntity(entity, event);
+            RotationUtil.faceEntity(entity, event);
         }
         int handleWeakness = handleWeakness();
         if (packet.getValue().equals("Both") || packet.getValue().equals("Break")) {
@@ -291,7 +279,7 @@ public class AutoCrystal extends Module {
         }
 
         if (event != null && (rotate.getValue().equals("Both") || rotate.getValue().equals("Place"))) {
-            prev = RotationUtil.facePos(pos, event);
+             RotationUtil.facePos(pos, event);
         }
 
         EnumFacing enumFacing = EnumFacing.UP;
@@ -302,7 +290,7 @@ public class AutoCrystal extends Module {
                 AxisAlignedBB bb = new AxisAlignedBB(pos);
                 PacketUtil.invoke(new CPacketPlayerTryUseItemOnBlock(pos, enumFacing, enumHand, (float) (vec == null ? 0.5f : (vec.x - bb.minX)), (float) (vec == null ? 0.5f : (vec.y - bb.minY)), (float) (vec == null ? 0.5f : (vec.z - bb.minZ))));
                 if (vec != null && event != null && (rotate.getValue().equals("Both") || rotate.getValue().equals("Place"))) {
-                    prev = RotationUtil.facePos(vec, event);
+                    RotationUtil.facePos(vec, event);
                 }
                 mc.player.swingArm(enumHand);
 
