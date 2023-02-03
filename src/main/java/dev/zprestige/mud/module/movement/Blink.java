@@ -5,6 +5,7 @@ import dev.zprestige.mud.Mud;
 import dev.zprestige.mud.events.bus.EventListener;
 import dev.zprestige.mud.events.impl.render.NameplateEvent;
 import dev.zprestige.mud.events.impl.render.Render2DEvent;
+import dev.zprestige.mud.events.impl.render.Render2DPostEvent;
 import dev.zprestige.mud.events.impl.render.Render3DEvent;
 import dev.zprestige.mud.events.impl.system.PacketSendEvent;
 import dev.zprestige.mud.events.impl.world.TickEvent;
@@ -69,7 +70,7 @@ public class Blink extends Module {
     }
 
     @EventListener
-    public void onRender2D(Render2DEvent event) {
+    public void onRender2D(Render2DPostEvent event) {
         if (isEnabled()) {
             GlowShader.render2D(bufferGroup);
         }

@@ -4,8 +4,6 @@ import dev.zprestige.mud.shader.ShaderUtil;
 import dev.zprestige.mud.util.MC;
 import dev.zprestige.mud.util.impl.MathUtil;
 import dev.zprestige.mud.util.impl.RenderUtil;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.shader.Framebuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -35,10 +33,10 @@ public class ShadowGradientShader implements MC {
 
     private static void render(int sourceTexture, int radius, int offset, float intensity, float step, float speed, Color color, Color color2) {
         framebuffer = RenderUtil.createFrameBuffer(framebuffer);
-
-        GlStateManager.enableBlend();
-        GlStateManager.color(1, 1, 1, 1);
-        OpenGlHelper.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(516, 0.0f);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         final FloatBuffer weightBuffer = BufferUtils.createFloatBuffer(256);
         for (int i = 0; i <= radius; i++) {
@@ -69,8 +67,9 @@ public class ShadowGradientShader implements MC {
         ShaderUtil.screenTex();
         shadowShader.releaseShader();
 
-        GlStateManager.color(1, 1, 1, 1);
-        GlStateManager.bindTexture(0);
+        glAlphaFunc(516, 0.1f);
+        glEnable(GL_ALPHA_TEST);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     private static void setupUniforms(int radius, int directionX, int directionY, FloatBuffer weights,float intensity, float step, float speed, Color color, Color color2) {
