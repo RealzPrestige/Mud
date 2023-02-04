@@ -54,7 +54,6 @@ public class RotationUtil implements MC {
         float[] angle = calculateAngle(entity.getPositionEyes(partialTicks));
         event.setYaw(angle[0]);
         event.setPitch(angle[1]);
-
     }
 
     public static float[] facePos(BlockPos pos, MotionUpdateEvent event, float[] prev, float maxYaw) {

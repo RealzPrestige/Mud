@@ -13,22 +13,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderPlayer.class)
 public abstract class MixinRenderPlayer implements MC {
-    private float renderPitch, renderYaw, renderHeadYaw, prevRenderHeadYaw, lastRenderHeadYaw, prevRenderPitch, lastRenderPitch;
+    private float renderPitch, renderHeadYaw, prevRenderHeadYaw, lastRenderHeadYaw, prevRenderPitch, lastRenderPitch;
 
     @Inject(method = "doRender*", at = @At("HEAD"))
     public void doRenderPre(AbstractClientPlayer entity, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo ci) {
-        if (entity.equals(mc.player)) {
+        if (entity.equals(mc.player) && mc.currentScreen == null) {
             RenderRotationsEvent event = new RenderRotationsEvent();
             Mud.eventBus.invoke(event);
             if (event.isCancelled()) {
                 prevRenderHeadYaw = entity.prevRotationYawHead;
                 prevRenderPitch = entity.prevRotationPitch;
                 renderPitch = entity.rotationPitch;
-                renderYaw = entity.rotationYaw;
                 renderHeadYaw = entity.rotationYawHead;
+
                 entity.rotationPitch = event.getPitch();
                 entity.prevRotationPitch = lastRenderPitch;
-                entity.rotationYaw = event.getYaw();
                 entity.rotationYawHead = event.getYaw();
                 entity.prevRotationYaw = lastRenderHeadYaw;
                 entity.prevRotationYawHead = lastRenderHeadYaw;
@@ -38,16 +37,15 @@ public abstract class MixinRenderPlayer implements MC {
 
     @Inject(method = "doRender*", at = @At("RETURN"))
     public void rotateEnd(AbstractClientPlayer entity, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo ci) {
-        if (entity.equals(mc.player)) {
+        if (entity.equals(mc.player) && mc.currentScreen == null) {
             RenderRotationsEvent event = new RenderRotationsEvent();
             Mud.eventBus.invoke(event);
             if (event.isCancelled()) {
-                if (partialTicks > 0.9f || mc.currentScreen != null){
+                if (partialTicks > 0.9f){
                     lastRenderHeadYaw = entity.rotationYawHead;
                     lastRenderPitch = entity.rotationPitch;
                 }
                 entity.rotationPitch = renderPitch;
-                entity.rotationYaw = renderYaw;
                 entity.rotationYawHead = renderHeadYaw;
                 entity.prevRotationYaw = prevRenderHeadYaw;
                 entity.prevRotationYawHead = prevRenderHeadYaw;

@@ -164,8 +164,10 @@ public class AutoCrystal extends Module {
 
             if ((rotate.getValue().equals("Place") || rotate.getValue().equals("Both")) && pos != null) {
                 spoofed = RotationUtil.facePos(pos, event, spoofed, maxRotation.getValue());
-
+            } else if ((rotate.getValue().equals("Break") || rotate.getValue().equals("Both")) && crystal != null) {
+                spoofed = RotationUtil.faceEntity(crystal, event, spoofed, maxRotation.getValue());
             }
+
             long sys = System.currentTimeMillis();
             if (sys - placeTime > placeInterval.getValue() && pos != null) {
                 active = true;
