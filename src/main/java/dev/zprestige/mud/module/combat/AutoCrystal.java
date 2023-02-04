@@ -41,6 +41,7 @@ public class AutoCrystal extends Module {
     private final BooleanSetting simultaneously = setting("Simultaneously", false).invokeTab("Timing");
 
     private final ModeSetting rotate = setting("Rotate", "None", Arrays.asList("Both", "Place", "Break", "None")).invokeTab("AntiCheat");
+    private final FloatSetting maxRotation = setting("Max Rotation", 180.0f, 1.0f, 180.0f).invokeVisibility(z -> !rotate.getValue().equals("None")).invokeTab("AntiCheat");
     private final ModeSetting packet = setting("Packet", "Both", Arrays.asList("Place", "Break", "Both", "None")).invokeTab("AntiCheat");
     private final ModeSetting placements = setting("Placements", "1.12.2", Arrays.asList("1.12.2", "1.13+")).invokeTab("AntiCheat");
     private final BooleanSetting limit = setting("Limit", false).invokeTab("AntiCheat");
@@ -93,6 +94,7 @@ public class AutoCrystal extends Module {
     public static long time;
     private EntityOtherPlayerMP entityOtherPlayerMP;
     private final HashMap<EntityEnderCrystal, Long> limitCrystals = new HashMap<>();
+    private float[] spoofed = new float[]{0.0f, 0.0f};
 
     private final BufferGroup bufferGroup = new BufferGroup(this, z -> true, lineWidth, color1, color2, step, speed, opacity,
             () -> {
@@ -118,7 +120,6 @@ public class AutoCrystal extends Module {
 
     @EventListener
     public void onMotion(MotionUpdateEvent event) {
-
         if (limit.getValue()) {
             for (Map.Entry<EntityEnderCrystal, Long> c : new HashMap<>(limitCrystals).entrySet()) {
                 if (System.currentTimeMillis() - c.getValue() > limitTimeout.getValue()) {
@@ -126,6 +127,8 @@ public class AutoCrystal extends Module {
                 }
             }
         }
+
+
         boolean active = false;
         EntityPlayer entityPlayer = EntityUtil.getEntityPlayer(targetRange.getValue());
         if (entityPlayer != null) {
@@ -160,15 +163,13 @@ public class AutoCrystal extends Module {
             calculating = false;
 
             if ((rotate.getValue().equals("Place") || rotate.getValue().equals("Both")) && pos != null) {
-                RotationUtil.facePos(pos, event);
-            } else if ((rotate.getValue().equals("Break") || rotate.getValue().equals("Both")) && crystal != null) {
-                RotationUtil.faceEntity(crystal, event);
-            }
+                spoofed = RotationUtil.facePos(pos, event, spoofed, maxRotation.getValue());
 
+            }
             long sys = System.currentTimeMillis();
             if (sys - placeTime > placeInterval.getValue() && pos != null) {
                 active = true;
-                placeCrystal(pos, event);
+                //placeCrystal(pos, event);
                 placeTime = sys;
             }
 
@@ -279,7 +280,7 @@ public class AutoCrystal extends Module {
                         : EnumHand.MAIN_HAND;
 
         if (rotate.getValue().equals("Both") || rotate.getValue().equals("Break")) {
-            RotationUtil.faceEntity(entity, event);
+            spoofed = RotationUtil.faceEntity(entity, event, spoofed[0], maxRotation.getValue());
         }
         int handleWeakness = handleWeakness();
         if (packet.getValue().equals("Both") || packet.getValue().equals("Break")) {
@@ -304,7 +305,7 @@ public class AutoCrystal extends Module {
                         : EnumHand.MAIN_HAND;
 
         if (event != null && (rotate.getValue().equals("Both") || rotate.getValue().equals("Place"))) {
-            RotationUtil.facePos(pos, event);
+            spoofed = RotationUtil.facePos(pos, event, spoofed, maxRotation.getValue());
         }
 
         int slot = !silentSwap.getValue() ? -1 : InventoryUtil.getItemFromHotbar(Items.END_CRYSTAL);
@@ -316,7 +317,7 @@ public class AutoCrystal extends Module {
                 AxisAlignedBB bb = new AxisAlignedBB(pos);
                 PacketUtil.invoke(new CPacketPlayerTryUseItemOnBlock(pos, enumFacing, enumHand, (float) (vec == null ? 0.5f : (vec.x - bb.minX)), (float) (vec == null ? 0.5f : (vec.y - bb.minY)), (float) (vec == null ? 0.5f : (vec.z - bb.minZ))));
                 if (vec != null && event != null && (rotate.getValue().equals("Both") || rotate.getValue().equals("Place"))) {
-                    RotationUtil.facePos(vec, event);
+                    spoofed = RotationUtil.facePos(vec, event, spoofed[0], maxRotation.getValue());
                 }
                 mc.player.swingArm(enumHand);
 
