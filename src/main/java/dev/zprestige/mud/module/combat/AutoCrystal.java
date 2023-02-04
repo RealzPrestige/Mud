@@ -169,7 +169,7 @@ public class AutoCrystal extends Module {
             long sys = System.currentTimeMillis();
             if (sys - placeTime > placeInterval.getValue() && pos != null) {
                 active = true;
-                //placeCrystal(pos, event);
+                placeCrystal(pos, event);
                 placeTime = sys;
             }
 
