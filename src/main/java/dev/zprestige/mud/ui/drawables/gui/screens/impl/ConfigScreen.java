@@ -279,7 +279,7 @@ public class ConfigScreen extends DrawableScreen {
         loadableConfigs.clear();
         try {
             for (File file : Objects.requireNonNull(Mud.configManager.folder.listFiles())) {
-                if (file.getName().equals("active.txt")) {
+                if (file.getName().equals("active.txt") || file.getName().equals("friends.txt")) {
                     continue;
                 }
                 loadableConfigs.add(new LoadableConfig(file.getName()));
