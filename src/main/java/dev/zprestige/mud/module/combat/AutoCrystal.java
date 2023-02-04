@@ -280,7 +280,7 @@ public class AutoCrystal extends Module {
                         : EnumHand.MAIN_HAND;
 
         if (rotate.getValue().equals("Both") || rotate.getValue().equals("Break")) {
-            spoofed = RotationUtil.faceEntity(entity, event, spoofed[0], maxRotation.getValue());
+            spoofed = RotationUtil.faceEntity(entity, event, spoofed, maxRotation.getValue());
         }
         int handleWeakness = handleWeakness();
         if (packet.getValue().equals("Both") || packet.getValue().equals("Break")) {
@@ -317,7 +317,7 @@ public class AutoCrystal extends Module {
                 AxisAlignedBB bb = new AxisAlignedBB(pos);
                 PacketUtil.invoke(new CPacketPlayerTryUseItemOnBlock(pos, enumFacing, enumHand, (float) (vec == null ? 0.5f : (vec.x - bb.minX)), (float) (vec == null ? 0.5f : (vec.y - bb.minY)), (float) (vec == null ? 0.5f : (vec.z - bb.minZ))));
                 if (vec != null && event != null && (rotate.getValue().equals("Both") || rotate.getValue().equals("Place"))) {
-                    spoofed = RotationUtil.facePos(vec, event, spoofed[0], maxRotation.getValue());
+                    spoofed = RotationUtil.facePos(vec, event, spoofed, maxRotation.getValue());
                 }
                 mc.player.swingArm(enumHand);
 
