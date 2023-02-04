@@ -42,7 +42,7 @@ public abstract class MixinRenderPlayer implements MC {
             RenderRotationsEvent event = new RenderRotationsEvent();
             Mud.eventBus.invoke(event);
             if (event.isCancelled()) {
-                if (partialTicks > 0.9f){
+                if (partialTicks > 0.9f || mc.currentScreen != null){
                     lastRenderHeadYaw = entity.rotationYawHead;
                     lastRenderPitch = entity.rotationPitch;
                 }
