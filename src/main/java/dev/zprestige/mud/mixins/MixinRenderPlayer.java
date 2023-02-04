@@ -30,6 +30,7 @@ public abstract class MixinRenderPlayer implements MC {
                 entity.prevRotationPitch = lastRenderPitch;
                 entity.rotationYaw = event.getYaw();
                 entity.rotationYawHead = event.getYaw();
+                entity.prevRotationYaw = lastRenderHeadYaw;
                 entity.prevRotationYawHead = lastRenderHeadYaw;
             }
         }
@@ -41,11 +42,14 @@ public abstract class MixinRenderPlayer implements MC {
             RenderRotationsEvent event = new RenderRotationsEvent();
             Mud.eventBus.invoke(event);
             if (event.isCancelled()) {
-                lastRenderHeadYaw = entity.rotationYawHead;
-                lastRenderPitch = entity.rotationPitch;
+                if (partialTicks > 0.9f){
+                    lastRenderHeadYaw = entity.rotationYawHead;
+                    lastRenderPitch = entity.rotationPitch;
+                }
                 entity.rotationPitch = renderPitch;
                 entity.rotationYaw = renderYaw;
                 entity.rotationYawHead = renderHeadYaw;
+                entity.prevRotationYaw = prevRenderHeadYaw;
                 entity.prevRotationYawHead = prevRenderHeadYaw;
                 entity.prevRotationPitch = prevRenderPitch;
             }
