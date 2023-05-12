@@ -8,6 +8,7 @@ Mud is a Minecraft 1.12.2 client built on the Forge modding platform. It provide
 ## Notable Features
 
 - Usage of gradient shaders everywhere.
+- Renders can be unstable for some people, or work perfectly (for me worked perfectly)
 
 ## Installation
 
