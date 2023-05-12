@@ -16,11 +16,10 @@ Mud is a Minecraft 1.12.2 client built on the Forge modding platform. It provide
 ## Usage
 
 - ClickGUI Bind: RSHIFT
-- Provide instructions for using specific features, if applicable.
 
 ## Contributing
 
-Contributions are welcome! If you would like to contribute to Mud, please follow these steps (I might accept :) ):
+Contributions are welcome! If you would like to contribute to Mud, please follow these steps (I might accept😊):
 
 1. Fork the repository.
 2. Create a new branch for your feature: 
